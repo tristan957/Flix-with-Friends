@@ -1,6 +1,11 @@
 #include <gtk/gtk.h>
 #include <iostream>
 
+void create_file_chooser_dialog()
+{
+
+}
+
 static void activate(GtkApplication* app, gpointer user_data)
 {
 	GtkWidget* mainWindow;
@@ -20,7 +25,7 @@ static void activate(GtkApplication* app, gpointer user_data)
 	gtk_window_set_titlebar(GTK_WINDOW(mainWindow), header);
 
 	fileButton = gtk_button_new_with_label("Open a File");
-	//g_signal_connect()
+	g_signal_connect()
 	//fileIcon = g_themed_icon_new("mail-send-receive-symbolic");
 	//fileImage = gtk_image_new_from_gicon(fileIcon, GTK_ICON_SIZE_BUTTON);
 	//gtk_container_add(GTK_CONTAINER(fileButton), fileImage);
