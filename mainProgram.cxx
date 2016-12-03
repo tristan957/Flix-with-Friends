@@ -4,6 +4,7 @@
 #include <vector>
 #include "menu.hxx"
 #include "Movie.hxx"
+#include "readFile.hxx"
 
 using namespace std;
 
@@ -11,6 +12,8 @@ int main()
 {
 	cout << "Welcome to Movie Night Helper!" << endl;
 	cout << "Version .2" << endl << endl;
+	string file_name = "Movies.csv";
+	readFile(file_name);
 
 
 	//if()
