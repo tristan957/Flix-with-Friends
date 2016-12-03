@@ -1,9 +1,14 @@
 #include <gtk/gtk.h>
 #include <iostream>
 
-void create_file_chooser_dialog()
+char* create_file_chooser_dialog(GtkWidget* fileButton, GtkWidget* mainWindow)
 {
+	GtkWidget* fileDialog;
 
+	fileDialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(mainWindow), GTK_FILE_CHOOSER_ACTION_OPEN, ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Open"), GTK_RESPONSE_ACCEPT, NULL);
+	char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fileDialog));
+	//gtk_widget_show_all(mainWindow);
+	return filename;
 }
 
 static void activate(GtkApplication* app, gpointer user_data)
@@ -25,7 +30,7 @@ static void activate(GtkApplication* app, gpointer user_data)
 	gtk_window_set_titlebar(GTK_WINDOW(mainWindow), header);
 
 	fileButton = gtk_button_new_with_label("Open a File");
-	g_signal_connect()
+	g_signal_connect(fileButton, "clicked", G_CALLBACK(create_file_chooser_dialog), mainWindow);
 	//fileIcon = g_themed_icon_new("mail-send-receive-symbolic");
 	//fileImage = gtk_image_new_from_gicon(fileIcon, GTK_ICON_SIZE_BUTTON);
 	//gtk_container_add(GTK_CONTAINER(fileButton), fileImage);
@@ -39,7 +44,7 @@ int main (int argc, char** argv)
   GtkApplication* app;
   int status;
 
-  app = gtk_application_new ("com.github.tristan957.stop_bitchin-start_watchin", G_APPLICATION_FLAGS_NONE);
+  app = gtk_application_new("com.github.tristan957.stop_bitchin-start_watchin", G_APPLICATION_FLAGS_NONE);
   g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
   status = g_application_run(G_APPLICATION(app), argc, argv);
   g_object_unref(app);
