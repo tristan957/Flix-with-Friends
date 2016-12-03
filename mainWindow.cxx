@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <iostream>
 
 static void activate(GtkApplication* app, gpointer user_data)
 {
@@ -17,12 +18,12 @@ static void activate(GtkApplication* app, gpointer user_data)
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), "Stop Bitchin' - Start Watchin'");
 	gtk_header_bar_set_has_subtitle(GTK_HEADER_BAR(header), FALSE);
 	gtk_window_set_titlebar(GTK_WINDOW(mainWindow), header);
-	fileButton = gtk_file_chooser_button_new("Choose a file", GTK_FILE_CHOOSER_ACTION_OPEN);
 
-	fileIcon = g_themed_icon_new("mail-send-receive-symbolic");
-	fileImage = gtk_image_new_from_gicon(fileIcon, GTK_ICON_SIZE_BUTTON);
-	g_object_unref(fileIcon);
-	gtk_container_add(GTK_CONTAINER(fileButton), fileImage);
+	fileButton = gtk_button_new_with_label("Open a File");
+	//g_signal_connect()
+	//fileIcon = g_themed_icon_new("mail-send-receive-symbolic");
+	//fileImage = gtk_image_new_from_gicon(fileIcon, GTK_ICON_SIZE_BUTTON);
+	//gtk_container_add(GTK_CONTAINER(fileButton), fileImage);
 	gtk_header_bar_pack_start(GTK_HEADER_BAR(header), fileButton);
 
 	gtk_widget_show_all(mainWindow);
