@@ -1,29 +1,20 @@
-# import tmdbsimple as tmdb
-# tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
-#
-# api = tmdb.API(b299f0e8dce095f8ebcbae6ab789005c)
-# api.movie(<parameters>)
-#
-# search = tmdb.Search()
-# # response = search.movie(query='259316')
-#
-# # Search for info about Forest Gump
-# response = search.movie(query='Forest Gump')
-# for s in search.results:
-#     with open('file.txt', 'w') as f:
-#         print (s['title'], file=f)
-#         # print(s['id'], s['release_date'], s['popularity'], file=f)
-#         print(s['popularity'], file =f)
-#         print( s['overview'], file=f)
-#         print('\n\n\n',file=f)
-#
-# response = search.movie(movie_id='13')
-# for s in search.results:
-#     with open('file.txt', 'a') as f:
-#         print (s['title'], file=f)
-#         # print(s['id'], s['release_date'], s['popularity'], file=f)
-#         print(s['popularity'], file =f)
-#         print( s['overview'], file=f)
+import tmdbsimple as tmdb
+tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
-from tmdb import set_key
-set_key('b299f0e8dce095f8ebcbae6ab789005c')
+# Forrest Gump
+forrestGump = tmdb.Movies(13)
+response = forrestGump.info()
+print(response['title'])
+
+# Saving Private Ryan
+savingPrivateRyan = tmdb.Movies(857)
+savingPrivateRyanInfo = savingPrivateRyan.info()
+print(savingPrivateRyanInfo['title'])
+
+# Dead Poet Society
+
+# Mulan
+
+# Shrek
+
+# P.S. I love You
