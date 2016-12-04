@@ -6,8 +6,13 @@ static void create_file_chooser_dialog(GtkWidget* fileButton, gpointer mainWindo
 	GtkWidget* fileDialog;
 	fileDialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(mainWindow), GTK_FILE_CHOOSER_ACTION_OPEN, ("Cancel"), GTK_RESPONSE_CANCEL, ("Open"), GTK_FILE_CHOOSER_CONFIRMATION_ACCEPT_FILENAME, NULL);
 	gtk_widget_show_all(fileDialog);
-	char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fileDialog));
-	std::cout << filename << std::endl;
+	gint resp = gtk_dialog_run(GTK_DIALOG(fileDialog));
+	if(resp == GTK_FILE_CHOOSER_CONFIRMATION_ACCEPT_FILENAME)
+	{
+		char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fileDialog));
+		std::cout << filename << std::endl;
+	}
+	gtk_widget_destroy(fileDialog);
 }
 
 static void activate(GtkApplication* app, gpointer user_data)
@@ -15,8 +20,6 @@ static void activate(GtkApplication* app, gpointer user_data)
 	GtkWidget* mainWindow;
 	GtkWidget* header;
 	GtkWidget* fileButton;
-	GIcon* fileIcon;
-	GtkWidget* fileImage;
 
 	mainWindow = gtk_application_window_new(app);
 	//gtk_window_set_title(GTK_WINDOW(mainWindow), "Stop Bitchin' - Start Watchin'");
