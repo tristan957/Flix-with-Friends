@@ -1,6 +1,7 @@
 import sys
 import tmdbsimple as tmdb
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
+
 # Initialize the search for The movie database
 search = tmdb.Search()
 
@@ -9,8 +10,6 @@ with open("Movies.csv") as f:
     content = f.readlines()
 
 # Func for determining lines in the CSV file
-
-
 def file_len(fname):
     with open(fname) as f:
         for i, l in enumerate(f):
@@ -18,14 +17,11 @@ def file_len(fname):
     return i + 1
 
 
-
-
 if len(sys.argv) > 1:
     arguments = sys.argv
     a = " ".join(arguments[1:])
     # print(a)
     response = search.movie(query=a)
-
     i = 0
     for s in search.results:
         i = 1 + i
@@ -36,9 +32,18 @@ if len(sys.argv) > 1:
             forrestGump = tmdb.Movies(titleID)
             response = forrestGump.info()
             print(response['title'])
-            print('Runtime: ', response['runtime'])
+            print('Runtime:', response['runtime'], 'minutes')
             # print('Runtime: ', response['rating'])
-            print('Overview: ', response['overview'], '\n')
+            print('Overview:', response['overview'])
+            gen = response['genres']
+            print('Genres:', end=' ')
+            for i in range(0,len(gen)):
+                print(gen[i]['name'], end=" ")
+            print()
+            print('Release Date:', response['release_date'])
+            print('Vote Average: ', response['vote_average'], '/10',sep='')
+            print('Popularity:',response['popularity'], 'million(s)')
+            print(response)
 
     if i == 0:
         print(a, 'not found')
@@ -54,14 +59,13 @@ else:
         print('CORRECT MOVIE: ', a[0])
 
         response = search.movie(query=a[0])
-
         i = 0
         for s in search.results:
             i = 1 + i
             if i == 1:
                 titleID = s['id']
-                forrestGump = tmdb.Movies(titleID)
-                response = forrestGump.info()
+                daMovie = tmdb.Movies(titleID)
+                response = daMovie.info()
                 print(response['title'])
                 print('Runtime: ', response['runtime'])
                 print('Overview: ', response['overview'], '\n')
