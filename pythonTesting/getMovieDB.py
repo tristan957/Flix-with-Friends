@@ -37,8 +37,11 @@ if len(sys.argv) > 1:
             response = forrestGump.info()
             print(response['title'])
             print('Runtime: ', response['runtime'])
+            # print('Runtime: ', response['rating'])
             print('Overview: ', response['overview'], '\n')
 
+    if i == 0:
+        print(a, 'not found')
 else:
 
     # Utilize the function
@@ -56,11 +59,12 @@ else:
         for s in search.results:
             i = 1 + i
             if i == 1:
-                # titleMovie = s['title']
                 titleID = s['id']
-                # print(titleMovie, titleID)
                 forrestGump = tmdb.Movies(titleID)
                 response = forrestGump.info()
                 print(response['title'])
                 print('Runtime: ', response['runtime'])
                 print('Overview: ', response['overview'], '\n')
+
+        if i == 0:
+            print(a, 'not found')
