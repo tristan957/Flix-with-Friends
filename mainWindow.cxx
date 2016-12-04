@@ -1,7 +1,15 @@
 #include <gtk/gtk.h>
 #include <iostream>
 
-static void create_file_chooser_dialog(GtkWidget* fileButton, gpointer mainWindow)
+static gboolean
+key_press_event_cb (GtkWidget *window,
+    GdkEvent *event,
+    GtkSearchBar *search_bar)
+{
+  return gtk_search_bar_handle_event (search_bar, event);
+}
+
+static void create_file_chooser_dialog_cb(GtkWidget* fileButton, gpointer mainWindow)
 {
 	GtkWidget* fileDialog;
 	fileDialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(mainWindow), GTK_FILE_CHOOSER_ACTION_OPEN, ("Cancel"), GTK_RESPONSE_CANCEL, ("Open"), GTK_FILE_CHOOSER_CONFIRMATION_ACCEPT_FILENAME, NULL);
@@ -20,9 +28,11 @@ static void activate(GtkApplication* app, gpointer user_data)
 	GtkWidget* mainWindow;
 	GtkWidget* header;
 	GtkWidget* fileButton;
+	GtkWidget* searchBar;
+	GtkWidget* entry;
+	GtkWidget* box;
 
 	mainWindow = gtk_application_window_new(app);
-	//gtk_window_set_title(GTK_WINDOW(mainWindow), "Stop Bitchin' - Start Watchin'");
 	gtk_window_set_default_size(GTK_WINDOW(mainWindow), 1200, 720);
 
 	header = gtk_header_bar_new();
@@ -32,8 +42,21 @@ static void activate(GtkApplication* app, gpointer user_data)
 	gtk_window_set_titlebar(GTK_WINDOW(mainWindow), header);
 
 	fileButton = gtk_button_new_with_label("Open a File");
-	g_signal_connect(fileButton, "clicked", G_CALLBACK(create_file_chooser_dialog), mainWindow);
+	g_signal_connect(fileButton, "clicked", G_CALLBACK(create_file_chooser_dialog_cb), mainWindow);
 	gtk_header_bar_pack_start(GTK_HEADER_BAR(header), fileButton);
+
+	searchBar = gtk_search_bar_new();
+	gtk_container_add(GTK_CONTAINER(mainWindow), searchBar);
+
+	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_container_add(GTK_CONTAINER(searchBar), box);
+
+	entry = gtk_search_entry_new();
+	gtk_box_pack_start(GTK_BOX(box), entry, TRUE, TRUE, 0);
+	gtk_search_bar_connect_entry(GTK_SEARCH_BAR(searchBar), GTK_ENTRY(entry));
+
+	g_signal_connect(mainWindow, "key-press-event", G_CALLBACK(key_press_event_cb), searchBar);
+
 	gtk_widget_show_all(mainWindow);
 }
 
