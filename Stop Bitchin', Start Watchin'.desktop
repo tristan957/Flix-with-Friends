@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Stop Bitchin', Start Watchin'
+Comment=A Family Movie Night solution by Joseph and Tristan
+Exec=/home/tristan957/Documents/Personal_Projects/LocalHack16/mainWindow
+Terminal=false
+Categories=AudioVideo;Video;
+Keywords=Movie;Movies;Video;movie;movies;
+Name[en_US]=Stop Bitchin', Start Watchin'
