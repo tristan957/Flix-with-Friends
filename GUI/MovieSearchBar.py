@@ -5,7 +5,7 @@ from gi.repository import Gtk
 class MovieSearchBar(Gtk.Box):
 	#needs a grid of GtkToggleButtons
 	def __init__(self):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 100)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
 		self.entry = Gtk.SearchEntry()
@@ -19,7 +19,7 @@ class MovieSearchBar(Gtk.Box):
 		self.yearButton = Gtk.ToggleButton(label = "Year of Release")
 		self.unviewedButton = Gtk.ToggleButton(label = "Unviewed")
 
-		self.buttonBox = Gtk.Box()
+		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 5)
 		self.buttonBox.pack_start(self.nameButton, True, True, 0)
 		self.buttonBox.pack_start(self.descriptionButton, True, True, 0)
 		self.buttonBox.pack_start(self.genreButton, True, True, 0)

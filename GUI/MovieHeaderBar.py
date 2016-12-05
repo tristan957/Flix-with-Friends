@@ -1,7 +1,6 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Gio
+from gi.repository import Gtk, Gio, GLib
 
 class MovieHeaderBar(Gtk.HeaderBar):
 
@@ -12,11 +11,19 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.fileButton.connect("file-set", self.fileButton_cb)	#connects the file-set signal to fileButton_cb
 		self.pack_start(self.fileButton)	#adds the button to the start of the headerbar
 
+		#button to display popover displaying add/delete options to data
+		#dataIcon = Gio.ThemedIcon(name="open-menu-symbolic")
+		#dataImage = Gtk.Image.new_from_gicon(dataIcon, Gtk.IconSize.BUTTON)
+		#look into popovers and how to create one
+		#self.dataPopover = Gtk.Popover
+		#self.dataButton = Gtk.MenuButton()
+
 		self.randomMovieButton = Gtk.Button(label = "Random Movie")
 		self.randomMovieButton.connect("clicked", self.randomMovieButton_cb)
 		self.pack_end(self.randomMovieButton)
 
-		self.searchImage = Gtk.Image(stock = Gtk.STOCK_FIND)	#create an image to place on the button
+		self.searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")	#create an image to place on the button
+		self.searchImage = Gtk.Image.new_from_gicon(self.searchIcon, Gtk.IconSize.BUTTON)
 		self.searchButton = Gtk.Button(image = self.searchImage)	#creates a button with an image
 		self.searchButton.connect("clicked", self.searchButton_cb)	#connects the activate signal to searchButton_cb
 		self.pack_end(self.searchButton)	#adds the button to the end of the headerbar
