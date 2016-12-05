@@ -24,9 +24,17 @@ def outputMovie(file, movie, row):
             titleID = s['id']
             daMovie = tmdb.Movies(titleID)
             response = daMovie.info()
+            # Get Genres into one line
+            genreResult = response['genres']
+            gen = ''
+            for i in range(0,len(genreResult)):
+                gen += genreResult[i]['name']
+                if i < (len(genreResult)-1):
+                    gen += ', '
             # Write info to appropriate (row,column)
             w_sheet.write(row, 0, response['title'])
             w_sheet.write(row, 2, response['runtime'])
+            w_sheet.write(row, 3, gen)
             w_sheet.write(row, 4, response['release_date'])
             w_sheet.write(row, 5, response['vote_average'])
             w_sheet.write(row, 6, response['overview'])

@@ -52,7 +52,7 @@ if len(sys.argv) > 1:
             print('URL image:',imagePage)
             urllib.request.urlretrieve(imagePage, response['title'] + '.jpg')
 
-            # print(response)
+            print(response)
 
     if i == 0:
         print(a, 'not found')
