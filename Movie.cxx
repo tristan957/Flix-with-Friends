@@ -37,7 +37,7 @@ vector<string>& Movie::get_viewers()
 
 // Input data from csv
 istream& operator>>(istream& is, Movie& m) {
-	// is >> m.title >> m.push_back(genres) >> m.push_back(actors);
+	is >> m.title;
 
 	// string title;
 	// vector<string> genres;

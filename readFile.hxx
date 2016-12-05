@@ -12,7 +12,5 @@
 using namespace std;
 
 void readFile(string file_name);
-// string input_file_name();
-// vector<vector<string>> read(string file_name);
 
 #endif
