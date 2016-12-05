@@ -46,7 +46,7 @@ if len(sys.argv) > 1:
             print('Popularity:',response['popularity'], 'million(s)')
 
             url300_450 = 'https://image.tmdb.org/t/p/w300_and_h450_bestv2'
-            imagePage = url + response['poster_path']
+            imagePage = url300_450 + response['poster_path']
             print('URL image:',imagePage)
             urllib.request.urlretrieve(imagePage, response['title'] + '.jpg')
 
