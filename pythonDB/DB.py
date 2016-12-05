@@ -7,7 +7,7 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 # TODO: need to change how it updates the entire base to, update if not a registered movie in the DB
 # TODO: need to add images if not already present for different dimentions
 
-# Excel name for DB
+# Excel filename for DB
 DATABASE = 'testing.xlsx'
 
 
@@ -40,9 +40,10 @@ def outputMovie(file, movie, row):
     wb.save(file)  # Save DB edits
 
 
-def update():
-    workbook = xlrd.open_workbook(DATABASE)
-    workbook = xlrd.open_workbook(DATABASE, on_demand=True)
+def getDict(DBfilename):
+    # This function converts all the data in the DB into a PY dictionary
+    workbook = xlrd.open_workbook(DBfilename)
+    workbook = xlrd.open_workbook(DBfilename, on_demand=True)
     worksheet = workbook.sheet_by_index(0)
     first_row = []  # The row where we stock the name of the column
     for col in range(worksheet.ncols):
@@ -54,11 +55,17 @@ def update():
         for col in range(worksheet.ncols):
             elm[first_row[col]] = worksheet.cell_value(row, col)
         data.append(elm)
-    # print(data)
+    return data
+
+
+def update(DBfilename):
+    data = {}
+    data = getDict(DBfilename)
     # Update all info about Movies
     for i, Movie in enumerate(data):
         outputMovie(DATABASE, Movie['Title'], i + 1)
         print(Movie['Title'], i)
 
+
 if __name__ == "__main__":
-    update()
+    update(DATABASE)
