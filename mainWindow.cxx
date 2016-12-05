@@ -9,7 +9,14 @@ key_press_event_cb (GtkWidget *window,
   return gtk_search_bar_handle_event (search_bar, event);
 }
 
-static void create_file_chooser_dialog_cb(GtkWidget* fileButton, gpointer mainWindow)
+static void get_filename(GtkWidget* fileButton, gpointer user_data)
+{
+
+	char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fileButton));
+	std::cout << filename << std::endl;
+}
+
+/*static void create_file_chooser_dialog_cb(GtkWidget* fileButton, gpointer mainWindow)
 {
 	GtkWidget* fileDialog;
 	fileDialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(mainWindow), GTK_FILE_CHOOSER_ACTION_OPEN, ("Cancel"), GTK_RESPONSE_CANCEL, ("Open"), GTK_FILE_CHOOSER_CONFIRMATION_ACCEPT_FILENAME, NULL);
@@ -21,7 +28,7 @@ static void create_file_chooser_dialog_cb(GtkWidget* fileButton, gpointer mainWi
 		std::cout << filename << std::endl;
 	}
 	gtk_widget_destroy(fileDialog);
-}
+}*/
 
 static void activate(GtkApplication* app, gpointer user_data)
 {
@@ -44,9 +51,13 @@ static void activate(GtkApplication* app, gpointer user_data)
 	gtk_header_bar_set_has_subtitle(GTK_HEADER_BAR(header), FALSE);
 	gtk_window_set_titlebar(GTK_WINDOW(mainWindow), header);
 
-	fileButton = gtk_button_new_with_label("Open a File");
-	g_signal_connect(fileButton, "clicked", G_CALLBACK(create_file_chooser_dialog_cb), mainWindow);
+	fileButton = gtk_file_chooser_button_new("Choose a file", GTK_FILE_CHOOSER_ACTION_OPEN);
+	g_signal_connect(fileButton, "file-set", G_CALLBACK(get_filename), NULL);
 	gtk_header_bar_pack_start(GTK_HEADER_BAR(header), fileButton);
+
+	/*fileButton = gtk_button_new_with_label("Open a File");
+	g_signal_connect(fileButton, "clicked", G_CALLBACK(create_file_chooser_dialog_cb), mainWindow);
+	gtk_header_bar_pack_start(GTK_HEADER_BAR(header), fileButton);*/
 
 	searchBar = gtk_search_bar_new();
 	gtk_container_add(GTK_CONTAINER(mainWindow), searchBar);
@@ -68,13 +79,13 @@ static void activate(GtkApplication* app, gpointer user_data)
 
 int main (int argc, char** argv)
 {
-  GtkApplication* app;
-  int status;
+	GtkApplication* app;
+	int status;
 
-  app = gtk_application_new("com.github.tristan957.stop_bitchin-start_watchin", G_APPLICATION_FLAGS_NONE);
-  g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
-  status = g_application_run(G_APPLICATION(app), argc, argv);
-  g_object_unref(app);
+	app = gtk_application_new("com.github.tristan957.stop_bitchin-start_watchin", G_APPLICATION_FLAGS_NONE);
+	g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
+	status = g_application_run(G_APPLICATION(app), argc, argv);
+	g_object_unref(app);
 
-  return status;
+	return status;
 }
