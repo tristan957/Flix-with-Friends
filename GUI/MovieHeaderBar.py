@@ -3,7 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import Gio
 
-class ProgramHeaderBar(Gtk.HeaderBar):
+class MovieHeaderBar(Gtk.HeaderBar):
 
 	def __init__(self):
 		Gtk.HeaderBar.__init__(self, title = "Stop Bitchin', Start Watchin'", show_close_button = True)
