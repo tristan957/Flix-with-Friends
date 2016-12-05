@@ -1,5 +1,7 @@
 import sys
 import tmdbsimple as tmdb
+import urllib.request
+
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
 # Initialize the search for The movie database
@@ -16,11 +18,10 @@ def file_len(fname):
             pass
     return i + 1
 
-
+# If there is an argument
 if len(sys.argv) > 1:
     arguments = sys.argv
     a = " ".join(arguments[1:])
-    # print(a)
     response = search.movie(query=a)
     i = 0
     for s in search.results:
@@ -43,7 +44,13 @@ if len(sys.argv) > 1:
             print('Release Date:', response['release_date'])
             print('Vote Average: ', response['vote_average'], '/10',sep='')
             print('Popularity:',response['popularity'], 'million(s)')
-            print(response)
+
+            url300_450 = 'https://image.tmdb.org/t/p/w300_and_h450_bestv2'
+            imagePage = url + response['poster_path']
+            print('URL image:',imagePage)
+            urllib.request.urlretrieve(imagePage, response['title'] + '.jpg')
+
+            # print(response)
 
     if i == 0:
         print(a, 'not found')
