@@ -27,7 +27,7 @@ if len(sys.argv) > 1:
     response = search.movie(query=a)
     i = 0
     for s in search.results:
-        i = 1 + i
+        i += 1
         if i == 1:
             # titleMovie = s['title']
             titleID = s['id']
@@ -47,12 +47,28 @@ if len(sys.argv) > 1:
             print('Vote Average: ', response['vote_average'], '/10',sep='')
             print('Popularity:',response['popularity'], 'million(s)')
 
-            url300_450 = 'https://image.tmdb.org/t/p/w300_and_h450_bestv2'
-            imagePage = url300_450 + response['poster_path']
-            print('URL image:',imagePage)
-            urllib.request.urlretrieve(imagePage, response['title'] + '.jpg')
+            # Images  "w92", "w154", "w185", "w342", "w500", "w780", or "original"
+            # there are other image sizes I beleive if we need
+            imgW92 = 'w92'
+            imgW154 = 'w154'
+            imgW185 = 'w185'
+            imgW342 = 'w342'
+            imgW500 = 'w500'
+            imgW780 = 'w780'
+            imgOrig = 'original'
+            img300_450 = 'w300_and_h450_bestv2'
 
-            print(response)
+            baseURL = 'https://image.tmdb.org/t/p/'
+
+            imagePage = baseURL + imgOrig + response['poster_path']
+            print('URL image:',imagePage)
+            urllib.request.urlretrieve(imagePage, response['title'] + '_' + imgOrig + '.jpg')
+
+            imagePage = baseURL + imgW92 + response['poster_path']
+            print('URL image:',imagePage)
+            urllib.request.urlretrieve(imagePage, response['title'] + '_' + imgW92 + '.jpg')
+
+            # print(response)
 
     if i == 0:
         print(a, 'not found')

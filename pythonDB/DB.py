@@ -69,10 +69,14 @@ def getDict(DBfilename):
 def update(DBfilename):
     data = {}
     data = getDict(DBfilename)
+    p = len(data)
     # Update all info about Movies
     for i, Movie in enumerate(data):
         outputMovie(DATABASE, Movie['Title'], i + 1)
-        print(Movie['Title'], i)
+        # print(Movie['Title'], i)
+        print('Percentage Complete: {0:.0f} %'.format( i/p*100))
+    print('Percentage Complete: 100 %')
+    print('Database Update Complete')
 
 
 if __name__ == "__main__":
