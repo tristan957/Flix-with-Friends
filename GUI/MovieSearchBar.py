@@ -18,29 +18,35 @@ class MovieSearchBar(Gtk.Box):
 		self.nameButton = Gtk.ToggleButton(label = "Name")
 		self.descriptionButton = Gtk.ToggleButton(label = "Description")
 		self.genreButton = Gtk.ToggleButton(label = "Genre")
-		self.yearButton = Gtk.ToggleButton(label = "Year of Release")
-		self.unviewedButton = Gtk.ToggleButton(label = "Unviewed")
+		self.dateButton = Gtk.ToggleButton(label = "Release Date")
+		self.viewedByButton = Gtk.ToggleButton(label = "Viewed By")
+		self.ratingButton = Gtk.ToggleButton(label = "Rating")
 
-		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 5)
+		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 2)
 		self.buttonBox.pack_start(self.nameButton, True, True, 0)
 		self.buttonBox.pack_start(self.descriptionButton, True, True, 0)
 		self.buttonBox.pack_start(self.genreButton, True, True, 0)
-		self.buttonBox.pack_start(self.yearButton, True, True, 0)
-		self.buttonBox.pack_start(self.unviewedButton, True, True, 0)
+		self.buttonBox.pack_start(self.dateButton, True, True, 0)
+		self.buttonBox.pack_start(self.viewedByButton, True, True, 0)
+		self.buttonBox.pack_start(self.ratingButton, True, True, 0)
 
 		self.nameButton.connect("toggled", self.searchCategories_cb)
 		self.descriptionButton.connect("toggled", self.searchCategories_cb)
 		self.genreButton.connect("toggled", self.searchCategories_cb)
-		self.yearButton.connect("toggled", self.searchCategories_cb)
-		self.unviewedButton.connect("toggled", self.searchCategories_cb)
+		self.dateButton.connect("toggled", self.searchCategories_cb)
+		self.viewedByButton.connect("toggled", self.searchCategories_cb)
+		self.ratingButton.connect("toggled", self.searchCategories_cb)
 
 		self.pack_start(self.buttonBox, True, True, 0)
 
 	def searchCategories_cb(self, searchButton):
 		if searchButton.get_active() == True:
 			self.categories.append(searchButton.get_label())
+			print(self.categories)
+
 		else:
 			self.categories.remove(searchButton.get_label())
+			print(self.categories)
 
 	def getCategories(self):
 		return self.categories
