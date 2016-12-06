@@ -9,10 +9,6 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 # Initialize the search for The movie database
 search = tmdb.Search()
 
-# Open the CSV file and read the lines
-with open("Movies.csv") as f:
-    content = f.readlines()
-
 # Func for determining lines in the CSV file
 def file_len(fname):
     with open(fname) as f:
@@ -40,12 +36,12 @@ if len(sys.argv) > 1:
             print('Overview:', response['overview'])
             gen = response['genres']
             print('Genres:', end=' ')
-            for i in range(0,len(gen)):
+            for i in range(0, len(gen)):
                 print(gen[i]['name'], end=" ")
             print()
             print('Release Date:', response['release_date'])
-            print('Vote Average: ', response['vote_average'], '/10',sep='')
-            print('Popularity:',response['popularity'], 'million(s)')
+            print('Vote Average: ', response['vote_average'], '/10', sep='')
+            print('Popularity:', response['popularity'], 'million(s)')
 
             # Images  "w92", "w154", "w185", "w342", "w500", "w780", or "original"
             # there are other image sizes I beleive if we need
@@ -61,18 +57,24 @@ if len(sys.argv) > 1:
             baseURL = 'https://image.tmdb.org/t/p/'
 
             imagePage = baseURL + imgOrig + response['poster_path']
-            print('URL image:',imagePage)
-            urllib.request.urlretrieve(imagePage, response['title'] + '_' + imgOrig + '.jpg')
+            print('URL image:', imagePage)
+            urllib.request.urlretrieve(
+                imagePage, response['title'] + '_' + imgOrig + '.jpg')
 
             imagePage = baseURL + imgW92 + response['poster_path']
-            print('URL image:',imagePage)
-            urllib.request.urlretrieve(imagePage, response['title'] + '_' + imgW92 + '.jpg')
+            print('URL image:', imagePage)
+            urllib.request.urlretrieve(
+                imagePage, response['title'] + '_' + imgW92 + '.jpg')
 
             # print(response)
 
     if i == 0:
         print(a, 'not found')
 else:
+
+    # Open the CSV file and read the lines
+    with open("Movies.csv") as f:
+        content = f.readlines()
 
     # Utilize the function
     length = file_len("Movies.csv")

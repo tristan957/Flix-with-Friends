@@ -1,3 +1,5 @@
+# TODO These methods need to be implemented into a class Database in Database.py
+
 import xlwt
 import xlrd
 from xlutils.copy import copy
@@ -73,7 +75,7 @@ def update(DBfilename):
     # Update all info about Movies
     for i, Movie in enumerate(data):
         outputMovie(DATABASE, Movie['Title'], i + 1)
-        # print(Movie['Title'], i)
+        # Display Percentage to console
         print('Percentage Complete: {0:.0f} %'.format( i/p*100))
     print('Percentage Complete: 100 %')
     print('Database Update Complete')
