@@ -7,7 +7,7 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 # TODO: need to change how it updates the entire base to, update if not a registered movie in the DB
 # TODO: need to add images if not already present for different dimentions
 
-# Excel name for DB
+# Excel filename for DB
 DATABASE = 'testing.xlsx'
 
 
@@ -24,9 +24,17 @@ def outputMovie(file, movie, row):
             titleID = s['id']
             daMovie = tmdb.Movies(titleID)
             response = daMovie.info()
+            # Get Genres into one line
+            genreResult = response['genres']
+            gen = ''
+            for i in range(0,len(genreResult)):
+                gen += genreResult[i]['name']
+                if i < (len(genreResult)-1):
+                    gen += ', '
             # Write info to appropriate (row,column)
             w_sheet.write(row, 0, response['title'])
             w_sheet.write(row, 2, response['runtime'])
+            w_sheet.write(row, 3, gen)
             w_sheet.write(row, 4, response['release_date'])
             w_sheet.write(row, 5, response['vote_average'])
             w_sheet.write(row, 6, response['overview'])
@@ -40,9 +48,10 @@ def outputMovie(file, movie, row):
     wb.save(file)  # Save DB edits
 
 
-def update():
-    workbook = xlrd.open_workbook(DATABASE)
-    workbook = xlrd.open_workbook(DATABASE, on_demand=True)
+def getDict(DBfilename):
+    # This function converts all the data in the DB into a PY dictionary
+    workbook = xlrd.open_workbook(DBfilename)
+    workbook = xlrd.open_workbook(DBfilename, on_demand=True)
     worksheet = workbook.sheet_by_index(0)
     first_row = []  # The row where we stock the name of the column
     for col in range(worksheet.ncols):
@@ -54,11 +63,21 @@ def update():
         for col in range(worksheet.ncols):
             elm[first_row[col]] = worksheet.cell_value(row, col)
         data.append(elm)
-    # print(data)
+    return data
+
+
+def update(DBfilename):
+    data = {}
+    data = getDict(DBfilename)
+    p = len(data)
     # Update all info about Movies
     for i, Movie in enumerate(data):
         outputMovie(DATABASE, Movie['Title'], i + 1)
-        print(Movie['Title'], i)
+        # print(Movie['Title'], i)
+        print('Percentage Complete: {0:.0f} %'.format( i/p*100))
+    print('Percentage Complete: 100 %')
+    print('Database Update Complete')
+
 
 if __name__ == "__main__":
-    update()
+    update(DATABASE)
