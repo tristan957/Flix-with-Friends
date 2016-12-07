@@ -5,8 +5,8 @@ def main():
     m = Movie('American Horror Story')
     print(m.title)
     db = Database('testing.xlsx')
-    db.createDictionary()
     print(db.dictionary[0]['Title'])
+    db.update()
 
 
 
