@@ -12,7 +12,7 @@ def main():
     # db.addMovie(b)
     # db.addMovie(c)
     for movie in db.movies:
-        print(movie.title)
+        print(movie.title, '-', movie.overview, '\n')
     # print(b)
     # db.update()
 

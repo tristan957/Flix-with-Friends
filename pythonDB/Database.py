@@ -5,6 +5,8 @@ from Movie import Movie
 import tmdbsimple as tmdb
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
+# FIXME: updateDB needs to be inspected to find ways to improve speed. Not sure
+# if possible
 
 class Database:
 
@@ -25,7 +27,7 @@ class Database:
     def createDictionary(self):
         # This method converts all the data in the excelDB into a Listed PY dictionary
         # Access data by self.dictionary[row]['columnName']
-        workbook = xlrd.open_workbook(self.fileName)
+        # workbook = xlrd.open_workbook(self.fileName)
         workbook = xlrd.open_workbook(self.fileName, on_demand=True)
         worksheet = workbook.sheet_by_index(0)
         first_row = []  # The row where we stock the name of the column
