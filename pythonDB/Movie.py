@@ -1,6 +1,3 @@
-import DB
-
-# DB.update(DB.DATABASE)
 
 class Movie:
     # Public variables - could be wrong, making class similiar to c++
@@ -12,8 +9,16 @@ class Movie:
     vote = 0
     overview = ''
 
-    def __init__(self, tI = '', vI = [], rU = 0, gE = []
-                , rD = '', vO = 0, oV = ''):
+    def __init__(self):
+        self.title = ''
+        self.viewers = []
+        self.runtime = 0
+        self.genres = []
+        self.release_date = ''
+        self.vote = 0
+        self.overview = ''
+
+    def __init__(self, tI='', vI=[], rU=0, gE=[], rD='', vO=0, oV=''):
         self.title = tI
         self.viewers = vI
         self.runtime = rU
@@ -22,13 +27,11 @@ class Movie:
         self.vote = vO
         self.overview = oV
 
-
-
-
-
-
-# # TESTING GROUNDS
-# m = Movie('American Horror Story', ['Joseph', 'Tristan'])
-#
-#
-# print(m.viewers)
+    def __init__(self, dictionary):
+        self.title = dictionary['Title']
+        self.viewers = dictionary['ViewedBy']
+        self.runtime = dictionary['Runtime']
+        self.genres = dictionary['Genres'].split(', ')
+        self.release_date = dictionary['ReleaseDate']
+        self.vote = dictionary['Vote']
+        self.overview = dictionary['Overview']

@@ -7,14 +7,24 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
 
 class Database:
-    fileName = ''
-    dictionary = []
 
     def __init__(self, FN):
+        self.fileName = ''
+        self.dictionary = []  # cellular array of Excel file
+        self.movies = []  # array of movies as class Movies
         self.fileName = FN
+        self.loadDB()
+
+    def loadDB(self):
         self.createDictionary()
 
+        for movie in self.dictionary:
+            self.addMovie(Movie(movie))
+            # print(movie[0])
+
     def createDictionary(self):
+        # This method converts all the data in the excelDB into a Listed PY dictionary
+        # Access data by self.dictionary[row]['columnName']
         workbook = xlrd.open_workbook(self.fileName)
         workbook = xlrd.open_workbook(self.fileName, on_demand=True)
         worksheet = workbook.sheet_by_index(0)
@@ -27,11 +37,9 @@ class Database:
             for col in range(worksheet.ncols):
                 elm[first_row[col]] = worksheet.cell_value(row, col)
             self.dictionary.append(elm)
-            # This Database.dictionary has converted all the data in the excelDB into a Listed PY dictionary
-            # Access data by dbName.dictionary[row]['columnName']
 
-    def updateMovie(self, movie, row):
-        # This method updates all columns of a movie
+    def updateMovieDB(self, movie, row):
+        # This method updates all columns of a movie in the DB
         rb = xlrd.open_workbook(self.fileName)  # Open the excel file
         wb = copy(rb)  # make a writeable copy of the open excel file
         w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
@@ -59,22 +67,24 @@ class Database:
                 w_sheet.write(row, 5, response['vote_average'])
                 w_sheet.write(row, 6, response['overview'])
         if i == 0:  # If no search results
-            print(movie, 'not found')  # Print to console
-            w_sheet.write(row, 2, 'not found')
-            w_sheet.write(row, 4, 'not found')
-            w_sheet.write(row, 5, 'not found')
-            w_sheet.write(row, 6, 'not found')
+            print(movie, 'NOT FOUND')  # Print to console
+            w_sheet.write(row, 2, 'NOT FOUND')
+            w_sheet.write(row, 3, 'NOT FOUND')
+            w_sheet.write(row, 4, 'NOT FOUND')
+            w_sheet.write(row, 5, 'NOT FOUND')
+            w_sheet.write(row, 6, 'NOT FOUND')
 
         wb.save(self.fileName)  # Save DB edits
 
-
     def update(self):
-
+        # Updates all movies' data in DB
         p = len(self.dictionary)
-        # Update all info about Movies
         for i, Movie in enumerate(self.dictionary):
-            self.updateMovie( Movie['Title'], i + 1)
+            self.updateMovieDB(Movie['Title'], i + 1)
             # Display Percentage to console
-            print('Percentage Complete: {0:.0f} %'.format( i/p*100))
+            print('Percentage Complete: {0:.0f} %'.format(i / p * 100))
         print('Percentage Complete: 100 %')
         print('Database Update Complete')
+
+    def addMovie(self, MOVIE):
+        self.movies.append(MOVIE)
