@@ -3,10 +3,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import re
 from Database import Database
-# from MovieHeaderBar import db
-
-# FIXME: Need to find the best way to get DB path from MovieHeaderBar Class
-db = Database('/home/joseph/Playground/LocalHack16/Both/testing.xlsx')
 
 
 class MovieSearchBar(Gtk.Box):
@@ -66,15 +62,15 @@ class MovieSearchBar(Gtk.Box):
         return self.categories
 
     def search_cb(self, entry):
-        # retrieve the content of the widget
-        # print(entry.get_text())
-        searchWord = entry.get_text()
+        searchWord = entry.get_text()  # retrieve the content of the widget
+        # create new DB object from global location
         db = Database(Database.location)
 
         titleSearch = 0
         descriptionSearch = 0
         genreSearch = 0
 
+        # If Value selected for search
         if any("Name" in s for s in self.categories):
             titleSearch = 1
         if any("Description" in s for s in self.categories):
@@ -88,8 +84,8 @@ class MovieSearchBar(Gtk.Box):
                 (re.search(searchWord, movie.overview, re.M | re.I))) and descriptionSearch
 
             if searchTitle or searchDescription:
-                print("Title:",movie.title)
-                print("Release Date:",movie.release_date)
-                print("Rating:",movie.vote)
-                print("Runtime:",movie.runtime)
-                print("Overview:",movie.overview, "\n")
+                print("Title:", movie.title)
+                print("Release Date:", movie.release_date)
+                print("Rating:", movie.vote)
+                print("Runtime:", movie.runtime)
+                print("Overview:", movie.overview, "\n")
