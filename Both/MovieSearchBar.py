@@ -88,5 +88,8 @@ class MovieSearchBar(Gtk.Box):
                 (re.search(searchWord, movie.overview, re.M | re.I))) and descriptionSearch
 
             if searchTitle or searchDescription:
-                print(movie.title)
-                print(movie.overview)
+                print("Title:",movie.title)
+                print("Release Date:",movie.release_date)
+                print("Rating:",movie.vote)
+                print("Runtime:",movie.runtime)
+                print("Overview:",movie.overview, "\n")
