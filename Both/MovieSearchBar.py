@@ -76,6 +76,9 @@ class MovieSearchBar(Gtk.Box):
         if any("Description" in s for s in self.categories):
             descriptionSearch = 1
 
+        if any("Release Date" in s for s in self.categories):
+            releaseSearch = 1
+
         for movie in db.movies:
             searchTitle = bool(
                 (re.search(searchWord, movie.title, re.M | re.I))) and titleSearch
@@ -83,7 +86,10 @@ class MovieSearchBar(Gtk.Box):
             searchDescription = bool(
                 (re.search(searchWord, movie.overview, re.M | re.I))) and descriptionSearch
 
-            if searchTitle or searchDescription:
+            searchRelease = bool(
+                (re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
+
+            if searchTitle or searchDescription or searchRelease:
                 print("Title:", movie.title)
                 print("Release Date:", movie.release_date)
                 print("Rating:", movie.vote)
