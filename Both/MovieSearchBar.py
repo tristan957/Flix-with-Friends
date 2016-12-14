@@ -1,6 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+import re
 from Database import Database
 
 db = Database('testing.xlsx')
@@ -62,10 +63,17 @@ class MovieSearchBar(Gtk.Box):
 
     def search_cb(self, entry):
         # retrieve the content of the widget
-        print(entry.get_text())
+        # print(entry.get_text())
+        searchWord = entry.get_text()
+
+        titleSearch = 0
+
+
+        if any("Name" in s for s in self.categories): titleSearch = 1
 
         for movie in db.movies:
-            # print(movie.title, '-', movie.overview, '\n')
-            if movie.title == entry.get_text():
+            searchTitle = bool((re.search(searchWord, movie.title, re.M|re.I))) and titleSearch
+
+            if searchTitle:
                 print(movie.title)
                 print(movie.overview)
