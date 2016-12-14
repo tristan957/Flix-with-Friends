@@ -1,9 +1,9 @@
-from Layouts.BorderPane.main_menu import *
-from Layouts.BorderPane.toolbar import *
-from Layouts.BorderPane.left import *
-from Layouts.BorderPane.middle import *
-from Layouts.BorderPane.right import *
-from Layouts.BorderPane.bottom import *
+from main_menu import *
+from toolbar import *
+from left import *
+from middle import *
+from right import *
+from bottom import *
 
 
 # Window
