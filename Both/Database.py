@@ -82,7 +82,7 @@ class Database:
             w_sheet.write(row, 2, 'NOT FOUND')
             w_sheet.write(row, 3, 'NOT FOUND')
             w_sheet.write(row, 4, 'NOT FOUND')
-            w_sheet.write(row, 5, 'NOT FOUND')
+            w_sheet.write(row, 5, '0')
             w_sheet.write(row, 6, 'NOT FOUND')
 
         wb.save(self.fileName)  # Save DB edits
