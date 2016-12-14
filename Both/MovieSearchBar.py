@@ -69,6 +69,7 @@ class MovieSearchBar(Gtk.Box):
         # retrieve the content of the widget
         # print(entry.get_text())
         searchWord = entry.get_text()
+        db = Database(Database.location)
 
         titleSearch = 0
         descriptionSearch = 0

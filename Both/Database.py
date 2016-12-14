@@ -8,8 +8,10 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 # FIXME: updateDB needs to be inspected to find ways to improve speed. Not sure
 # if possible
 
-class Database:
 
+
+class Database:
+    global test
     def __init__(self):
         self.fileName = ''
         self.dictionary = []  # cellular array of Excel file
@@ -21,6 +23,7 @@ class Database:
         self.dictionary = []  # cellular array of Excel file
         self.movies = []  # array of movies as class Movies
         self.fileName = FN
+        test = FN
         self.loadDB()
 
     def loadDB(self):

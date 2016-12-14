@@ -3,6 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
+
 class MovieHeaderBar(Gtk.HeaderBar):
 
 	def __init__(self):
@@ -42,7 +43,9 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		filename = fileButton.get_filename()
 		# db Needs to be accesed by MovieSearchBar
 		db = Database(filename)
+		Database.location = filename
 		db.loadDB()
+		# print(db.test)
 
 	def randomMovieButton_cb(self, randomMovieButton):
 		print("Random Movie")
