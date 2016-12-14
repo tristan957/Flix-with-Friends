@@ -12,7 +12,9 @@ def main():
     # db.addMovie(b)
     # db.addMovie(c)
     for movie in db.movies:
-        print(movie.title, '-', movie.overview, '\n')
+        # print(movie.title, '-', movie.overview, '\n')
+        if movie.title == "A Beautiful Mind":
+            print("FOUND IT")
     # print(b)
     # db.update()
 
