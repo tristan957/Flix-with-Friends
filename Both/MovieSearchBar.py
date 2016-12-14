@@ -6,6 +6,7 @@ from Database import Database
 
 db = Database('testing.xlsx')
 
+
 class MovieSearchBar(Gtk.Box):
     # needs a grid of GtkToggleButtons
 
@@ -15,7 +16,8 @@ class MovieSearchBar(Gtk.Box):
 
         self.categories = []
 
-        self.search = Gtk.SearchBar(search_mode_enabled=True, show_close_button=True)
+        self.search = Gtk.SearchBar(
+            search_mode_enabled=True, show_close_button=True)
         self.entry = Gtk.SearchEntry()
         self.search.connect_entry(self.entry)
         self.entry.grab_focus()
@@ -52,11 +54,11 @@ class MovieSearchBar(Gtk.Box):
     def searchCategories_cb(self, searchButton):
         if searchButton.get_active() == True:
             self.categories.append(searchButton.get_label())
-            print(self.categories)
+            # print(self.categories)
 
         else:
             self.categories.remove(searchButton.get_label())
-            print(self.categories)
+            # print(self.categories)
 
     def getCategories(self):
         return self.categories
@@ -67,13 +69,21 @@ class MovieSearchBar(Gtk.Box):
         searchWord = entry.get_text()
 
         titleSearch = 0
+        descriptionSearch = 0
+        genreSearch = 0
 
-
-        if any("Name" in s for s in self.categories): titleSearch = 1
+        if any("Name" in s for s in self.categories):
+            titleSearch = 1
+        if any("Description" in s for s in self.categories):
+            descriptionSearch = 1
 
         for movie in db.movies:
-            searchTitle = bool((re.search(searchWord, movie.title, re.M|re.I))) and titleSearch
+            searchTitle = bool(
+                (re.search(searchWord, movie.title, re.M | re.I))) and titleSearch
 
-            if searchTitle:
+            searchDescription = bool(
+                (re.search(searchWord, movie.overview, re.M | re.I))) and descriptionSearch
+
+            if searchTitle or searchDescription:
                 print(movie.title)
                 print(movie.overview)
