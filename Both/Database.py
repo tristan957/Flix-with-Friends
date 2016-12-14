@@ -10,6 +10,12 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
 class Database:
 
+    def __init__(self):
+        self.fileName = ''
+        self.dictionary = []  # cellular array of Excel file
+        self.movies = []  # array of movies as class Movies
+        self.fileName = ''
+
     def __init__(self, FN):
         self.fileName = ''
         self.dictionary = []  # cellular array of Excel file

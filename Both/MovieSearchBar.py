@@ -3,8 +3,10 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import re
 from Database import Database
+# from MovieHeaderBar import db
 
-db = Database('testing.xlsx')
+# FIXME: Need to find the best way to get DB path from MovieHeaderBar Class
+db = Database('/home/joseph/Playground/LocalHack16/Both/testing.xlsx')
 
 
 class MovieSearchBar(Gtk.Box):
