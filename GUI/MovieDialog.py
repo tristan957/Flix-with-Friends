@@ -11,7 +11,7 @@ class MovieDialog(Gtk.Window):
 		self.set_titlebar(self.header)
 
 		self.box = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 5)
-		self.entry = Gtk.Entry()
+		self.entry = Gtk.Entry(text = "Enter the name of a movie to " + action.lower())
 		self.entry.grab_focus()
 		self.box.add(self.entry)
 
@@ -20,6 +20,8 @@ class MovieDialog(Gtk.Window):
 		self.box.add(self.enterButton)
 
 		self.add(self.box)
+
+		#if the action is deleting, create an autocompletion tree
 
 	def enterButton_cb(self, enterButton):
 		self.destroy()
