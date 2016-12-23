@@ -1,6 +1,8 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+import re
+from Database import Database
 
 
 class MovieSearchBar(Gtk.Box):
@@ -59,6 +61,48 @@ class MovieSearchBar(Gtk.Box):
 	def search_cb(self, entry):
 		# retrieve the content of the widget
 		print(entry.get_text())
+		self.run_search(entry)
 
 	def search_changed_cb(self, entry):
 		print(entry.get_text())
+		self.run_search(entry)
+
+	def run_search(self,entry):
+		searchWord = entry.get_text()  # retrieve the content of the widget
+		# create new DB object from global location
+		db = Database(Database.location)
+
+		titleSearch = 0
+		descriptionSearch = 0
+		genreSearch = 0
+		releaseSearch = 0
+		ratingSearch = 0
+
+		# If Value selected for search
+		if any("Name" in s for s in self.categories):
+			titleSearch = 1
+		if any("Description" in s for s in self.categories):
+			descriptionSearch = 1
+
+		if any("Release Date" in s for s in self.categories):
+			releaseSearch = 1
+
+		if any("Rating" in s for s in self.categories):
+			ratingSearch = 1
+
+		for movie in db.movies:
+			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) and titleSearch
+
+			searchDescription = bool(
+				(re.search(searchWord, movie.overview, re.M | re.I))) and descriptionSearch
+
+			searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
+
+			# searchRating = float(float(movie.vote) >= float(searchWord)) and ratingSearch
+
+			if searchTitle or searchDescription or searchRelease:# or searchRating:
+				print("Title:", movie.title)
+				print("Release Date:", movie.release_date)
+				print("Rating:", movie.vote)
+				print("Runtime:", movie.runtime)
+				print("Overview:", movie.overview, "\n")

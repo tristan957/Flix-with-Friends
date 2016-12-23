@@ -1,13 +1,5 @@
 
 class Movie:
-	# Public variables - could be wrong, making class similiar to c++
-	title = ''
-	viewers = []
-	runtime = 0
-	genres = []
-	release_date = ''
-	vote = 0
-	overview = ''
 
 	def __init__(self):
 		self.title = ''
@@ -27,6 +19,7 @@ class Movie:
 		self.vote = vO
 		self.overview = oV
 
+	# This might be the only init needed, depends on how the add movie dialog is going to be setup
 	def __init__(self, dictionary):
 		self.title = dictionary['Title']
 		self.viewers = dictionary['ViewedBy']
