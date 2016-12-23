@@ -2,6 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from MovieDialog import MovieDialog
+from Database import Database
 
 class MovieHeaderBar(Gtk.HeaderBar):
 
@@ -42,6 +43,9 @@ class MovieHeaderBar(Gtk.HeaderBar):
 	#callback for when the fileButton is pressed
 	def fileButton_cb(self, fileButton):
 		filename = fileButton.get_filename()
+		db = Database(filename)
+		Database.location = filename
+		db.loadDB()
 
 	def randomMovieButton_cb(self, randomMovieButton):
 		print("Random Movie")

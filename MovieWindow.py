@@ -20,5 +20,4 @@ class MovieWindow(Gtk.Window):
 		reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 		header.searchButton.set_active(True)
 		reveal.set_reveal_child(True)
-		searchBar.entry.grab_focus()
 		return self.searchBar.search.handle_event(event)
