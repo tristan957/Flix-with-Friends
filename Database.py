@@ -5,8 +5,7 @@ from Movie import Movie
 import tmdbsimple as tmdb
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
-# FIXME: updateDB needs to be inspected to find ways to improve speed. Not sure
-# if possible
+# FIXME: updateDB needs to be inspected to find ways to improve speed. Not sure if possible because it seems that the laggin is due to the api pulls.
 
 
 class Database:
