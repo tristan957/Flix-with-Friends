@@ -13,8 +13,8 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.pack_start(self.fileButton)	#adds the button to the start of the headerbar
 
 		#button to display popover displaying add/delete options to data
-		dataIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
-		dataImage = Gtk.Image.new_from_gicon(dataIcon, Gtk.IconSize.BUTTON)
+		self.dataIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
+		self.dataImage = Gtk.Image.new_from_gicon(self.dataIcon, Gtk.IconSize.BUTTON)
 
 		self.addMovieButton = Gtk.ModelButton(label = "Add a Movie")
 		self.addMovieButton.connect("clicked", self.manipulate_MovieButton_cb, "Add")
@@ -23,7 +23,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dataBox.add(self.addMovieButton)
 		self.dataBox.add(self.deleteMovieButton)
-		self.dataButton = Gtk.Button(image = dataImage)
+		self.dataButton = Gtk.Button(image = self.dataImage)
 		self.dataButton.connect("clicked", self.dataButton_cb)
 		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM, relative_to = self.dataButton)
 		self.dataPopover.add(self.dataBox)
