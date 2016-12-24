@@ -98,9 +98,9 @@ class MovieSearchBar(Gtk.Box):
 
 			searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
 
-			# searchRating = float(float(movie.vote) >= float(searchWord)) and ratingSearch
+			searchRating = (str(movie.vote) >= str(searchWord)) and ratingSearch
 
-			if searchTitle or searchDescription or searchRelease:# or searchRating:
+			if searchTitle or searchDescription or searchRelease or searchRating:
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
