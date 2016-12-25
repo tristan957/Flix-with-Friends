@@ -103,5 +103,5 @@ class Database:
 
 if __name__ == "__main__":
 	db = Database('testing.xlsx')
-	db.loadDB()
-	# db.update()
+	# db.loadDB()
+	db.update()

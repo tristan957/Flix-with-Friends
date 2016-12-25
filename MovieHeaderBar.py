@@ -45,7 +45,6 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		filename = fileButton.get_filename()
 		db = Database(filename)
 		Database.location = filename
-		db.loadDB()
 
 	def randomMovieButton_cb(self, randomMovieButton):
 		print("Random Movie")
