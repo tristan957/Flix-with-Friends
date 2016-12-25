@@ -22,6 +22,7 @@ class MovieSearchBar(Gtk.Box):
 		self.entry.connect("activate", self.search_cb)
 		self.entry.connect("search-changed", self.search_changed_cb)
 
+		self.categories.append("Name")
 		self.nameButton = Gtk.ToggleButton(label = "Name", active = True)
 		self.descriptionButton = Gtk.ToggleButton(label = "Description")
 		self.genreButton = Gtk.ToggleButton(label = "Genre")
