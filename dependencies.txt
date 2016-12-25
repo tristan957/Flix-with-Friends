@@ -3,6 +3,8 @@ Python:
       xlwt
       xlrd
       tmdbsimple
+      urllib
+      sys
 
 System:
       gnome-python
