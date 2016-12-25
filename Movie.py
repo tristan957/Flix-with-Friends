@@ -5,9 +5,13 @@ import urllib.request
 
 def get_image(moviePoster):
 	if moviePoster != '':
-		url300_450 = 'https://image.tmdb.org/t/p/w300_and_h450_bestv2'
-		imagePage = url300_450 + moviePoster
-		print('URL image:',imagePage, '\n')
+		baseURL = 'https://image.tmdb.org/t/p/'
+		posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2','w342', 'w500', 'w780', 'original']
+
+		for p in posters:
+			imagePage = baseURL + p + moviePoster
+			print(p, 'poster image:',imagePage)
+		print('')
 		# urllib.request.urlretrieve(imagePage, response['title'] + '.jpg')
 
 class Movie:
