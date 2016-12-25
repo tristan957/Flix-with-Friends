@@ -1,0 +1,8 @@
+Python:
+      xlutils
+      xlwt
+      xlrd
+      tmdbsimple
+
+System:
+      gnome-python

@@ -6,7 +6,6 @@ from Database import Database
 
 
 class MovieSearchBar(Gtk.Box):
-    # needs a grid of GtkToggleButtons
 
 	def __init__(self):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
@@ -23,7 +22,7 @@ class MovieSearchBar(Gtk.Box):
 		self.entry.connect("activate", self.search_cb)
 		self.entry.connect("search-changed", self.search_changed_cb)
 
-		self.nameButton = Gtk.ToggleButton(label = "Name")
+		self.nameButton = Gtk.ToggleButton(label = "Name", active = True)
 		self.descriptionButton = Gtk.ToggleButton(label = "Description")
 		self.genreButton = Gtk.ToggleButton(label = "Genre")
 		self.dateButton = Gtk.ToggleButton(label = "Release Date")
