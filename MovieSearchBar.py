@@ -3,6 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import re
 from Database import Database
+from PosterImage import get_image
 
 
 class MovieSearchBar(Gtk.Box):
@@ -114,5 +115,9 @@ class MovieSearchBar(Gtk.Box):
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
 				print("Runtime:", movie.runtime)
-				print("Genres:",movie.genres)
-				print("Overview:", movie.overview, "\n")
+				print("Genres:",end=" ")
+				for i in range(0,len(movie.genres)):
+					print(movie.genres[i], end=" ")
+				print("")
+				print("Overview:", movie.overview)
+				get_image(movie.poster_path)
