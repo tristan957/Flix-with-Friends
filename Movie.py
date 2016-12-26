@@ -14,8 +14,7 @@ def get_image(moviePoster, movieTitle):
 			print(p, 'poster image:',imagePage)
 			filename = movieTitle.replace(" ", "") + '_' + p + '.jpg'
 			fullfilename = os.path.join('./imagePosters', filename)
-			urllib.request.urlretrieve(imagePage, fullfilename)
-			# urllib.request.urlretrieve(imagePage, './moviePosters'+ )
+			# urllib.request.urlretrieve(imagePage, fullfilename)
 		print('')
 
 class Movie:
