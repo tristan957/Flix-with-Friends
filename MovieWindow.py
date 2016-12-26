@@ -3,6 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from MovieHeaderBar import MovieHeaderBar
 from MovieSearchBar import MovieSearchBar
+from MovieBox import MovieBox
 
 class MovieWindow(Gtk.Window):
 
@@ -13,7 +14,8 @@ class MovieWindow(Gtk.Window):
 		self.searchBar = MovieSearchBar()
 		self.reveal = Gtk.Revealer(child = self.searchBar, transition_duration = 500)
 		self.box.add(self.reveal)
-		self.box.add(Gtk.Label(label = "This is a test"))
+		self.imdbBox = MovieBox()
+		self.box.add(self.imdbBox)
 		self.add(self.box)
 		self.header = MovieHeaderBar(self, self.reveal, self.searchBar)	#create headerbar
 		self.set_titlebar(self.header)	#add it to the window
