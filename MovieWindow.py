@@ -9,9 +9,12 @@ class MovieWindow(Gtk.Window):
 	def __init__(self):
 		Gtk.Window.__init__(self, title = "Stop Bitchin', Start Watchin'")
 
+		self.box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = MovieSearchBar()
 		self.reveal = Gtk.Revealer(child = self.searchBar, transition_duration = 500)
-		self.add(self.reveal)
+		self.box.add(self.reveal)
+		self.box.add(Gtk.Label(label = "This is a test"))
+		self.add(self.box)
 		self.header = MovieHeaderBar(self, self.reveal, self.searchBar)	#create headerbar
 		self.set_titlebar(self.header)	#add it to the window
 		self.connect("key-press-event", self.key_pressed_cb, self.reveal, self.searchBar, self.header)
