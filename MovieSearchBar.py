@@ -120,4 +120,4 @@ class MovieSearchBar(Gtk.Box):
 					print(movie.genres[i], end=" ")
 				print("")
 				print("Overview:", movie.overview)
-				get_image(movie.poster_path)
+				get_image(movie.poster_path,movie.title)

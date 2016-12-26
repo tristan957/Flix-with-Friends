@@ -3,7 +3,7 @@ import tmdbsimple as tmdb
 import urllib.request
 
 
-def get_image(moviePoster):
+def get_image(moviePoster, movieTitle):
 	if moviePoster != '':
 		baseURL = 'https://image.tmdb.org/t/p/'
 		posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2','w342', 'w500', 'w780', 'original']
@@ -11,8 +11,8 @@ def get_image(moviePoster):
 		for p in posters:
 			imagePage = baseURL + p + moviePoster
 			print(p, 'poster image:',imagePage)
+			urllib.request.urlretrieve(imagePage, movieTitle + p + '.jpg')
 		print('')
-		# urllib.request.urlretrieve(imagePage, response['title'] + '.jpg')
 
 class Movie:
 
