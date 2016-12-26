@@ -1,3 +1,4 @@
+import os
 import sys
 import tmdbsimple as tmdb
 import urllib.request
@@ -11,7 +12,10 @@ def get_image(moviePoster, movieTitle):
 		for p in posters:
 			imagePage = baseURL + p + moviePoster
 			print(p, 'poster image:',imagePage)
-			urllib.request.urlretrieve(imagePage, movieTitle + p + '.jpg')
+			filename = movieTitle.replace(" ", "") + '_' + p + '.jpg'
+			fullfilename = os.path.join('./imagePosters', filename)
+			urllib.request.urlretrieve(imagePage, fullfilename)
+			# urllib.request.urlretrieve(imagePage, './moviePosters'+ )
 		print('')
 
 class Movie:
