@@ -6,7 +6,7 @@ from Database import Database
 
 class MovieHeaderBar(Gtk.HeaderBar):
 
-	def __init__(self, reveal, searchBar):
+	def __init__(self, parent, reveal, searchBar):
 		Gtk.HeaderBar.__init__(self, title = "Stop Bitchin', Start Watchin'", show_close_button = True)
 
 		self.fileButton = Gtk.FileChooserButton()	#create a Gtk.FileChooserButton
@@ -18,9 +18,9 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.dataImage = Gtk.Image.new_from_gicon(self.dataIcon, Gtk.IconSize.BUTTON)
 
 		self.addMovieButton = Gtk.ModelButton(label = "Add a Movie")
-		self.addMovieButton.connect("clicked", self.manipulate_MovieButton_cb, "Add")
+		self.addMovieButton.connect("clicked", self.manipulate_MovieButton_cb, parent, "Add")
 		self.deleteMovieButton = Gtk.ModelButton(label = "Delete a Movie")
-		self.deleteMovieButton.connect("clicked", self.manipulate_MovieButton_cb, "Delete")
+		self.deleteMovieButton.connect("clicked", self.manipulate_MovieButton_cb, parent, "Delete")
 		self.dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dataBox.add(self.addMovieButton)
 		self.dataBox.add(self.deleteMovieButton)
@@ -64,8 +64,5 @@ class MovieHeaderBar(Gtk.HeaderBar):
 	def dataButton_cb(self, dataButton):
 		self.dataPopover.show_all()
 
-	def manipulate_MovieButton_cb(self, movieButton, action):
-		manipulateDialog = MovieDialog(action)
-		manipulateDialog.connect("delete-event", Gtk.main_quit)	#when delete-event signal is received, calls Gtk.main_quit
-		manipulateDialog.show_all()	#display the window and all widgets
-		Gtk.main()	#continuous function for running GTK applications
+	def manipulate_MovieButton_cb(self, movieButton, parent, action):
+		manipulateDialog = MovieDialog(parent, action)
