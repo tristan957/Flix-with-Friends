@@ -5,7 +5,7 @@ from Movie import Movie
 import tmdbsimple as tmdb
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
-# FIXME: updateDB needs to be inspected to find ways to improve speed. Not sure if possible because it seems that the laggin is due to the api pulls.
+# FIXME: Update seems to print everything twice
 
 
 class Database:
@@ -73,6 +73,8 @@ class Database:
 				w_sheet.write(row, 4, response['release_date'])
 				w_sheet.write(row, 5, response['vote_average'])
 				w_sheet.write(row, 6, response['overview'])
+				w_sheet.write(row, 7, titleID)
+				w_sheet.write(row, 8, response['poster_path'])
 
 		if i == 0:  # If no search results
 			print(movie, 'NOT FOUND')  # Print to console
@@ -81,6 +83,7 @@ class Database:
 			w_sheet.write(row, 4, 'NOT FOUND')
 			w_sheet.write(row, 5, '0')
 			w_sheet.write(row, 6, 'NOT FOUND')
+			w_sheet.write(row, 7, '0')
 
 		wb.save(self.fileName)  # Save DB edits
 
@@ -96,3 +99,9 @@ class Database:
 
 	def addMovie(self, MOVIE):
 		self.movies.append(MOVIE)
+
+
+if __name__ == "__main__":
+	db = Database('testing.xlsx')
+	# db.loadDB()
+	db.update()
