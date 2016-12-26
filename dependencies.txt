@@ -5,6 +5,7 @@ Python:
       tmdbsimple
       urllib
       sys
+      os
 
 System:
       gnome-python
