@@ -16,7 +16,10 @@ def get_image(moviePoster, movieTitle):
 			print(p, 'poster image:',imagePage)
 			filename = movieTitle.replace(" ", "") + '_' + p + '.jpg'
 			fullfilename = os.path.join('./imagePosters', filename)
-			# urllib.request.urlretrieve(imagePage, fullfilename)
+			# if not already existent, download
+			if not(os.path.isfile(fullfilename)):
+				# COMMENT ME OUT TO NOT DOWNLOAD EVERYTHING
+				urllib.request.urlretrieve(imagePage, fullfilename)
 		print('')
 
 class Movie:
