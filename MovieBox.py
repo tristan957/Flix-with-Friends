@@ -11,7 +11,7 @@ class MovieBox(Gtk.Box):
         self.imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
         self.infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
 
-        self.titleLabel = Gtk.Label(label = "Iron Man", justify = Gtk.Justification.CENTER)
+        self.titleLabel = Gtk.Label(label = "<big>Iron Man</big>", justify = Gtk.Justification.CENTER, use_markup = True)
         self.poster = Gtk.Image(file = "./imagePosters/SavingPrivateRyan_w154.jpg")
         self.viewedLabel = Gtk.Label(label = "Viewed By: T, C, G, A, M, P", justify = Gtk.Justification.LEFT)
         self.viewedLabel.set_xalign(0)
