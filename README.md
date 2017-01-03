@@ -13,4 +13,7 @@
 ## How to Use
 *(Insert App Usage)*
 
+## How to Install
+*(Insert Instructions)*
+
 ## Future Development?
