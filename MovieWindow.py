@@ -8,7 +8,7 @@ from MovieBox import MovieBox
 class MovieWindow(Gtk.Window):
 
 	def __init__(self):
-		Gtk.Window.__init__(self, title = "Stop Bitchin', Start Watchin'")
+		Gtk.Window.__init__(self, title = "Flix with Friends")
 
 		self.box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = MovieSearchBar()

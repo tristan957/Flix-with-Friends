@@ -24,10 +24,10 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dataBox.add(self.addMovieButton)
 		self.dataBox.add(self.deleteMovieButton)
-		self.dataButton = Gtk.Button(image = self.dataImage)
-		self.dataButton.connect("clicked", self.dataButton_cb)
-		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM, relative_to = self.dataButton)
+		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)#, relative_to = self.dataButton)
 		self.dataPopover.add(self.dataBox)
+		self.dataButton = Gtk.MenuButton(image = self.dataImage, use_popover = True, popover = self.dataPopover)
+		self.dataButton.connect("clicked", self.dataButton_cb)
 		self.pack_end(self.dataButton)
 
 		self.randomMovieButton = Gtk.Button(label = "Random Movie")
