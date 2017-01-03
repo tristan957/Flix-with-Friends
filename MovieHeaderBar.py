@@ -2,12 +2,13 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from MovieDialog import MovieDialog
+from FriendDialog import FriendDialog
 from Database import Database
 
 class MovieHeaderBar(Gtk.HeaderBar):
 
 	def __init__(self, parent, reveal, searchBar):
-		Gtk.HeaderBar.__init__(self, title = "Stop Bitchin', Start Watchin'", show_close_button = True)
+		Gtk.HeaderBar.__init__(self, title = "Flix with Friends", show_close_button = True)
 
 		self.fileButton = Gtk.FileChooserButton()	#create a Gtk.FileChooserButton
 		self.fileButton.connect("file-set", self.fileButton_cb)	#connects the file-set signal to fileButton_cb
@@ -18,12 +19,20 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.dataImage = Gtk.Image.new_from_gicon(self.dataIcon, Gtk.IconSize.BUTTON)
 
 		self.addMovieButton = Gtk.ModelButton(label = "Add a Movie")
-		self.addMovieButton.connect("clicked", self.manipulate_MovieButton_cb, parent, "Add")
+		self.addMovieButton.connect("clicked", self.manipulateMovieButton_cb, parent, "Add")
 		self.deleteMovieButton = Gtk.ModelButton(label = "Delete a Movie")
-		self.deleteMovieButton.connect("clicked", self.manipulate_MovieButton_cb, parent, "Delete")
+		self.deleteMovieButton.connect("clicked", self.manipulateMovieButton_cb, parent, "Delete")
+		self.dataSeparator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+		self.addFriendButton = Gtk.ModelButton(label = "Add a Friend")
+		self.addFriendButton.connect("clicked", self.manipulateFriend_cb, parent, "Add")
+		self.deleteFriendButton = Gtk.ModelButton(label = "Delete a Friend")
+		self.deleteFriendButton.connect("clicked", self.manipulateFriend_cb, parent, "Delete")
 		self.dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dataBox.add(self.addMovieButton)
 		self.dataBox.add(self.deleteMovieButton)
+		self.dataBox.add(self.dataSeparator)
+		self.dataBox.add(self.addFriendButton)
+		self.dataBox.add(self.deleteFriendButton)
 		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)#, relative_to = self.dataButton)
 		self.dataPopover.add(self.dataBox)
 		self.dataButton = Gtk.MenuButton(image = self.dataImage, use_popover = True, popover = self.dataPopover)
@@ -63,5 +72,8 @@ class MovieHeaderBar(Gtk.HeaderBar):
 	def dataButton_cb(self, dataButton):
 		self.dataPopover.show_all()
 
-	def manipulate_MovieButton_cb(self, movieButton, parent, action):
+	def manipulateMovieButton_cb(self, movieButton, parent, action):
 		manipulateDialog = MovieDialog(parent, action)
+
+	def manipulateFriend_cb(self, friendButton, parent, action):
+		manipulateDialog = FriendDialog(parent, action)
