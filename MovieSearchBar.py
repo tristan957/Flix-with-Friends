@@ -4,7 +4,7 @@ from gi.repository import Gtk
 import re
 from Database import Database
 from Movie import get_image
-
+from friends import getFriends
 
 class MovieSearchBar(Gtk.Box):
 
@@ -24,29 +24,37 @@ class MovieSearchBar(Gtk.Box):
 		self.entry.connect("search-changed", self.search_changed_cb)
 
 		self.categories.append("Name")
+
+		self.viewedByPopover = Gtk.Popover()
+		self.viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		friendsList = getFriends()
+		for friend in friendsList:
+			self.viewedByBox.add(Gtk.CheckButton(label = friend))
+		self.viewedByPopover.add(self.viewedByBox)
+
 		self.nameButton = Gtk.ToggleButton(label = "Name", active = True)
 		self.descriptionButton = Gtk.ToggleButton(label = "Description")
 		self.genreButton = Gtk.ToggleButton(label = "Genre")
 		self.dateButton = Gtk.ToggleButton(label = "Release Date")
-		self.viewedByButton = Gtk.ToggleButton(label = "Viewed By")
+		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
 		self.ratingButton = Gtk.ToggleButton(label = "Rating")
 
 		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 2)
-		self.buttonBox.pack_start(self.nameButton, True, True, 0)
-		self.buttonBox.pack_start(self.descriptionButton, True, True, 0)
-		self.buttonBox.pack_start(self.genreButton, True, True, 0)
-		self.buttonBox.pack_start(self.dateButton, True, True, 0)
-		self.buttonBox.pack_start(self.viewedByButton, True, True, 0)
-		self.buttonBox.pack_start(self.ratingButton, True, True, 0)
+		self.buttonBox.add(self.nameButton)
+		self.buttonBox.add(self.descriptionButton)
+		self.buttonBox.add(self.genreButton)
+		self.buttonBox.add(self.dateButton)
+		self.buttonBox.add(self.viewedByButton)
+		self.buttonBox.add(self.ratingButton)
 
 		self.nameButton.connect("toggled", self.searchCategories_cb)
 		self.descriptionButton.connect("toggled", self.searchCategories_cb)
 		self.genreButton.connect("toggled", self.searchCategories_cb)
 		self.dateButton.connect("toggled", self.searchCategories_cb)
-		self.viewedByButton.connect("toggled", self.searchCategories_cb)
+		self.viewedByButton.connect("clicked", self.viewedBy_cb)
 		self.ratingButton.connect("toggled", self.searchCategories_cb)
 
-		self.pack_start(self.buttonBox, True, True, 0)
+		self.add(self.buttonBox)
 
 	def searchCategories_cb(self, searchButton):
 		if searchButton.get_active() == True:
@@ -67,6 +75,9 @@ class MovieSearchBar(Gtk.Box):
 	def search_changed_cb(self, entry):
 		print(entry.get_text())
 		self.run_search(entry)
+
+	def viewedBy_cb(self, viewedByButton):
+		self.viewedByPopover.show_all()
 
 	def run_search(self,entry):
 		searchWord = entry.get_text()  # retrieve the content of the widget
