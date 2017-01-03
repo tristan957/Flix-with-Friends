@@ -14,12 +14,14 @@ class Database:
 		self.fileName = ''
 		self.dictionary = []  # cellular array of Excel file
 		self.movies = []  # array of movies as class Movies
+		self.listGenres = []
 
 	def __init__(self, FN):
 		self.fileName = ''
 		self.dictionary = []  # cellular array of Excel file
 		self.movies = []  # array of movies as class Movies
 		self.fileName = FN
+		self.listGenres = []
 		# location = FN - doesn't work
 		self.loadDB()
 
@@ -98,6 +100,10 @@ class Database:
 		print('Database Update Complete')
 
 	def addMovie(self, MOVIE):
+		for g in MOVIE.genres:
+			if g not in self.listGenres:
+				(self.listGenres).append(g)
+
 		self.movies.append(MOVIE)
 
 

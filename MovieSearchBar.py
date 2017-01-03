@@ -95,6 +95,7 @@ class MovieSearchBar(Gtk.Box):
 		if any("Genre" in s for s in self.categories):
 			genreSearch = 1
 
+		print(db.listGenres)
 		for movie in db.movies:
 			ratingSearchCheck = 0
 
