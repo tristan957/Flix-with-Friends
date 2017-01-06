@@ -13,6 +13,7 @@ class MovieSearchBar(Gtk.Box):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
 
 		self.categories = []
+		self.db = Database(Database.location)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
 		self.entry = Gtk.SearchEntry()
@@ -21,10 +22,17 @@ class MovieSearchBar(Gtk.Box):
 		self.pack_start(self.entry, True, True, 0)
 
 		# Callback for when enter key is pressed
-		self.entry.connect("activate", self.search_cb)
-		self.entry.connect("search-changed", self.search_changed_cb)
+		self.entry.connect("activate", self.search_cb, self.db)
+		self.entry.connect("search-changed", self.search_changed_cb, self.db)
 
 		self.categories.append("Name")
+
+		self.genrePopover = Gtk.Popover()
+		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		genres = db.listGenres()
+		for genre in genres:
+			self.genreBox.add(Gtk.CheckButton(label = genre))
+		self.genrePopover.add(self.genreBox)
 
 		self.viewedByPopover = Gtk.Popover()
 		self.viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
@@ -35,7 +43,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.nameButton = Gtk.ToggleButton(label = "Name", active = True)
 		self.descriptionButton = Gtk.ToggleButton(label = "Description")
-		self.genreButton = Gtk.ToggleButton(label = "Genre")
+		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
 		self.dateButton = Gtk.ToggleButton(label = "Release Date")
 		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
 		self.ratingButton = Gtk.ToggleButton(label = "Rating")
@@ -68,22 +76,21 @@ class MovieSearchBar(Gtk.Box):
 	def getCategories(self):
 		return self.categories
 
-	def search_cb(self, entry):
+	def search_cb(self, entry, db):
 		# retrieve the content of the widget
 		print(entry.get_text())
-		self.run_search(entry)
+		self.run_search(entry, db)
 
-	def search_changed_cb(self, entry):
+	def search_changed_cb(self, entry, db):
 		print(entry.get_text())
-		self.run_search(entry)
+		self.run_search(entry, db)
 
 	def viewedBy_cb(self, viewedByButton):
 		self.viewedByPopover.show_all()
 
-	def run_search(self, entry):
+	def run_search(self, entry, db):
 		searchWord = entry.get_text()  # retrieve the content of the widget
 		# create new DB object from global location
-		db = Database(Database.location)
 
 		titleSearch = 0
 		descriptionSearch = 0
