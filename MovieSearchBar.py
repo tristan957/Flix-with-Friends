@@ -6,6 +6,7 @@ from Database import Database
 from Movie import get_image
 from friends import getFriends
 
+
 class MovieSearchBar(Gtk.Box):
 
 	def __init__(self):
@@ -57,7 +58,7 @@ class MovieSearchBar(Gtk.Box):
 		self.add(self.buttonBox)
 
 	def searchCategories_cb(self, searchButton):
-		if searchButton.get_active() == True:
+		if searchButton.get_active() is True:
 			self.categories.append(searchButton.get_label())
 			print(self.categories)
 		else:
@@ -79,7 +80,7 @@ class MovieSearchBar(Gtk.Box):
 	def viewedBy_cb(self, viewedByButton):
 		self.viewedByPopover.show_all()
 
-	def run_search(self,entry):
+	def run_search(self, entry):
 		searchWord = entry.get_text()  # retrieve the content of the widget
 		# create new DB object from global location
 		db = Database(Database.location)
@@ -127,9 +128,9 @@ class MovieSearchBar(Gtk.Box):
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
 				print("Runtime:", movie.runtime)
-				print("Genres:",end=" ")
-				for i in range(0,len(movie.genres)):
+				print("Genres:", end=" ")
+				for i in range(0, len(movie.genres)):
 					print(movie.genres[i], end=" ")
 				print("")
 				print("Overview:", movie.overview)
-				get_image(movie.poster_path,movie.title)
+				get_image(movie.poster_path, movie.title)
