@@ -50,6 +50,7 @@ class MovieWindow(Gtk.Window):
 		fileChooser.add_button("Open", Gtk.FileChooserAction.OPEN)
 		fileChooser.add_button("Cancel", Gtk.ResponseType.CANCEL)
 		fileChooser.set_transient_for(self)
+		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 		if fileChooser.run() is 0:
 			location = fileChooser.get_filename()
 
@@ -57,3 +58,11 @@ class MovieWindow(Gtk.Window):
 
 			self.remove(self.chooser)
 			self.createMovieFramework(location)
+
+	def doubleClickEnter_cb(self, fileChooser):
+		location = fileChooser.get_filename()
+
+		fileChooser.destroy()
+
+		self.remove(self.chooser)
+		self.createMovieFramework(location)
