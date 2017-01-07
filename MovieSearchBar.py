@@ -9,17 +9,17 @@ from friends import getFriends
 
 class MovieSearchBar(Gtk.Box):
 
-	def __init__(self):
+	def __init__(self, location):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
 
 		self.categories = []
-		self.db = Database(Database.location)
+		self.db = Database(location)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
 		self.entry = Gtk.SearchEntry()
 		self.search.connect_entry(self.entry)
 		self.entry.grab_focus()
-		self.pack_start(self.entry, True, True, 0)
+		self.add(self.entry)
 
 		# Callback for when enter key is pressed
 		self.entry.connect("activate", self.search_cb, self.db)
@@ -29,8 +29,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.genrePopover = Gtk.Popover()
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		genres = db.listGenres()
-		for genre in genres:
+		for genre in self.db.listGenres:
 			self.genreBox.add(Gtk.CheckButton(label = genre))
 		self.genrePopover.add(self.genreBox)
 
@@ -102,6 +101,7 @@ class MovieSearchBar(Gtk.Box):
 		# If Value selected for search
 		if any("Name" in s for s in self.categories):
 			titleSearch = 1
+
 		if any("Description" in s for s in self.categories):
 			descriptionSearch = 1
 
@@ -117,13 +117,9 @@ class MovieSearchBar(Gtk.Box):
 		print(db.listGenres)
 		for movie in db.movies:
 			ratingSearchCheck = 0
-
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) and titleSearch
-
 			searchDescription = bool((re.search(searchWord, movie.overview, re.M | re.I))) and descriptionSearch
-
 			searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
-
 			searchRating = (str(movie.vote) >= str(searchWord)) and ratingSearch
 
 			if any(searchWord.upper() in s.upper() for s in movie.genres):
