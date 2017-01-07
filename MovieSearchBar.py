@@ -14,6 +14,8 @@ class MovieSearchBar(Gtk.Box):
 
 		self.categories = []
 		self.db = Database(location)
+		print(location)
+		print(self.db.listGenres)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
 		self.entry = Gtk.SearchEntry()
