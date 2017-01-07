@@ -59,7 +59,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		if searchButton.get_active() is True:
 			reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 			reveal.set_reveal_child(True)
-			searchBar.entry.grab_focus()
+			searchBar.searchEntry.grab_focus()
 		else:
 			reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
 			reveal.set_reveal_child(False)
