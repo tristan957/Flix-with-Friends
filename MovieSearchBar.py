@@ -25,8 +25,6 @@ class MovieSearchBar(Gtk.Box):
 		self.searchEntry.connect("activate", self.search_cb, self.db)
 		self.searchEntry.connect("search-changed", self.search_changed_cb, self.db)
 
-		self.categories.append("Name")
-
 		self.genrePopover = Gtk.Popover()
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
@@ -53,23 +51,17 @@ class MovieSearchBar(Gtk.Box):
 			self.viewedByBox.add(Gtk.CheckButton(label = friend))
 		self.viewedByPopover.add(self.viewedByBox)
 
-		self.nameButton = Gtk.ToggleButton(label = "Name", active = True)
-		self.descriptionButton = Gtk.ToggleButton(label = "Description")
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
 		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
 		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
 		self.ratingButton = Gtk.ToggleButton(label = "Rating")
 
 		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 2)
-		self.buttonBox.add(self.nameButton)
-		self.buttonBox.add(self.descriptionButton)
 		self.buttonBox.add(self.genreButton)
 		self.buttonBox.add(self.dateButton)
 		self.buttonBox.add(self.viewedByButton)
 		self.buttonBox.add(self.ratingButton)
 
-		self.nameButton.connect("toggled", self.searchCategories_cb)
-		self.descriptionButton.connect("toggled", self.searchCategories_cb)
 		self.genreButton.connect("toggled", self.genre_cb)
 		self.dateButton.connect("toggled", self.releasedBy_cb)
 		self.viewedByButton.connect("clicked", self.viewedBy_cb)
