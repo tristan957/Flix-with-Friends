@@ -16,7 +16,7 @@ class MovieSearchBar(Gtk.Box):
 		self.db = Database(location)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
-		self.searchEntry = Gtk.SearchEntry()
+		self.entry = Gtk.SearchEntry()
 		self.search.connect_entry(self.entry)
 		self.entry.grab_focus()
 		self.add(self.entry)
@@ -35,7 +35,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.datePopover = Gtk.Popover()
 		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		self.dateEntry = Gtk.Entry()
+		self.entry = Gtk.Entry()
 		self.entry.set_text("Enter a year")
 		self.dateAfter = Gtk.CheckButton(label = "Search for movies produced\nonly in the year above")
 		self.dateBox.add(self.entry)
@@ -97,7 +97,6 @@ class MovieSearchBar(Gtk.Box):
 		self.genrePopover.show_all()
 
 	def releasedBy_cb(self, dateButton):
-		self.entry.grab_focus()
 		self.datePopover.show_all()
 
 	def viewedBy_cb(self, viewedByButton):
