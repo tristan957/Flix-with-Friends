@@ -33,6 +33,7 @@ class MovieSearchBar(Gtk.Box):
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
 			self.genreBox.add(Gtk.CheckButton(label = genre))
+			print(genre)
 		self.genrePopover.add(self.genreBox)
 
 		self.viewedByPopover = Gtk.Popover()
