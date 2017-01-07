@@ -58,7 +58,6 @@ class MovieWindow(Gtk.Window):
 			self.createMovieFramework(location)
 		else:
 			fileChooser.destroy()
-			self.remove(self.chooser)
 
 	def doubleClickEnter_cb(self, fileChooser):
 		location = fileChooser.get_filename()
