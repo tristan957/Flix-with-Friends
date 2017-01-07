@@ -53,17 +53,15 @@ class MovieWindow(Gtk.Window):
 		fileChooser.set_transient_for(self)
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 		if fileChooser.run() is 0:
-			Database.location = fileChooser.get_filename()
-
+			location = fileChooser.get_filename()
 			fileChooser.destroy()
-
 			self.remove(self.chooser)
-			self.createMovieFramework(Database.location)
+			self.createMovieFramework(location)
+		else:
+			fileChooser.destroy()
 
 	def doubleClickEnter_cb(self, fileChooser):
 		location = fileChooser.get_filename()
-
 		fileChooser.destroy()
-
 		self.remove(self.chooser)
 		self.createMovieFramework(location)
