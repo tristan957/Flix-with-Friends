@@ -5,6 +5,7 @@ from MovieHeaderBar import MovieHeaderBar
 from MovieSearchBar import MovieSearchBar
 from MovieBox import MovieBox
 from FileChooserBox import FileChooserBox
+from Database import Database
 
 class MovieWindow(Gtk.Window):
 
@@ -52,11 +53,12 @@ class MovieWindow(Gtk.Window):
 		fileChooser.set_transient_for(self)
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 		if fileChooser.run() is 0:
-			location = fileChooser.get_filename()
+			Database.location = fileChooser.get_filename()
 
-		fileChooser.destroy()
-		self.remove(self.chooser)
-		self.createMovieFramework(location)
+			fileChooser.destroy()
+
+			self.remove(self.chooser)
+			self.createMovieFramework(Database.location)
 
 	def doubleClickEnter_cb(self, fileChooser):
 		location = fileChooser.get_filename()
