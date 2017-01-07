@@ -9,22 +9,38 @@ from friends import getFriends
 
 class MovieSearchBar(Gtk.Box):
 
-	def __init__(self):
+	def __init__(self, location):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
 
 		self.categories = []
+		self.db = Database(location)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
-		self.entry = Gtk.SearchEntry()
-		self.search.connect_entry(self.entry)
-		self.entry.grab_focus()
-		self.pack_start(self.entry, True, True, 0)
+		self.searchEntry = Gtk.SearchEntry()
+		self.search.connect_entry(self.searchEntry)
+		self.searchEntry.grab_focus()
+		self.add(self.searchEntry)
 
 		# Callback for when enter key is pressed
-		self.entry.connect("activate", self.search_cb)
-		self.entry.connect("search-changed", self.search_changed_cb)
+		self.searchEntry.connect("activate", self.search_cb, self.db)
+		self.searchEntry.connect("search-changed", self.search_changed_cb, self.db)
 
 		self.categories.append("Name")
+
+		self.genrePopover = Gtk.Popover()
+		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		for genre in self.db.listGenres:
+			self.genreBox.add(Gtk.CheckButton(label = genre))
+		self.genrePopover.add(self.genreBox)
+
+		self.datePopover = Gtk.Popover()
+		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		self.dateEntry = Gtk.Entry()
+		self.dateEntry.set_text("Enter a year")
+		self.dateAfter = Gtk.CheckButton(label = "Search for movies produced\nonly in the year above")
+		self.dateBox.add(self.dateEntry)
+		self.dateBox.add(self.dateAfter)
+		self.datePopover.add(self.dateBox)
 
 		self.viewedByPopover = Gtk.Popover()
 		self.viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
@@ -35,8 +51,8 @@ class MovieSearchBar(Gtk.Box):
 
 		self.nameButton = Gtk.ToggleButton(label = "Name", active = True)
 		self.descriptionButton = Gtk.ToggleButton(label = "Description")
-		self.genreButton = Gtk.ToggleButton(label = "Genre")
-		self.dateButton = Gtk.ToggleButton(label = "Release Date")
+		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
+		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
 		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
 		self.ratingButton = Gtk.ToggleButton(label = "Rating")
 
@@ -50,8 +66,8 @@ class MovieSearchBar(Gtk.Box):
 
 		self.nameButton.connect("toggled", self.searchCategories_cb)
 		self.descriptionButton.connect("toggled", self.searchCategories_cb)
-		self.genreButton.connect("toggled", self.searchCategories_cb)
-		self.dateButton.connect("toggled", self.searchCategories_cb)
+		self.genreButton.connect("toggled", self.genre_cb)
+		self.dateButton.connect("toggled", self.releasedBy_cb)
 		self.viewedByButton.connect("clicked", self.viewedBy_cb)
 		self.ratingButton.connect("toggled", self.searchCategories_cb)
 
@@ -68,22 +84,27 @@ class MovieSearchBar(Gtk.Box):
 	def getCategories(self):
 		return self.categories
 
-	def search_cb(self, entry):
+	def search_cb(self, entry, db):
 		# retrieve the content of the widget
 		print(entry.get_text())
-		self.run_search(entry)
+		self.run_search(entry, db)
 
-	def search_changed_cb(self, entry):
+	def search_changed_cb(self, entry, db):
 		print(entry.get_text())
-		self.run_search(entry)
+		self.run_search(entry, db)
+
+	def genre_cb(self, genreButton):
+		self.genrePopover.show_all()
+
+	def releasedBy_cb(self, dateButton):
+		self.datePopover.show_all()
 
 	def viewedBy_cb(self, viewedByButton):
 		self.viewedByPopover.show_all()
 
-	def run_search(self, entry):
+	def run_search(self, entry, db):
 		searchWord = entry.get_text()  # retrieve the content of the widget
 		# create new DB object from global location
-		db = Database(Database.location)
 
 		titleSearch = 0
 		descriptionSearch = 0
@@ -95,6 +116,7 @@ class MovieSearchBar(Gtk.Box):
 		# If Value selected for search
 		if any("Name" in s for s in self.categories):
 			titleSearch = 1
+
 		if any("Description" in s for s in self.categories):
 			descriptionSearch = 1
 
@@ -110,13 +132,9 @@ class MovieSearchBar(Gtk.Box):
 		print(db.listGenres)
 		for movie in db.movies:
 			ratingSearchCheck = 0
-
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) and titleSearch
-
 			searchDescription = bool((re.search(searchWord, movie.overview, re.M | re.I))) and descriptionSearch
-
 			searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
-
 			searchRating = (str(movie.vote) >= str(searchWord)) and ratingSearch
 
 			if any(searchWord.upper() in s.upper() for s in movie.genres):

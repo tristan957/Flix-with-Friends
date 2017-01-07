@@ -10,11 +10,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 	def __init__(self, parent, reveal, searchBar):
 		Gtk.HeaderBar.__init__(self, title = "Flix with Friends", show_close_button = True)
 
-		self.fileButton = Gtk.FileChooserButton()	#create a Gtk.FileChooserButton
-		self.fileButton.connect("file-set", self.fileButton_cb)	#connects the file-set signal to fileButton_cb
-		self.pack_start(self.fileButton)	#adds the button to the start of the headerbar
-
-		#button to display popover displaying add/delete options to data
+		# button to display popover displaying add/delete options to data
 		self.dataIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
 		self.dataImage = Gtk.Image.new_from_gicon(self.dataIcon, Gtk.IconSize.BUTTON)
 
@@ -33,7 +29,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.dataBox.add(self.dataSeparator)
 		self.dataBox.add(self.addFriendButton)
 		self.dataBox.add(self.deleteFriendButton)
-		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)#, relative_to = self.dataButton)
+		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)  # , relative_to = self.dataButton)
 		self.dataPopover.add(self.dataBox)
 		self.dataButton = Gtk.MenuButton(image = self.dataImage, use_popover = True, popover = self.dataPopover)
 		self.dataButton.connect("clicked", self.dataButton_cb)
@@ -41,15 +37,15 @@ class MovieHeaderBar(Gtk.HeaderBar):
 
 		self.randomMovieButton = Gtk.Button(label = "Random Movie")
 		self.randomMovieButton.connect("clicked", self.randomMovieButton_cb)
-		self.pack_end(self.randomMovieButton)
+		self.pack_start(self.randomMovieButton)
 
-		self.searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")	#create an image to place on the button
+		self.searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")  # create an image to place on the button
 		self.searchImage = Gtk.Image.new_from_gicon(self.searchIcon, Gtk.IconSize.BUTTON)
-		self.searchButton = Gtk.ToggleButton(image = self.searchImage)	#creates a button with an image
-		self.searchButton.connect("clicked", self.searchButton_cb, reveal, searchBar)	#connects the activate signal to searchButton_cb
-		self.pack_end(self.searchButton)	#adds the button to the end of the headerbar
+		self.searchButton = Gtk.ToggleButton(image = self.searchImage)  # creates a button with an image
+		self.searchButton.connect("clicked", self.searchButton_cb, reveal, searchBar)  # connects the activate signal to searchButton_cb
+		self.pack_end(self.searchButton)  # adds the button to the end of the headerbar
 
-	#callback for when the fileButton is pressed
+	# callback for when the fileButton is pressed
 	def fileButton_cb(self, fileButton):
 		filename = fileButton.get_filename()
 		db = Database(filename)
@@ -58,12 +54,12 @@ class MovieHeaderBar(Gtk.HeaderBar):
 	def randomMovieButton_cb(self, randomMovieButton):
 		print("Random Movie")
 
-	#callback for when the searchButton is pressed
+	# callback for when the searchButton is pressed
 	def searchButton_cb(self, searchButton, reveal, searchBar):
-		if searchButton.get_active() == True:
+		if searchButton.get_active() is True:
 			reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 			reveal.set_reveal_child(True)
-			searchBar.entry.grab_focus()
+			searchBar.searchEntry.grab_focus()
 		else:
 			reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
 			reveal.set_reveal_child(False)
