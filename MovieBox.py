@@ -3,7 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
-MOVIE_INDEX = 0
+MOVIE_INDEX = 58
 
 
 class MovieBox(Gtk.Box):
@@ -41,18 +41,22 @@ class MovieBox(Gtk.Box):
         self.add(self.infoBox)
 
     def generateDescription(self, descriptionText):
-        CHARACTERS_IN_LINE = 35 #Numbers of chars before inserting \n
+        CHARACTERS_IN_LINE = 45 #Numbers of chars before inserting \n
         TAB = 18 * ' '
-        i = 0
+        i = len(TAB)
+        FLAG = True
         while i < len(descriptionText):
             i += 1
             if (i % CHARACTERS_IN_LINE) == 0:
+                if FLAG:
+                    i -= len(TAB)
+                    FLAG = False
                 while descriptionText[i] != ' ':
                     if i < len(descriptionText)-1:
                         i += 1
                     else: break
                 descriptionText = descriptionText[:i] + '\n' + TAB + descriptionText[i:]
                 i += len(TAB)
-                CHARACTERS_IN_LINE += len(TAB)
+                FLAG = True
 
         return descriptionText
