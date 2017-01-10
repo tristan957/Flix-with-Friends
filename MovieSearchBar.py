@@ -12,7 +12,8 @@ class MovieSearchBar(Gtk.Box):
 	def __init__(self, location):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
 
-		self.categories = []
+		self.genres = []
+		self.friends = []
 		self.db = Database(location)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
@@ -23,12 +24,14 @@ class MovieSearchBar(Gtk.Box):
 
 		# Callback for when enter key is pressed
 		self.searchEntry.connect("activate", self.search_cb, self.db)
-		self.searchEntry.connect("search-changed", self.search_changed_cb, self.db)
+		self.searchEntry.connect("search-changed", self.search_cb, self.db)
 
 		self.genrePopover = Gtk.Popover()
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
-			self.genreBox.add(Gtk.CheckButton(label = genre))
+			butt = Gtk.CheckButton(label = genre)
+			self.genreBox.add(butt)
+			butt.connect("toggled", self.genresList_cb)
 		self.genrePopover.add(self.genreBox)
 
 		self.datePopover = Gtk.Popover()
@@ -46,9 +49,10 @@ class MovieSearchBar(Gtk.Box):
 
 		self.viewedByPopover = Gtk.Popover()
 		self.viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		friendsList = getFriends()
-		for friend in friendsList:
-			self.viewedByBox.add(Gtk.CheckButton(label = friend))
+		for friend in getFriends():
+			butt = Gtk.CheckButton(label = friend)
+			self.viewedByBox.add(butt)
+			butt.connect("toggled", self.friendsList_cb)
 		self.viewedByPopover.add(self.viewedByBox)
 
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
@@ -64,29 +68,25 @@ class MovieSearchBar(Gtk.Box):
 
 		self.genreButton.connect("toggled", self.genre_cb)
 		self.dateButton.connect("toggled", self.releasedBy_cb)
-		self.viewedByButton.connect("clicked", self.viewedBy_cb)
-		self.ratingButton.connect("toggled", self.searchCategories_cb)
+		self.viewedByButton.connect("toggled", self.viewedBy_cb)
+		# self.ratingButton.connect("toggled", self.searchCategories_cb)
 
 		self.add(self.buttonBox)
 
-	def searchCategories_cb(self, searchButton):
-		if searchButton.get_active() is True:
-			self.categories.append(searchButton.get_label())
-			print(self.categories)
+	def genresList_cb(self, genreButton):
+		if genreButton.get_active() is True:
+			self.genres.append(genreButton.get_label())
 		else:
-			self.categories.remove(searchButton.get_label())
-			print(self.categories)
+			self.genres.remove(genreButton.get_label())
 
-	def getCategories(self):
-		return self.categories
+	def friendsList_cb(self, friendButton):
+		if friendButton.get_active() is True:
+			self.friends.append(friendButton.get_label())
+		else:
+			self.friends.remove(friendButton.get_label())
 
 	def search_cb(self, entry, db):
 		# retrieve the content of the widget
-		print(entry.get_text())
-		self.run_search(entry, db)
-
-	def search_changed_cb(self, entry, db):
-		print(entry.get_text())
 		self.run_search(entry, db)
 
 	def genre_cb(self, genreButton):

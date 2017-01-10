@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=Stop Bitchin', Start Watchin'
+Name=Flix with Friends
 Comment=A Family Movie Night solution by Joseph and Tristan
-Exec=/home/tristan957/Documents/Personal_Projects/LocalHack16/mainWindow
+Exec=/home/tristan957/Documents/Personal_Projects/LocalHack16/flix-with-friends
 Terminal=false
 Categories=AudioVideo;Video;
 Keywords=Movie;Movies;Video;movie;movies;
-Name[en_US]=Stop Bitchin', Start Watchin'
+Name[en_US]=Flix with Friends
