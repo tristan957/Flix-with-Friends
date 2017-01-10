@@ -3,6 +3,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
+MOVIE_INDEX = 58
+
 
 class MovieBox(Gtk.Box):
 
@@ -13,18 +15,24 @@ class MovieBox(Gtk.Box):
         self.imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
         self.infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
 
-        # self.titleLabel = Gtk.Label(label = "<big>Iron Man</big>", justify = Gtk.Justification.CENTER, use_markup = True)
-        self.titleLabel = Gtk.Label(label = "<big>" + db.movies[0].title + "</big>", justify = Gtk.Justification.CENTER, use_markup = True)
-        self.poster = Gtk.Image(file = "./imagePosters/" + db.movies[0].title.replace(" ", "") + "_w342.jpg")
-        self.viewedLabel = Gtk.Label(label = "Viewed By: T, C, G, A, M, P", justify = Gtk.Justification.LEFT)
+        self.titleLabel = Gtk.Label(label = "<big><b>" + db.movies[MOVIE_INDEX].title + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
+        self.poster = Gtk.Image(file = "./imagePosters/" + db.movies[MOVIE_INDEX].title.replace(" ", "") + "_w342.jpg")
+        self.viewedLabel = Gtk.Label(label = "<b>Viewed By:</b> T, C, G, A, M, P", justify = Gtk.Justification.LEFT, use_markup = True)
         self.viewedLabel.set_xalign(0)
-        self.ratingLabel = Gtk.Label(label = "Rating: " + str(db.movies[0].vote) + "/10", justify = Gtk.Justification.LEFT)
+        self.ratingLabel = Gtk.Label(label = "<b>Rating:</b> " + str(db.movies[MOVIE_INDEX].vote) + "/10", justify = Gtk.Justification.LEFT, use_markup = True)
         self.ratingLabel.set_xalign(0)
-        self.runtimeLabel = Gtk.Label(label = "Runtime: " + str(db.movies[0].runtime // 60)
-                                                          + " Hours "+ str(db.movies[0].runtime % 60)
-                                                          + " Minutes", justify = Gtk.Justification.LEFT)
+        self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(db.movies[MOVIE_INDEX].runtime // 60)
+                                                          + " Hours "+ str(db.movies[MOVIE_INDEX].runtime % 60)
+                                                          + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
         self.runtimeLabel.set_xalign(0)
-        self.description = Gtk.Label(label = "Description: A movie", justify = Gtk.Justification.LEFT)
+
+        # Generate description
+        descriptionText = db.movies[MOVIE_INDEX].overview
+        for i in enumerate(db.movies[MOVIE_INDEX].overview):
+            if (i[0] % 35) == 0:
+                descriptionText = descriptionText[:i[0]] + '\n' + descriptionText[i[0]:]
+
+        self.description = Gtk.Label(label = "<b>Description:</b> " + descriptionText, justify = Gtk.Justification.LEFT, use_markup = True)
         self.description.set_xalign(0)
 
         self.imageBox.add(self.titleLabel)
