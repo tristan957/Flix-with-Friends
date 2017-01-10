@@ -124,8 +124,18 @@ class MovieSearchBar(Gtk.Box):
 			if genreSearchCheck == len(self.genres):
 				searchGenre = True
 
+			if str(self.dateEntry.get_text()) != "Enter a year":
+				if self.dateEntry.get_text() <= movie.release_date[:4]:
+					print(self.dateEntry.get_text())
+					print(movie.release_date[:4])
+					searchDate = True
+				else:
+					searchDate = False
+			else:
+				searchDate = True
+
 			# If passes checks, then print Movie info
-			if ((searchTitle or searchDescription) and searchGenre):
+			if ((searchTitle or searchDescription) and searchGenre and searchDate):
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
