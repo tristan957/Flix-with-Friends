@@ -7,6 +7,7 @@ from MovieBox import MovieBox
 from FileChooserBox import FileChooserBox
 from Database import Database
 
+
 class MovieWindow(Gtk.Window):
 
 	def __init__(self):

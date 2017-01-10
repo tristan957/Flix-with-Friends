@@ -9,6 +9,6 @@ def getFriends():
             friendsList.append(line)
     return friendsList
 
-#def addFriend():
+# def addFriend():
 
-#def deleteFriend():
+# def deleteFriend():

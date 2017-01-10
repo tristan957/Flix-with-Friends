@@ -2,6 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
+
 class MovieDialog(Gtk.Dialog):
 
 	def __init__(self, parent, action):

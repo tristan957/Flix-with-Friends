@@ -5,6 +5,7 @@ from MovieDialog import MovieDialog
 from FriendDialog import FriendDialog
 from Database import Database
 
+
 class MovieHeaderBar(Gtk.HeaderBar):
 
 	def __init__(self, parent, reveal, searchBar):
