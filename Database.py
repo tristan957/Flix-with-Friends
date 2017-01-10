@@ -5,8 +5,6 @@ from Movie import Movie
 import tmdbsimple as tmdb
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
-# FIXME: Update seems to print everything twice
-
 
 class Database:
 	global location
@@ -31,6 +29,7 @@ class Database:
 
 		for movie in self.dictionary:
 			self.addMovie(Movie(movie))
+		self.listGenres = sorted(self.listGenres)
 
 	def createDictionary(self):
 		# This method converts all the data in the excelDB into a Listed PY dictionary

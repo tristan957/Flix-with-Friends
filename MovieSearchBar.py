@@ -101,7 +101,6 @@ class MovieSearchBar(Gtk.Box):
 
 	def run_search(self, entry, db):
 		searchWord = entry.get_text()  # retrieve the content of the widget
-		# create new DB object from global location
 
 		for movie in db.movies:
 			# Check if search word passes regex check for either Movie title or description
