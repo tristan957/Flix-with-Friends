@@ -10,7 +10,7 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
 class Database:
 	global location
-	
+
 	def __init__(self):
 		self.fileName = ''
 		self.dictionary = []  # cellular array of Excel file
@@ -103,7 +103,8 @@ class Database:
 	def addMovie(self, MOVIE):
 		for g in MOVIE.genres:
 			if g not in self.listGenres:
-				(self.listGenres).append(g)
+				if g != '' and g != 'NOT FOUND':
+					(self.listGenres).append(g)
 
 		self.movies.append(MOVIE)
 
