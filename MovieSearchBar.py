@@ -103,34 +103,27 @@ class MovieSearchBar(Gtk.Box):
 		searchWord = entry.get_text()  # retrieve the content of the widget
 		# create new DB object from global location
 
-		genreSearch = 0
-		releaseSearch = 0
-		ratingSearch = 0
-		genreSearch = 0
 
-		# If Value selected for search
-		if any("Release Date" in s for s in self.categories):
-			releaseSearch = 1
-
-		if any("Rating" in s for s in self.categories):
-			ratingSearch = 1
-
-		if any("Genre" in s for s in self.categories):
-			genreSearch = 1
-
-		print(db.listGenres)
 		for movie in db.movies:
 			ratingSearchCheck = 0
-			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I)))
+			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
 			searchDescription = bool((re.search(searchWord, movie.overview, re.M | re.I)))
-			searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
-			searchRating = (str(movie.vote) >= str(searchWord)) and ratingSearch
+			# searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
+			# searchRating = (str(movie.vote) >= str(searchWord)) and ratingSearch
 
-			if any(searchWord.upper() in s.upper() for s in movie.genres):
-				ratingSearchCheck = 1
-			searchGenre = ratingSearchCheck and genreSearch
+			ratingSearchCheck = 0
+			searchGenre = 0
 
-			if searchTitle or searchDescription or searchRelease or searchRating or searchGenre:
+			for g in self.genres:
+				for c in movie.genres:
+					if g == c:
+						ratingSearchCheck += 1
+
+			if ratingSearchCheck == len(self.genres):
+				searchGenre = True
+
+
+			if (searchTitle and searchGenre):
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
