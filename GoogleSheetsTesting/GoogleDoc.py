@@ -1,10 +1,13 @@
 import httplib2
 import os
+import xlwt
+import tempfile
 
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+
 
 try:
     import argparse
@@ -12,11 +15,10 @@ try:
 except ImportError:
     flags = None
 
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/sheets.googleapis.flix-with-friends.json
+# Creds stored at ~/.credentials/sheets.googleapis.flix-with-friends.json
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
-APPLICATION_NAME = 'Google Sheets API Python Quickstart'
+APPLICATION_NAME = 'Flix with Friends'
 
 
 def get_credentials():
@@ -69,16 +71,35 @@ def main():
 
     values = result.get('values', [])
 
+
+    book = xlwt.Workbook(encoding="utf-8")
+
+    sheet1 = book.add_sheet("Sheet 1")
+
+
+
     if not values:
         print('No data found.')
     else:
-        print('Name, Major:')
+        i = 0
         for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s, %s' % (row[0], row[4]))
-            row[2] = "Joseph Martinsen"
+            sheet1.write(i, 0, row[0])
+            sheet1.write(i, 1, row[1])
+            sheet1.write(i, 2, row[2])
+            sheet1.write(i, 3, row[3])
+            sheet1.write(i, 4, row[4])
+            sheet1.write(i, 5, row[5])
+            sheet1.write(i, 6, row[6])
+            sheet1.write(i, 7, row[7])
+            i += 1
 
-    service.spreadsheets().batchUpdate(spreadsheetId=spreadsheetId, body=values)
+
+    temp = tempfile.TemporaryFile()
+    book.save(temp)
+    # service.spreadsheets().batchUpdate(spreadsheetId=spreadsheetId, body=values)
+
+
+    # os.remove(f)
 
 
 if __name__ == '__main__':
