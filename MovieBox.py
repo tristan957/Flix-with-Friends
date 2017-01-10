@@ -3,7 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
-MOVIE_INDEX = 58
+MOVIE_INDEX = 0
 
 
 class MovieBox(Gtk.Box):
@@ -26,13 +26,7 @@ class MovieBox(Gtk.Box):
                                                           + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
         self.runtimeLabel.set_xalign(0)
 
-        # Generate description
-        descriptionText = db.movies[MOVIE_INDEX].overview
-        for i in enumerate(db.movies[MOVIE_INDEX].overview):
-            if (i[0] % 35) == 0:
-                descriptionText = descriptionText[:i[0]] + '\n' + descriptionText[i[0]:]
-
-        self.description = Gtk.Label(label = "<b>Description:</b> " + descriptionText, justify = Gtk.Justification.LEFT, use_markup = True)
+        self.description = Gtk.Label(label = "<b>Description:</b> " + self.generateDescription(db.movies[MOVIE_INDEX].overview), justify = Gtk.Justification.LEFT, use_markup = True)
         self.description.set_xalign(0)
 
         self.imageBox.add(self.titleLabel)
@@ -45,3 +39,20 @@ class MovieBox(Gtk.Box):
 
         self.add(self.imageBox)
         self.add(self.infoBox)
+
+    def generateDescription(self, descriptionText):
+        CHARACTERS_IN_LINE = 35 #Numbers of chars before inserting \n
+        TAB = 18 * ' '
+        i = 0
+        while i < len(descriptionText):
+            i += 1
+            if (i % CHARACTERS_IN_LINE) == 0:
+                while descriptionText[i] != ' ':
+                    if i < len(descriptionText)-1:
+                        i += 1
+                    else: break
+                descriptionText = descriptionText[:i] + '\n' + TAB + descriptionText[i:]
+                i += len(TAB)
+                CHARACTERS_IN_LINE += len(TAB)
+
+        return descriptionText
