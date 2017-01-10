@@ -13,7 +13,7 @@ class MovieSearchBar(Gtk.Box):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
 
 		self.genres = []
-		self.friends = getFriends()
+		self.friends = []
 		self.db = Database(location)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
@@ -49,7 +49,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.viewedByPopover = Gtk.Popover()
 		self.viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		for friend in self.friends:
+		for friend in getFriends():
 			butt = Gtk.CheckButton(label = friend)
 			self.viewedByBox.add(butt)
 			butt.connect("toggled", self.friendsList_cb)
@@ -81,10 +81,10 @@ class MovieSearchBar(Gtk.Box):
 
 	def friendsList_cb(self, friendButton):
 		if friendButton.get_active() is True:
-			self.friends.remove(friendButton.get_label())
+			self.friends.append(friendButton.get_label())
 			print(self.friends)
 		else:
-			self.friends.append(friendButton.get_label())
+			self.friends.remove(friendButton.get_label())
 
 	def search_cb(self, entry, db):
 		# retrieve the content of the widget
