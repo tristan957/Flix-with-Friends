@@ -123,7 +123,7 @@ class MovieSearchBar(Gtk.Box):
 				searchGenre = True
 
 
-			if (searchTitle and searchGenre):
+			if ((searchTitle or searchDescription) and searchGenre):
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
