@@ -105,24 +105,26 @@ class MovieSearchBar(Gtk.Box):
 
 
 		for movie in db.movies:
-			ratingSearchCheck = 0
+			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
 			searchDescription = bool((re.search(searchWord, movie.overview, re.M | re.I)))
 			# searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
 			# searchRating = (str(movie.vote) >= str(searchWord)) and ratingSearch
 
-			ratingSearchCheck = 0
+			genreSearchCheck = 0
 			searchGenre = 0
 
+			# Check how many matches for self genre are in Movie Genre
 			for g in self.genres:
 				for c in movie.genres:
 					if g == c:
-						ratingSearchCheck += 1
+						genreSearchCheck += 1
 
-			if ratingSearchCheck == len(self.genres):
+			# Make sure Number of genres in Movie match number of self genres
+			if genreSearchCheck == len(self.genres):
 				searchGenre = True
 
-
+			# If passes checks, then print Movie info
 			if ((searchTitle or searchDescription) and searchGenre):
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
