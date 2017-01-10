@@ -103,7 +103,6 @@ class MovieSearchBar(Gtk.Box):
 		searchWord = entry.get_text()  # retrieve the content of the widget
 		# create new DB object from global location
 
-
 		for movie in db.movies:
 			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
@@ -126,9 +125,13 @@ class MovieSearchBar(Gtk.Box):
 
 			if str(self.dateEntry.get_text()) != "Enter a year":
 				if self.dateEntry.get_text() <= movie.release_date[:4]:
-					print(self.dateEntry.get_text())
-					print(movie.release_date[:4])
-					searchDate = True
+					if self.dateAfter.get_active():
+						if self.dateEntry.get_text() == movie.release_date[:4]:
+							searchDate = True
+						else:
+							searchDate = False
+					else:
+						searchDate = True
 				else:
 					searchDate = False
 			else:
