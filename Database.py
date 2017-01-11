@@ -1,7 +1,7 @@
 import xlwt
 import xlrd
 from xlutils.copy import copy
-from Movie import Movie, get_image
+from Movie import Movie
 import tmdbsimple as tmdb
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
@@ -110,6 +110,5 @@ class Database:
 
 if __name__ == "__main__":
 	db = Database('testing.xlsx')
-	Excel_Position = len(db.movies) #+1 This is the row number next empty cell
-	db.updateMovieDB('La La Land',Excel_Position)
-	get_image(db.movies[-1].poster_path,db.movies[-1].title)
+	# db.loadDB()
+	db.update()
