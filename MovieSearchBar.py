@@ -89,6 +89,9 @@ class MovieSearchBar(Gtk.Box):
 
 		self.add(self.buttonBox)
 
+	def search_cb(self, entry):
+		self.run_search()
+
 	def genresList_cb(self, genreButton):
 		if genreButton.get_active() is True:
 			self.genres.append(genreButton.get_label())
