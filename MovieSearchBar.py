@@ -56,14 +56,9 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByPopover.add(self.viewedByBox)
 
 		self.ratingPopover = Gtk.Popover()
-<<<<<<< HEAD
 		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 		scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
-=======
-		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.VERTICAL, 0, 10, 1)
-		self.scale.set_inverted(True)
->>>>>>> master
 		i = 1
 		while i <= 10:
 			scale.add_mark(i, Gtk.PositionType.TOP)
