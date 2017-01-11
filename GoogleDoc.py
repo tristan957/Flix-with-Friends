@@ -50,14 +50,8 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def main():
-    """Shows basic usage of the Sheets API.
 
-    Creates a Sheets API service object and prints the names and majors of
-    students in a sample spreadsheet:
-    https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-    https://docs.google.com/spreadsheets/d/1JpaDABfhpMfeNMayt1xaEyxbpA369Ze3_UjKCJvNX8c/edit?usp=sharing
-    """
+def get_google_doc():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
@@ -98,9 +92,21 @@ def main():
     book.save("GoogleDocDB.xlsx")
     Database.location = "GoogleDocDB.xlsx"
 
+
+def upload_google_doc():
+    credentials = get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
+                    'version=v4')
+    service = discovery.build('sheets', 'v4', http=http,
+                              discoveryServiceUrl=discoveryUrl)
+
+    spreadsheetId = '1JpaDABfhpMfeNMayt1xaEyxbpA369Ze3_UjKCJvNX8c'
+
+
     values = [
         [
-            'JosephMartinsen'# Cell values ...
+            'Ghostbusters'# Cell values ...
         ],
         # Additional rows ...
     ]
@@ -111,10 +117,11 @@ def main():
     result = service.spreadsheets().values().update(
         spreadsheetId=spreadsheetId, range=range_name,
         valueInputOption='RAW', body=body).execute()
-    # service.spreadsheets().batchUpdate(spreadsheetId=spreadsheetId, body=values)
 
 
-    # os.remove(f)
+def main():
+    get_google_doc()
+    upload_google_doc()
 
 
 if __name__ == '__main__':
