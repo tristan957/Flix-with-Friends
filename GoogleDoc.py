@@ -106,14 +106,22 @@ def upload_google_doc():
 
     values = [
         [
-            'Ghostbusters'# Cell values ...
+            'Ghostbusters',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph'# Cell values ...
         ],
         # Additional rows ...
     ]
     body = {
       'values': values
     }
-    range_name = 'Sheet1!A10'
+    range_name = 'Sheet1!A63'
     result = service.spreadsheets().values().update(
         spreadsheetId=spreadsheetId, range=range_name,
         valueInputOption='RAW', body=body).execute()
