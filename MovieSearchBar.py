@@ -56,7 +56,11 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByPopover.add(self.viewedByBox)
 
 		self.ratingPopover = Gtk.Popover()
-		self.scale = Gtk.Scale(draw_value = True).new_with_range(Gtk.Orientation.VERTICAL, 0, 10, 1)
+		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.VERTICAL, 0, 10, 1)
+		i = 1
+		while i < 10:
+			self.scale.add_mark(i, Gtk.PositionType.RIGHT)
+			i = i + 1
 		self.scale.set_size_request(50, 150)
 		self.ratingPopover.add(self.scale)
 
