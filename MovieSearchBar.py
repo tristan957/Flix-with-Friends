@@ -56,13 +56,17 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByPopover.add(self.viewedByBox)
 
 		self.ratingPopover = Gtk.Popover()
-		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.VERTICAL, 0, 10, 1)
+		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
+		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
+		scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
 		i = 1
-		while i < 10:
-			self.scale.add_mark(i, Gtk.PositionType.RIGHT)
+		while i <= 10:
+			scale.add_mark(i, Gtk.PositionType.TOP)
 			i = i + 1
-		self.scale.set_size_request(50, 150)
-		self.ratingPopover.add(self.scale)
+		scale.set_size_request(150, 40)
+		ratingBox.add(ratingLabel)
+		ratingBox.add(scale)
+		self.ratingPopover.add(ratingBox)
 
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
 		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
