@@ -17,7 +17,7 @@ except ImportError:
     flags = None
 
 # Creds stored at ~/.credentials/sheets.googleapis.flix-with-friends.json
-SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
+SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Flix with Friends'
 
@@ -97,6 +97,20 @@ def main():
 
     book.save("GoogleDocDB.xlsx")
     Database.location = "GoogleDocDB.xlsx"
+
+    values = [
+        [
+            'JosephMartinsen'# Cell values ...
+        ],
+        # Additional rows ...
+    ]
+    body = {
+      'values': values
+    }
+    range_name = 'Sheet1!A10'
+    result = service.spreadsheets().values().update(
+        spreadsheetId=spreadsheetId, range=range_name,
+        valueInputOption='RAW', body=body).execute()
     # service.spreadsheets().batchUpdate(spreadsheetId=spreadsheetId, body=values)
 
 
