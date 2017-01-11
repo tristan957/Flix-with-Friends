@@ -24,8 +24,8 @@ class MovieSearchBar(Gtk.Box):
 		self.add(self.searchEntry)
 
 		# Callback for when enter key is pressed
-		self.searchEntry.connect("activate", self.run_search)
-		self.searchEntry.connect("search-changed", self.run_search)
+		self.searchEntry.connect("activate", self.search_cb)
+		self.searchEntry.connect("search-changed", self.search_cb)
 
 		self.genrePopover = Gtk.Popover()
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
