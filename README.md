@@ -2,7 +2,9 @@
 
 <sub>
     <sup>
-    Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957)
+        <big>
+            Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957)
+        </big>
     </sup>
 </sub>
 
