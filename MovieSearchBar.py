@@ -10,7 +10,7 @@ from friends import getFriends
 class MovieSearchBar(Gtk.Box):
 
 	def __init__(self, location):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 100)
 
 		self.genres = []
 		self.friends = []
@@ -57,6 +57,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.ratingPopover = Gtk.Popover()
 		self.scale = Gtk.Scale(draw_value = True).new_with_range(Gtk.Orientation.VERTICAL, 0, 10, 1)
+		self.scale.set_size_request(50, 150)
 		self.ratingPopover.add(self.scale)
 
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
