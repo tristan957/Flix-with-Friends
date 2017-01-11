@@ -36,6 +36,15 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.dataButton.connect("clicked", self.dataButton_cb)
 		self.pack_end(self.dataButton)
 
+		backIcon = Gio.ThemedIcon(name = "go-previous")
+		backImage = Gtk.Image.new_from_gicon(backIcon, Gtk.IconSize.BUTTON)
+		self.back = Gtk.Button(image = backImage)
+		forwardIcon = Gio.ThemedIcon(name = "go-next")
+		forwardImage = Gtk.Image.new_from_gicon(forwardIcon, Gtk.IconSize.BUTTON)
+		self.forward = Gtk.Button(image = forwardImage)
+		self.pack_start(self.back)
+		self.pack_start(self.forward)
+
 		self.randomMovieButton = Gtk.Button(label = "Random Movie")
 		self.randomMovieButton.connect("clicked", self.randomMovieButton_cb)
 		self.pack_start(self.randomMovieButton)
