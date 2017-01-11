@@ -14,6 +14,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.genres = []
 		self.friends = []
+		self.rating = 0
 		self.db = Database(location)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
@@ -23,8 +24,8 @@ class MovieSearchBar(Gtk.Box):
 		self.add(self.searchEntry)
 
 		# Callback for when enter key is pressed
-		self.searchEntry.connect("activate", self.search_cb, self.db)
-		self.searchEntry.connect("search-changed", self.search_cb, self.db)
+		self.searchEntry.connect("activate", self.run_search)
+		self.searchEntry.connect("search-changed", self.run_search)
 
 		self.genrePopover = Gtk.Popover()
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
@@ -35,6 +36,7 @@ class MovieSearchBar(Gtk.Box):
 		self.genrePopover.add(self.genreBox)
 
 		self.datePopover = Gtk.Popover()
+		self.datePopover.connect("closed", self.closed_cb)
 		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dateEntry = Gtk.Entry()
 		self.dateEntry.set_text("Enter a year")
@@ -81,7 +83,7 @@ class MovieSearchBar(Gtk.Box):
 		self.buttonBox.add(self.ratingButton)
 
 		self.genreButton.connect("toggled", self.genre_cb)
-		self.dateButton.connect("toggled", self.releasedBy_cb)
+		self.dateButton.connect("toggled", self.releaseDate_cb)
 		self.viewedByButton.connect("toggled", self.viewedBy_cb)
 		self.ratingButton.connect("toggled", self.rating_cb)
 
@@ -92,6 +94,7 @@ class MovieSearchBar(Gtk.Box):
 			self.genres.append(genreButton.get_label())
 		else:
 			self.genres.remove(genreButton.get_label())
+		self.run_search()
 
 	def friendsList_cb(self, friendButton):
 		if friendButton.get_active() is True:
@@ -99,19 +102,20 @@ class MovieSearchBar(Gtk.Box):
 			print(self.friends)
 		else:
 			self.friends.remove(friendButton.get_label())
+		self.run_search()
 
 	def minRating_cb(self, scale):
-		print(scale.get_value())
-
-	def search_cb(self, entry, db):
-		# retrieve the content of the widget
-		self.run_search(entry, db)
+		self.rating = scale.get_value()
+		self.run_search()
 
 	def genre_cb(self, genreButton):
 		self.genrePopover.show_all()
 
-	def releasedBy_cb(self, dateButton):
+	def releaseDate_cb(self, dateButton):
 		self.datePopover.show_all()
+
+	def closed_cb(self, datePopover):
+		self.run_search()
 
 	def viewedBy_cb(self, viewedByButton):
 		self.viewedByPopover.show_all()
@@ -119,10 +123,10 @@ class MovieSearchBar(Gtk.Box):
 	def rating_cb(self, ratingButton):
 		self.ratingPopover.show_all()
 
-	def run_search(self, entry, db):
-		searchWord = entry.get_text()  # retrieve the content of the widget
+	def run_search(self):
+		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
 
-		for movie in db.movies:
+		for movie in self.db.movies:
 			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
 			searchDescription = bool((re.search(searchWord, movie.overview, re.M | re.I)))
@@ -164,7 +168,7 @@ class MovieSearchBar(Gtk.Box):
 				print("Runtime:", movie.runtime)
 				print("Genres:", end=" ")
 				for i in range(0, len(movie.genres)):
-					print(movie.genres[i], end=" ")
+					print(movie.genres[i], end = " ")
 				print("")
 				print("Overview:", movie.overview)
 				get_image(movie.poster_path, movie.title)
