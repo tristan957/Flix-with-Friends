@@ -59,6 +59,7 @@ class MovieSearchBar(Gtk.Box):
 		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 		scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
+		scale.connect("value-changed", self.minRating_cb)
 		i = 1
 		while i <= 10:
 			scale.add_mark(i, Gtk.PositionType.TOP)
@@ -98,6 +99,9 @@ class MovieSearchBar(Gtk.Box):
 			print(self.friends)
 		else:
 			self.friends.remove(friendButton.get_label())
+
+	def minRating_cb(self, scale):
+		print(scale.get_value())
 
 	def search_cb(self, entry, db):
 		# retrieve the content of the widget
