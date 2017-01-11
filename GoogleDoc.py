@@ -2,6 +2,7 @@ import httplib2
 import os
 import xlwt
 import tempfile
+import Database
 
 from apiclient import discovery
 from oauth2client import client
@@ -95,6 +96,7 @@ def main():
 
 
     book.save("GoogleDocDB.xlsx")
+    Database.location = "GoogleDocDB.xlsx"
     # service.spreadsheets().batchUpdate(spreadsheetId=spreadsheetId, body=values)
 
 
