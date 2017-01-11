@@ -60,15 +60,15 @@ class MovieSearchBar(Gtk.Box):
 		self.ratingPopover = Gtk.Popover()
 		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
-		scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
-		scale.connect("value-changed", self.minRating_cb)
+		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
+		self.scale.connect("value-changed", self.minRating_cb)
 		i = 1
 		while i <= 10:
-			scale.add_mark(i, Gtk.PositionType.TOP)
+			self.scale.add_mark(i, Gtk.PositionType.TOP)
 			i = i + 1
-		scale.set_size_request(150, 40)
+		self.scale.set_size_request(150, 40)
 		ratingBox.add(ratingLabel)
-		ratingBox.add(scale)
+		ratingBox.add(self.scale)
 		self.ratingPopover.add(ratingBox)
 
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
@@ -133,11 +133,10 @@ class MovieSearchBar(Gtk.Box):
 			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
 			searchDescription = bool((re.search(searchWord, movie.overview, re.M | re.I)))
-			# searchRelease = bool((re.search(searchWord, movie.release_date, re.M | re.I))) and releaseSearch
-			# searchRating = (str(movie.vote) >= str(searchWord)) and ratingSearch
 
 			genreSearchCheck = 0
 			searchGenre = 0
+			searchRating = 0
 
 			# Check how many matches for self genre are in Movie Genre
 			for g in self.genres:
@@ -163,8 +162,12 @@ class MovieSearchBar(Gtk.Box):
 			else:
 				searchDate = True
 
+
+			# Check Rating
+			if int(movie.vote) >= self.scale.get_value(): searchRating = True
+
 			# If passes checks, then print Movie info
-			if ((searchTitle or searchDescription) and searchGenre and searchDate):
+			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating):
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
