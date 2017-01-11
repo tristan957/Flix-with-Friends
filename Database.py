@@ -53,7 +53,7 @@ class Database:
 		wb = copy(rb)  # make a writeable copy of the open excel file
 		w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
 		search = tmdb.Search()
-		response = search.movie(query=movie)  # Search for movie
+		response = search.movie(query = movie)  # Search for movie
 		i = 0
 		for s in search.results:  # for loop return first search result FIXME
 			i = 1 + i
@@ -110,6 +110,6 @@ class Database:
 
 if __name__ == "__main__":
 	db = Database('testing.xlsx')
-	Excel_Position = len(db.movies) #+1 This is the row number next empty cell
-	db.updateMovieDB('La La Land',Excel_Position)
-	get_image(db.movies[-1].poster_path,db.movies[-1].title)
+	Excel_Position = len(db.movies)  # +1 This is the row number next empty cell
+	db.updateMovieDB('La La Land', Excel_Position)
+	get_image(db.movies[-1].poster_path, db.movies[-1].title)

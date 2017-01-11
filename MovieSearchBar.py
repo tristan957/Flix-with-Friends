@@ -55,10 +55,15 @@ class MovieSearchBar(Gtk.Box):
 			butt.connect("toggled", self.friendsList_cb)
 		self.viewedByPopover.add(self.viewedByBox)
 
+		self.ratingPopover = Gtk.Popover()
+		self.ratingPopover.set_default_size(350)
+		self.scale = Gtk.Scale(draw_value = True, hexpand = True).new_with_range(Gtk.Orientation.VERTICAL, 0, 10, 1)
+		self.ratingPopover.add(self.scale)
+
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
 		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
 		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
-		self.ratingButton = Gtk.ToggleButton(label = "Rating")
+		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
 
 		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 2)
 		self.buttonBox.add(self.genreButton)
@@ -69,7 +74,7 @@ class MovieSearchBar(Gtk.Box):
 		self.genreButton.connect("toggled", self.genre_cb)
 		self.dateButton.connect("toggled", self.releasedBy_cb)
 		self.viewedByButton.connect("toggled", self.viewedBy_cb)
-		# self.ratingButton.connect("toggled", self.searchCategories_cb)
+		self.ratingButton.connect("toggled", self.rating_cb)
 
 		self.add(self.buttonBox)
 
@@ -98,6 +103,9 @@ class MovieSearchBar(Gtk.Box):
 
 	def viewedBy_cb(self, viewedByButton):
 		self.viewedByPopover.show_all()
+
+	def rating_cb(self, ratingButton):
+		self.ratingPopover.show_all()
 
 	def run_search(self, entry, db):
 		searchWord = entry.get_text()  # retrieve the content of the widget
