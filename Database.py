@@ -14,6 +14,7 @@ class Database:
 		self.dictionary = []  # cellular array of Excel file
 		self.movies = []  # array of movies as class Movies
 		self.listGenres = []
+		self.MISSING_DATA = 'N/A'
 
 	def __init__(self, FN):
 		self.fileName = ''
@@ -21,6 +22,7 @@ class Database:
 		self.movies = []  # array of movies as class Movies
 		self.fileName = FN
 		self.listGenres = []
+		self.MISSING_DATA = 'N/A'
 		# location = FN - doesn't work
 		self.loadDB()
 
@@ -71,22 +73,29 @@ class Database:
 				# Write info to appropriate (row,column)
 				w_sheet.write(row, 0, response['title'])
 				w_sheet.write(row, 2, response['runtime'])
-				w_sheet.write(row, 3, gen)
+				if (gen is None) or (len(gen) == 0):
+					w_sheet.write(row, 3, 'N/A')
+				else:
+					w_sheet.write(row, 3, gen)
 				w_sheet.write(row, 4, response['release_date'])
 				w_sheet.write(row, 5, response['vote_average'])
 				w_sheet.write(row, 6, response['overview'])
 				w_sheet.write(row, 7, titleID)
-				w_sheet.write(row, 8, response['poster_path'])
+
+				if (response['poster_path'] is None) or (len(response['poster_path']) == 0):
+					w_sheet.write(row, 8, 'N/A')
+				else:
+					w_sheet.write(row, 8, response['poster_path'])
 
 		if i == 0:  # If no search results
-			print(movie, 'NOT FOUND')  # Print to console
-			w_sheet.write(row, 2, 'NOT FOUND')
-			w_sheet.write(row, 3, 'NOT FOUND')
-			w_sheet.write(row, 4, 'NOT FOUND')
+			print(movie, self.MISSING_DATA)  # Print to console
+			w_sheet.write(row, 2, self.MISSING_DATA)
+			w_sheet.write(row, 3, self.MISSING_DATA)
+			w_sheet.write(row, 4, self.MISSING_DATA)
 			w_sheet.write(row, 5, '0')
-			w_sheet.write(row, 6, 'NOT FOUND')
+			w_sheet.write(row, 6, self.MISSING_DATA)
 			w_sheet.write(row, 7, '0')
-			w_sheet.write(row, 8, 'NOT FOUND')
+			w_sheet.write(row, 8, self.MISSING_DATA)
 
 		wb.save(self.fileName)  # Save DB edits
 
@@ -103,7 +112,7 @@ class Database:
 	def addMovie(self, MOVIE):
 		for g in MOVIE.genres:
 			if g not in self.listGenres:
-				if g != '' and g != 'NOT FOUND':
+				if g != '' and g != self.MISSING_DATA:
 					(self.listGenres).append(g)
 
 		self.movies.append(MOVIE)

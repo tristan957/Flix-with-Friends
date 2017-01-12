@@ -5,7 +5,7 @@ import urllib.request
 
 
 def get_image(moviePoster, movieTitle):
-	if moviePoster != '':
+	if (moviePoster != 'N/A'):
 		# Create imagePosters directory if not present
 		os.makedirs("./imagePosters", exist_ok=True)
 		baseURL = 'https://image.tmdb.org/t/p/'
