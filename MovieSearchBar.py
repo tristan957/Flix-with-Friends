@@ -168,9 +168,9 @@ class MovieSearchBar(Gtk.Box):
 			else:
 				searchDate = True
 
-
 			# Check Rating
-			if float(movie.vote) >= self.scale.get_value(): searchRating = True
+			if float(movie.vote) >= self.scale.get_value():
+				searchRating = True
 
 			# If passes checks, then print Movie info
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating):
