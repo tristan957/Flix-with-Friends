@@ -30,9 +30,9 @@ class MovieSearchBar(Gtk.Box):
 		self.genrePopover = Gtk.Popover()
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
-			butt = Gtk.CheckButton(label = genre)
+			butt = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK, centered = False)
 			self.genreBox.add(butt)
-			butt.connect("toggled", self.genresList_cb)
+			butt.connect("clicked", self.genresList_cb)
 		self.genrePopover.add(self.genreBox)
 
 		self.datePopover = Gtk.Popover()
@@ -52,9 +52,9 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByPopover = Gtk.Popover()
 		self.viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for friend in getFriends():
-			butt = Gtk.CheckButton(label = friend)
+			butt = Gtk.ModelButton(text = friend, role = Gtk.ButtonRole.CHECK, centered = False)
 			self.viewedByBox.add(butt)
-			butt.connect("toggled", self.friendsList_cb)
+			butt.connect("clicked", self.friendsList_cb)
 		self.viewedByPopover.add(self.viewedByBox)
 
 		self.ratingPopover = Gtk.Popover()
@@ -93,18 +93,20 @@ class MovieSearchBar(Gtk.Box):
 		self.run_search()
 
 	def genresList_cb(self, genreButton):
-		if genreButton.get_active() is True:
-			self.genres.append(genreButton.get_label())
+		genreButton.props.active = not genreButton.props.active
+		if genreButton.props.active is True:
+			self.genres.append(genreButton.props.text)
 		else:
-			self.genres.remove(genreButton.get_label())
+			self.genres.remove(genreButton.props.text)
 		self.run_search()
 
 	def friendsList_cb(self, friendButton):
-		if friendButton.get_active() is True:
-			self.friends.append(friendButton.get_label())
+		friendButton.props.active = not friendButton.props.active
+		if friendButton.props.active is True:
+			self.friends.append(friendButton.props.text)
 			print(self.friends)
 		else:
-			self.friends.remove(friendButton.get_label())
+			self.friends.remove(friendButton.props.text)
 		self.run_search()
 
 	def minRating_cb(self, scale):
