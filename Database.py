@@ -23,7 +23,6 @@ class Database:
 		self.fileName = FN
 		self.listGenres = []
 		self.MISSING_DATA = 'N/A'
-		# location = FN - doesn't work
 		self.loadDB()
 
 	def loadDB(self):
