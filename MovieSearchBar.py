@@ -10,18 +10,19 @@ from friends import getFriends
 class MovieSearchBar(Gtk.Box):
 
 	def __init__(self, location):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 100)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
 		self.genres = []
 		self.friends = []
 		self.rating = 0
 		self.db = Database(location)
+		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
 		self.searchEntry = Gtk.SearchEntry()
 		self.search.connect_entry(self.searchEntry)
 		self.searchEntry.grab_focus()
-		self.add(self.searchEntry)
+		central.add(self.searchEntry)
 
 		# Callback for when enter key is pressed
 		self.searchEntry.connect("activate", self.search_cb)
@@ -77,6 +78,7 @@ class MovieSearchBar(Gtk.Box):
 		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
 
 		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 2)
+
 		self.buttonBox.add(self.genreButton)
 		self.buttonBox.add(self.dateButton)
 		self.buttonBox.add(self.viewedByButton)
@@ -87,7 +89,9 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByButton.connect("toggled", self.viewedBy_cb)
 		self.ratingButton.connect("toggled", self.rating_cb)
 
-		self.add(self.buttonBox)
+		central.add(self.buttonBox)
+
+		self.pack_start(central, True, False, 0)
 
 	def search_cb(self, entry):
 		self.run_search()
