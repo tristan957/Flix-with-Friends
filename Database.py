@@ -86,6 +86,7 @@ class Database:
 			w_sheet.write(row, 5, '0')
 			w_sheet.write(row, 6, 'NOT FOUND')
 			w_sheet.write(row, 7, '0')
+			w_sheet.write(row, 8, 'NOT FOUND')
 
 		wb.save(self.fileName)  # Save DB edits
 
@@ -110,6 +111,7 @@ class Database:
 
 if __name__ == "__main__":
 	db = Database('testing.xlsx')
-	Excel_Position = len(db.movies)  # +1 This is the row number next empty cell
-	db.updateMovieDB('La La Land', Excel_Position)
-	get_image(db.movies[-1].poster_path, db.movies[-1].title)
+	# Excel_Position = len(db.movies)  # +1 This is the row number next empty cell
+	# db.updateMovieDB('La La Land', Excel_Position)
+	# get_image(db.movies[-1].poster_path, db.movies[-1].title)
+	db.update()

@@ -2,8 +2,8 @@ import httplib2
 import os
 import xlwt
 import tempfile
-import Database
 
+from Database import Database
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -72,7 +72,6 @@ def get_google_doc():
     sheet1 = book.add_sheet("Sheet 1")
 
 
-
     if not values:
         print('No data found.')
     else:
@@ -86,6 +85,7 @@ def get_google_doc():
             sheet1.write(i, 5, row[5])
             sheet1.write(i, 6, row[6])
             sheet1.write(i, 7, row[7])
+            sheet1.write(i, 8, row[8])
             i += 1
 
 
@@ -116,6 +116,28 @@ def upload_google_doc():
             'Joseph',
             'Joseph'# Cell values ...
         ],
+        [
+            'Ghostbusters',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph'# Cell values ...
+        ],
+        [
+            'Ghostbusters',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph',
+            'Joseph'# Cell values ...
+        ],
         # Additional rows ...
     ]
     body = {
@@ -129,7 +151,8 @@ def upload_google_doc():
 
 def main():
     get_google_doc()
-    upload_google_doc()
+    db = Database(Database.location)
+    # upload_google_doc()
 
 
 if __name__ == '__main__':

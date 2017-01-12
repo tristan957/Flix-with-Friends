@@ -22,9 +22,7 @@ class MovieBox(Gtk.Box):
         self.viewedLabel.set_xalign(0)
         self.ratingLabel = Gtk.Label(label = "<b>Rating:</b> " + str(movie.vote) + "/10", justify = Gtk.Justification.LEFT, use_markup = True)
         self.ratingLabel.set_xalign(0)
-        self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(movie.runtime // 60)
-                                                          + " Hours "+ str(movie.runtime % 60)
-                                                          + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
+        self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(int(movie.runtime) // 60) + " Hours "+ str(int(movie.runtime) % 60) + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
         self.runtimeLabel.set_xalign(0)
 
         self.description = Gtk.Label(label = "<b>Description:</b> " + self.generateDescription(movie.overview), justify = Gtk.Justification.LEFT, use_markup = True)
