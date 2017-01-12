@@ -164,7 +164,7 @@ class MovieSearchBar(Gtk.Box):
 
 
 			# Check Rating
-			if int(movie.vote) >= self.scale.get_value(): searchRating = True
+			if float(movie.vote) >= self.scale.get_value(): searchRating = True
 
 			# If passes checks, then print Movie info
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating):
@@ -177,4 +177,6 @@ class MovieSearchBar(Gtk.Box):
 					print(movie.genres[i], end = " ")
 				print("")
 				print("Overview:", movie.overview)
-				get_image(movie.poster_path, movie.title)
+				# GOing to need a try except for this,
+				# get_image(movie.poster_path, movie.title)
+				print('')

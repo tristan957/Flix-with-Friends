@@ -152,6 +152,7 @@ def upload_google_doc():
 def main():
     get_google_doc()
     db = Database(Database.location)
+    db.createDictionary()
     # upload_google_doc()
 
 
