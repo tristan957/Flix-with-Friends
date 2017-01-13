@@ -16,6 +16,7 @@ class MovieSearchBar(Gtk.Box):
 		self.friends = []
 		self.rating = 0
 		self.db = Database(location)
+		Database.fileName = location # FIXME move this to the parent class
 		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
 
 		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
