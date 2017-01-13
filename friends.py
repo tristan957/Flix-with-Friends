@@ -9,6 +9,9 @@ def getFriends():
             friendsList.append(line)
     return friendsList
 
-# def addFriend():
+def addFriend(name):
+    f = open("friends.txt", "a")
+    f.write(name + "\n")
+
 
 # def deleteFriend():
