@@ -1,7 +1,8 @@
 import httplib2
 import os
 import xlwt
-import tempfile
+import xlrd
+from xlutils.copy import copy
 
 from Database import Database
 from apiclient import discovery
@@ -101,59 +102,72 @@ def upload_google_doc():
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
 
-    spreadsheetId = '1JpaDABfhpMfeNMayt1xaEyxbpA369Ze3_UjKCJvNX8c'
+    spreadsheetId = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 
+    workbook = xlrd.open_workbook('GoogleDocDB.xlsx', on_demand=True)
+    worksheet = workbook.sheet_by_index(0)
+    # transform the workbook to a list of dictionaries
+    values = []
+    first_row = []  # The row where we stock the name of the column
+    for row in range(worksheet.nrows):
+        elm = []
+        for col in range(worksheet.ncols):
+            elm.append(worksheet.cell_value(row, col))
+        values.append(elm)
 
-    values = [
-        [
-            'Ghostbusters',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph'# Cell values ...
-        ],
-        [
-            'Ghostbusters',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph'# Cell values ...
-        ],
-        [
-            'Ghostbusters',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph',
-            'Joseph'# Cell values ...
-        ],
-        # Additional rows ...
-    ]
+    # print(sheetData[0])
+    #
+    #
+    # values = [
+    #     [
+    #         'Ghostbusters',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph'# Cell values ...
+    #     ],
+    #     [
+    #         'Ghostbusters',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph'# Cell values ...
+    #     ],
+    #     [
+    #         'Ghostbusters',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph',
+    #         'Joseph'# Cell values ...
+    #     ],
+    #     # Additional rows ...
+    # ]
     body = {
       'values': values
     }
-    range_name = 'Sheet1!A63'
+    range_name = 'Sheet1!A1'
     result = service.spreadsheets().values().update(
         spreadsheetId=spreadsheetId, range=range_name,
         valueInputOption='RAW', body=body).execute()
 
 
 def main():
-    get_google_doc()
-    db = Database(Database.location)
-    db.createDictionary()
-    # upload_google_doc()
+    # get_google_doc()
+    # db = Database(Database.location)
+
+    upload_google_doc()
 
 
 if __name__ == '__main__':
