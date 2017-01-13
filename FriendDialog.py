@@ -24,4 +24,5 @@ class FriendDialog(Gtk.Dialog):
 		# if the action is deleting, create an autocompletion tree
 
 	def enterButton_cb(self, enterButton):
+		print(self.entry.get_text())
 		self.destroy()

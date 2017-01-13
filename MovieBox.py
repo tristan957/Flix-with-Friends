@@ -22,7 +22,7 @@ class MovieBox(Gtk.Box):
         self.viewedLabel.set_xalign(0)
         self.ratingLabel = Gtk.Label(label = "<b>Rating:</b> " + str(movie.vote) + "/10", justify = Gtk.Justification.LEFT, use_markup = True)
         self.ratingLabel.set_xalign(0)
-        self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(int(movie.runtime) // 60) + " Hours "+ str(int(movie.runtime) % 60) + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
+        self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(int(movie.runtime) // 60) + " Hours " + str(int(movie.runtime) % 60) + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
         self.runtimeLabel.set_xalign(0)
 
         self.description = Gtk.Label(label = "<b>Description:</b> " + self.generateDescription(movie.overview), justify = Gtk.Justification.LEFT, use_markup = True)
@@ -40,7 +40,7 @@ class MovieBox(Gtk.Box):
         self.add(self.infoBox)
 
     def generateDescription(self, descriptionText):
-        CHARACTERS_IN_LINE = 50 #Numbers of chars before inserting \n
+        CHARACTERS_IN_LINE = 50  # Numbers of chars before inserting \n
         TAB = 18 * ' '
         i = len(TAB)
         FLAG = True
@@ -51,9 +51,10 @@ class MovieBox(Gtk.Box):
                     i -= len(TAB)
                     FLAG = False
                 while descriptionText[i] != ' ':
-                    if i < len(descriptionText)-1:
+                    if i < len(descriptionText) - 1:
                         i += 1
-                    else: break
+                    else:
+                        break
                 descriptionText = descriptionText[:i] + '\n' + TAB + descriptionText[i:]
                 i += len(TAB)
                 FLAG = True
