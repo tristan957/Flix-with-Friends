@@ -16,6 +16,7 @@ def get_image(moviePoster, movieTitle):
 			print(p, 'poster image:',imagePage)
 			filename = movieTitle.replace(" ", "") + '_' + p + '.jpg'
 			fullfilename = os.path.join('./imagePosters', filename)
+
 			# if not already existent, download
 			if not(os.path.isfile(fullfilename)):
 				# COMMENT ME OUT TO NOT DOWNLOAD EVERYTHING
@@ -44,7 +45,6 @@ class Movie:
 		self.vote = vO
 		self.overview = oV
 
-	# This might be the only init needed, depends on how the add movie dialog is going to be setup
 	def __init__(self, dictionary):
 		self.title = dictionary['Title']
 		self.ID = dictionary['ID']

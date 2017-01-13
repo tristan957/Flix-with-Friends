@@ -28,6 +28,7 @@ class Database:
 	def loadDB(self):
 		self.createDictionary()
 
+		# Add Movies to movie list
 		for movie in self.dictionary:
 			self.addMovie(Movie(movie))
 		self.listGenres = sorted(self.listGenres)
@@ -35,7 +36,6 @@ class Database:
 	def createDictionary(self):
 		# This method converts all the data in the excelDB into a Listed PY dictionary
 		# Access data by self.dictionary[row]['columnName']
-		# workbook = xlrd.open_workbook(self.fileName)
 		workbook = xlrd.open_workbook(self.fileName, on_demand=True)
 		worksheet = workbook.sheet_by_index(0)
 		first_row = []  # The row where we stock the name of the column
@@ -49,11 +49,11 @@ class Database:
 			self.dictionary.append(elm)
 
 	def updateMovieDB(self, movie, row):
-		# This method updates all columns of a movie in the DB
+		# This method updates all columns of a single movie in the DB
 		rb = xlrd.open_workbook(self.fileName)  # Open the excel file
 		wb = copy(rb)  # make a writeable copy of the open excel file
 		w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
-		search = tmdb.Search()
+		search = tmdb.Search() # Setup search to run API query
 		response = search.movie(query = movie)  # Search for movie
 		i = 0
 		for s in search.results:  # for loop return first search result FIXME
@@ -88,13 +88,13 @@ class Database:
 
 		if i == 0:  # If no search results
 			print(movie, self.MISSING_DATA)  # Print to console
-			w_sheet.write(row, 2, self.MISSING_DATA)
-			w_sheet.write(row, 3, self.MISSING_DATA)
-			w_sheet.write(row, 4, self.MISSING_DATA)
-			w_sheet.write(row, 5, '0')
-			w_sheet.write(row, 6, self.MISSING_DATA)
-			w_sheet.write(row, 7, '0')
-			w_sheet.write(row, 8, self.MISSING_DATA)
+			w_sheet.write(row, 2, self.MISSING_DATA) #runtime
+			w_sheet.write(row, 3, self.MISSING_DATA) # genres
+			w_sheet.write(row, 4, self.MISSING_DATA) # release date
+			w_sheet.write(row, 5, '0') # vote count
+			w_sheet.write(row, 6, self.MISSING_DATA) # overview
+			w_sheet.write(row, 7, '0') # TMDB ID number
+			w_sheet.write(row, 8, self.MISSING_DATA) # poster path
 
 		wb.save(self.fileName)  # Save DB edits
 

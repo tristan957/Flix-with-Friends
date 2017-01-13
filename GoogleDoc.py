@@ -53,6 +53,7 @@ def get_credentials():
 
 
 def get_google_doc():
+    # Run Google OAuth2
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
@@ -60,19 +61,16 @@ def get_google_doc():
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
 
+    # Pull data from the Google Sheet
     spreadsheetId = '1JpaDABfhpMfeNMayt1xaEyxbpA369Ze3_UjKCJvNX8c'
     rangeName = 'Sheet1!A:I'
     result = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=rangeName).execute()
-
     values = result.get('values', [])
 
-
+    # Add values to the Excel sheet
     book = xlwt.Workbook(encoding="utf-8")
-
     sheet1 = book.add_sheet("Sheet 1")
-
-
     if not values:
         print('No data found.')
     else:
@@ -89,12 +87,12 @@ def get_google_doc():
             sheet1.write(i, 8, row[8])
             i += 1
 
-
     book.save("GoogleDocDB.xlsx")
     Database.location = "GoogleDocDB.xlsx"
 
 
 def upload_google_doc():
+    # Run Google OAuth2
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
@@ -104,56 +102,19 @@ def upload_google_doc():
 
     spreadsheetId = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 
+    # Open the Excel sheet to read in data
     workbook = xlrd.open_workbook('GoogleDocDB.xlsx', on_demand=True)
     worksheet = workbook.sheet_by_index(0)
-    # transform the workbook to a list of dictionaries
+
+    # transform the workbook to a 2D list
     values = []
-    first_row = []  # The row where we stock the name of the column
     for row in range(worksheet.nrows):
         elm = []
         for col in range(worksheet.ncols):
             elm.append(worksheet.cell_value(row, col))
         values.append(elm)
 
-    # print(sheetData[0])
-    #
-    #
-    # values = [
-    #     [
-    #         'Ghostbusters',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph'# Cell values ...
-    #     ],
-    #     [
-    #         'Ghostbusters',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph'# Cell values ...
-    #     ],
-    #     [
-    #         'Ghostbusters',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph',
-    #         'Joseph'# Cell values ...
-    #     ],
-    #     # Additional rows ...
-    # ]
+    # Upload values to the Google Sheet
     body = {
       'values': values
     }
