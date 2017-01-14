@@ -38,7 +38,7 @@ class Database:
 		self.MISSING_DATA = 'N/A'
 		self.spreadsheetID = ''
 
-	def __init__(self, FN):
+	def __init__(self, FN = None):
 		self.fileName = ''
 		self.dictionary = []  # cellular array of Excel file
 		self.movies = []  # array of movies as class Movies
@@ -46,7 +46,9 @@ class Database:
 		self.listGenres = []
 		self.MISSING_DATA = 'N/A'
 		self.spreadsheetID = ''
-		self.loadDB()
+
+		if FN is not None:
+			self.loadDB()
 
 	def loadDB(self):
 		self.createDictionary()
@@ -176,7 +178,7 @@ class Database:
 
 	def get_google_doc(self, sheetID):
 		# Run Google OAuth2
-		credentials = get_credentials()
+		credentials = self.get_credentials()
 		http = credentials.authorize(httplib2.Http())
 		discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
 						'version=v4')
@@ -216,7 +218,7 @@ class Database:
 
 	def upload_google_doc(self):
 		# Run Google OAuth2
-		credentials = get_credentials()
+		credentials = self.get_credentials()
 		http = credentials.authorize(httplib2.Http())
 		discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
 						'version=v4')
@@ -243,13 +245,14 @@ class Database:
 		}
 		range_name = 'Sheet1!A1'
 		result = service.spreadsheets().values().update(
-			spreadsheetId=self.spreadsheetId, range=range_name,
+			spreadsheetId=self.spreadsheetID, range=range_name,
 			valueInputOption='USER_ENTERED', body=body).execute() # USER_ENTERED or RAW
 
 
 if __name__ == "__main__":
 	db = Database()
-	db.get_google_doc('1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8')
+	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	db.get_google_doc(doc_id)
 
 	for movie in db.movies:
 		print(movie.title)
