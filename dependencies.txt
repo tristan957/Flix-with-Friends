@@ -6,6 +6,9 @@ Python:
       urllib
       sys
       os
+      httplib2
+      apiclient
+      oauth2client
 
 System:
       gnome-python
