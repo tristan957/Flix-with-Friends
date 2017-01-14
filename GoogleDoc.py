@@ -62,7 +62,7 @@ def get_google_doc():
                               discoveryServiceUrl=discoveryUrl)
 
     # Pull data from the Google Sheet
-    spreadsheetId = '1JpaDABfhpMfeNMayt1xaEyxbpA369Ze3_UjKCJvNX8c'
+    spreadsheetId = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
     rangeName = 'Sheet1!A:I'
     result = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=rangeName).execute()
@@ -103,7 +103,7 @@ def upload_google_doc():
     spreadsheetId = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 
     # Open the Excel sheet to read in data
-    workbook = xlrd.open_workbook('GoogleDocDB.xlsx', on_demand=True)
+    workbook = xlrd.open_workbook('testing.xlsx', on_demand=True)
     worksheet = workbook.sheet_by_index(0)
 
     # transform the workbook to a 2D list
@@ -125,9 +125,9 @@ def upload_google_doc():
 
 
 def main():
-    # get_google_doc()
-    # db = Database(Database.location)
-
+    get_google_doc()
+    db = Database(Database.location)
+    db.newMovie('Zootopia')
     upload_google_doc()
 
 

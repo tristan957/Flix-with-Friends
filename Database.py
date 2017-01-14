@@ -118,7 +118,6 @@ class Database:
 
 	def newMovie(self, movie_title):
 		# Add a new movie just with a movie title
-		print(len(self.movies) + 1)
 		self.updateMovieDB(movie_title, len(self.movies) + 1)
 		get_image(self.movies[-1].poster_path, self.movies[-1].title)
 		self.loadDB()
