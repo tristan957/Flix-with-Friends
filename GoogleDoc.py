@@ -121,7 +121,7 @@ def upload_google_doc():
     range_name = 'Sheet1!A1'
     result = service.spreadsheets().values().update(
         spreadsheetId=spreadsheetId, range=range_name,
-        valueInputOption='RAW', body=body).execute()
+        valueInputOption='USER_ENTERED', body=body).execute() # USER_ENTERED or RAW
 
 
 def main():
