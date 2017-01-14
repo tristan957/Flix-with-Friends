@@ -116,10 +116,14 @@ class Database:
 
 		self.movies.append(MOVIE)
 
+	def newMovie(self, movie_title):
+		# Add a new movie just with a movie title
+		print(len(self.movies) + 1)
+		self.updateMovieDB(movie_title, len(self.movies) + 1)
+		get_image(self.movies[-1].poster_path, self.movies[-1].title)
+		self.loadDB()
+
 
 if __name__ == "__main__":
 	db = Database('testing.xlsx')
-	# Excel_Position = len(db.movies)  # +1 This is the row number next empty cell
-	# db.updateMovieDB('La La Land', Excel_Position)
-	# get_image(db.movies[-1].poster_path, db.movies[-1].title)
-	db.update()
+	db.newMovie('Zootopia')
