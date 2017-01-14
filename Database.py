@@ -36,6 +36,7 @@ class Database:
 		self.movies = []  # array of movies as class Movies
 		self.listGenres = []
 		self.MISSING_DATA = 'N/A'
+		self.spreadsheetID = ''
 
 	def __init__(self, FN):
 		self.fileName = ''
@@ -44,6 +45,7 @@ class Database:
 		self.fileName = FN
 		self.listGenres = []
 		self.MISSING_DATA = 'N/A'
+		self.spreadsheetID = ''
 		self.loadDB()
 
 	def loadDB(self):
@@ -172,7 +174,7 @@ class Database:
 			print('Storing credentials to ' + credential_path)
 		return credentials
 
-	def get_google_doc(self):
+	def get_google_doc(self, sheetID):
 		# Run Google OAuth2
 		credentials = get_credentials()
 		http = credentials.authorize(httplib2.Http())
@@ -182,7 +184,8 @@ class Database:
 									discoveryServiceUrl=discoveryUrl)
 
 		# Pull data from the Google Sheet
-		self.spreadsheetID = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+		# self.spreadsheetID = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+		self.spreadsheetID = sheetID
 		rangeName = 'Sheet1!A:I'
 		result = service.spreadsheets().values().get(
 			spreadsheetId=self.spreadsheetID, range=rangeName).execute()
@@ -208,7 +211,8 @@ class Database:
 				i += 1
 
 		book.save("GoogleDocDB.xlsx")
-		Database.location = "GoogleDocDB.xlsx"
+		self.fileName = Database.location = "GoogleDocDB.xlsx"
+		self.loadDB()
 
 	def upload_google_doc(self):
 		# Run Google OAuth2
@@ -244,5 +248,11 @@ class Database:
 
 
 if __name__ == "__main__":
-	db = Database('testing.xlsx')
-	db.newMovie('Zootopia')
+	db = Database()
+	db.get_google_doc('1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8')
+
+	for movie in db.movies:
+		print(movie.title)
+
+	db.newMovie('Ben Hur')
+	db.upload_google_doc()
