@@ -29,6 +29,7 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
 class Database:
 	global location
+	global docID
 
 	def __init__(self, FN = None):
 		self.fileName = ''
@@ -179,7 +180,7 @@ class Database:
 
 		# Pull data from the Google Sheet
 		# self.spreadsheetID = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-		self.spreadsheetID = sheetID
+		docID = self.spreadsheetID = sheetID
 		rangeName = 'Sheet1!A:I'
 		result = service.spreadsheets().values().get(
 			spreadsheetId=self.spreadsheetID, range=rangeName).execute()
