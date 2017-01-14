@@ -172,7 +172,7 @@ class Database:
 			print('Storing credentials to ' + credential_path)
 		return credentials
 
-	def get_google_doc():
+	def get_google_doc(self):
 		# Run Google OAuth2
 		credentials = get_credentials()
 		http = credentials.authorize(httplib2.Http())
@@ -210,7 +210,7 @@ class Database:
 		book.save("GoogleDocDB.xlsx")
 		Database.location = "GoogleDocDB.xlsx"
 
-	def upload_google_doc():
+	def upload_google_doc(self):
 		# Run Google OAuth2
 		credentials = get_credentials()
 		http = credentials.authorize(httplib2.Http())
