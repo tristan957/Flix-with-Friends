@@ -220,7 +220,7 @@ class Database:
 		# self.spreadsheetId = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 
 		# Open the Excel sheet to read in data
-		workbook = xlrd.open_workbook('testing.xlsx', on_demand=True)
+		workbook = xlrd.open_workbook(self.fileName, on_demand=True)
 		worksheet = workbook.sheet_by_index(0)
 
 		# transform the workbook to a 2D list
