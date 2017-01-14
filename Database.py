@@ -30,14 +30,6 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 class Database:
 	global location
 
-	def __init__(self):
-		self.fileName = ''
-		self.dictionary = []  # cellular array of Excel file
-		self.movies = []  # array of movies as class Movies
-		self.listGenres = []
-		self.MISSING_DATA = 'N/A'
-		self.spreadsheetID = ''
-
 	def __init__(self, FN = None):
 		self.fileName = ''
 		self.dictionary = []  # cellular array of Excel file
