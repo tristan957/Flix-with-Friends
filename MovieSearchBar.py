@@ -18,12 +18,14 @@ class MovieSearchBar(Gtk.Box):
 		self.friends = []
 		self.rating = 0
 		self.db = Database(location)
+
 		Database.fileName = location # FIXME move this to the parent class
+
 		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+		central.get_style_context().add_class("linked")
 
 		self.searchEntry = Gtk.SearchEntry()
 		self.searchEntry.grab_focus()
-		central.get_style_context().add_class("linked")
 		central.pack_start(self.searchEntry, True, True, 0)
 
 		# Callback for when enter key is pressed
