@@ -9,11 +9,11 @@ def get_image(moviePoster, movieTitle):
 		# Create imagePosters directory if not present
 		os.makedirs("./imagePosters", exist_ok=True)
 		baseURL = 'https://image.tmdb.org/t/p/'
-		posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2','w342', 'w500', 'w780'] #'original']
+		posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2', 'w342', 'w500', 'w780'] #'original']
 
 		for p in posters:
 			imagePage = baseURL + p + moviePoster
-			print(p, 'poster image:',imagePage)
+			print(p, 'poster image:', imagePage)
 			filename = movieTitle.replace(" ", "") + '_' + p + '.jpg'
 			fullfilename = os.path.join('./imagePosters', filename)
 

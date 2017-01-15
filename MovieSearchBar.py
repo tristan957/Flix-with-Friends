@@ -9,6 +9,8 @@ from friends import getFriends
 
 class MovieSearchBar(Gtk.Box):
 
+	global results = []
+
 	def __init__(self, location):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
