@@ -124,12 +124,12 @@ class SearchResults(Gtk.Box):
         for movie in results:
             desc = movie.overview
             if len(desc) > 76:
-                desc = "%s..." % summary[0:76]
+                desc = "%s..." % desc[0:76]
 
             desc = GLib.markup_escape_text(desc)
             text = "<b>%s</b>\n%s" % (movie.title, desc)
 
-            model.append([text, movie, movie.searchImage, "go-next-symbolic"])
+            model.append([text, movie, "./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg", "go-next-symbolic"])
 
             while (Gtk.events_pending()):
                 Gtk.main_iteration()
