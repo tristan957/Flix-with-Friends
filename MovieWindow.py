@@ -1,6 +1,6 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gio
 from MovieHeaderBar import MovieHeaderBar
 from MovieSearchBar import MovieSearchBar
 from MovieBox import MovieBox
@@ -12,10 +12,19 @@ class FileChooserBox(Gtk.Box):
 	def __init__(self):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, spacing = 50)
 
-		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 50)
-		self.google = Gtk.Button(label = "Google Sheet")
-		self.label = Gtk.Label("<big>Choose the location of your file</big>", use_markup = True)
-		self.local = Gtk.Button(label = "Local Spreadsheet")
+		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 25)
+		self.label = Gtk.Label("Choose the location of your file", use_markup = True)
+
+		# alignment could probably be ffixed with a Gtk.Button.new_with_label() and Gtk.Label with right alighnment
+
+		googleIcon = Gio.ThemedIcon(name = "google")
+		googleImage = Gtk.Image.new_from_gicon(googleIcon, Gtk.IconSize.BUTTON)
+		self.google = Gtk.Button(label = "Google Sheet", image = googleImage, image_position = Gtk.PositionType.LEFT, always_show_image = True)
+
+		localIcon = Gio.ThemedIcon(name = "folder-symbolic")
+		localImage = Gtk.Image.new_from_gicon(localIcon, Gtk.IconSize.BUTTON)
+		self.local = Gtk.Button(label = "Local Spreadsheet", image = localImage, image_position = Gtk.PositionType.LEFT, always_show_image = True)
+
 		self.buttonBox.add(self.google)
 		self.buttonBox.add(self.local)
 		self.add(self.label)
@@ -29,8 +38,7 @@ class MovieWindow(Gtk.Window):
 		header = Gtk.HeaderBar(title = "Flix with Friends", show_close_button = True)	 # create headerbar
 		self.set_titlebar(header)  # add it to the window
 
-		self.main_stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.SLIDE_UP_DOWN)
-		# self.pack_start(self.main_stack, True, True, 0)
+		self.main_stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.SLIDE_UP_DOWN, homogeneous = True)
 		self.add(self.main_stack)
 
 		self.filePage = FileChooserBox()
