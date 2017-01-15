@@ -68,7 +68,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 
 	def randomMovieButton_cb(self, randomMovieButton):
 		number_movies = len(self.db.movies) - 1
-		movie_position = random.randint(0,number_movies)
+		movie_position = random.randint(0, number_movies)
 		movie = self.db.movies[movie_position]
 
 		print("Title:", movie.title)
