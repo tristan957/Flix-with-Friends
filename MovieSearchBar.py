@@ -19,17 +19,16 @@ class MovieSearchBar(Gtk.Box):
 		self.rating = 0
 		self.db = Database(location)
 		Database.fileName = location # FIXME move this to the parent class
-		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
+		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
 
-		self.search = Gtk.SearchBar(search_mode_enabled = True, show_close_button = True)
 		self.searchEntry = Gtk.SearchEntry()
-		self.search.connect_entry(self.searchEntry)
 		self.searchEntry.grab_focus()
-		central.add(self.searchEntry)
+		central.get_style_context().add_class("linked")
+		central.pack_start(self.searchEntry, True, True, 0)
 
 		# Callback for when enter key is pressed
 		self.searchEntry.connect("activate", self.search_cb)
-		self.searchEntry.connect("search-changed", self.search_cb)
+		self.searchEntry.connect("changed", self.search_cb)
 
 		self.genrePopover = Gtk.Popover()
 		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
@@ -62,7 +61,7 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByPopover.add(self.viewedByBox)
 
 		self.ratingPopover = Gtk.Popover()
-		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
+		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
 		self.scale.connect("value-changed", self.minRating_cb)
@@ -80,23 +79,19 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
 		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
 
-		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 2)
-
-		self.buttonBox.add(self.genreButton)
-		self.buttonBox.add(self.dateButton)
-		self.buttonBox.add(self.viewedByButton)
-		self.buttonBox.add(self.ratingButton)
+		central.pack_start(self.genreButton, True, True, 0)
+		central.pack_start(self.dateButton, True, True, 0)
+		central.pack_start(self.viewedByButton, True, True, 0)
+		central.pack_end(self.ratingButton, True, True, 0)
 
 		self.genreButton.connect("toggled", self.genre_cb)
 		self.dateButton.connect("toggled", self.releaseDate_cb)
 		self.viewedByButton.connect("toggled", self.viewedBy_cb)
 		self.ratingButton.connect("toggled", self.rating_cb)
 
-		central.add(self.buttonBox)
-
 		self.pack_start(central, True, False, 0)
 
-	def search_cb(self, entry):
+	def search_cb(self, widget):
 		self.run_search()
 
 	def genresList_cb(self, genreButton):
