@@ -1,7 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GdkPixbuf
-from MovieSearchBar import results
+import MovieSearchBar
 
 
 INDEX_FIELD_DISPLAY = 0
@@ -63,8 +63,9 @@ class BlankPage(Gtk.Box):
 
 class SearchResults(Gtk.Box):
 
-    def __init__(self, movies):
+    def __init__(self, search_page):
         Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
+        self.search_page = search_page
 
         self.stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
         self.pack_start(self.stack, True, True, 0)
@@ -116,6 +117,7 @@ class SearchResults(Gtk.Box):
 
         # line 178 solus-sc/search-results...what's it do
 
+
     def set_search_view(self):
         model = Gtk.ListStore(str, str, Gtk.Image, str)
 
@@ -129,7 +131,10 @@ class SearchResults(Gtk.Box):
             desc = GLib.markup_escape_text(desc)
             text = "<b>%s</b>\n%s" % (movie.title, desc)
 
-            model.append([text, movie, "./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg", "go-next-symbolic"])
+            image = Gtk.Image.new_from_file("./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg")
+
+            model.append([text, movie, image, "go-next-symbolic"])
+
 
             while (Gtk.events_pending()):
                 Gtk.main_iteration()

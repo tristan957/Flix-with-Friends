@@ -5,6 +5,7 @@ import re
 from Database import Database
 from Movie import get_image
 from friends import getFriends
+from search_results import SearchResults
 
 
 class MovieSearchBar(Gtk.Box):
@@ -21,7 +22,7 @@ class MovieSearchBar(Gtk.Box):
 
 		Database.fileName = location # FIXME move this to the parent class
 
-		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 10)
 		central.get_style_context().add_class("linked")
 
 		self.searchEntry = Gtk.SearchEntry()
@@ -63,7 +64,7 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByPopover.add(self.viewedByBox)
 
 		self.ratingPopover = Gtk.Popover()
-		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 5)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
 		self.scale.connect("value-changed", self.minRating_cb)
@@ -92,6 +93,8 @@ class MovieSearchBar(Gtk.Box):
 		self.ratingButton.connect("toggled", self.rating_cb)
 
 		self.pack_start(central, True, False, 0)
+
+		# self.searchResults = SearchResults()
 
 	def search_cb(self, widget):
 		self.run_search()
@@ -186,3 +189,5 @@ class MovieSearchBar(Gtk.Box):
 				# GOing to need a try except for this,
 				# get_image(movie.poster_path, movie.title)
 				print('')
+
+		# self.searchResults.set_search_view()

@@ -65,7 +65,7 @@ class MovieWindow(Gtk.Window):
 		if fileChooser.run() is 0:
 			# Database.location = fileChooser.get_filename()
 			Database.location = 'testing.xlsx' # TEMP
-			self.addMovieStack(Database.location)
+			self.addSearchStack(Database.location)
 			self.main_stack.set_visible_child_name("movies")
 		fileChooser.destroy()
 
@@ -73,16 +73,16 @@ class MovieWindow(Gtk.Window):
 		# Database.location = fileChooser.get_filename()
 		Database.location = 'testing.xlsx' # TEMP
 		fileChooser.destroy()
-		self.addMovieStack(Database.location)
+		self.addSearchStack(Database.location)
 		self.main_stack.set_visible_child_name("movies")
 
-	def addMovieStack(self, location):
+	def addSearchStack(self, location):
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = MovieSearchBar(location)
 		self.reveal = Gtk.Revealer(child = self.searchBar, transition_duration = 300)
 		box.add(self.reveal)
-		self.imdbBox = MovieBox()
-		box.add(self.imdbBox)
+		imdbBox = MovieBox()
+		box.add(imdbBox)  # self.searchBar.searchResults)
 
 		self.header = MovieHeaderBar(self, self.reveal, self.searchBar)
 		self.set_titlebar(self.header)
