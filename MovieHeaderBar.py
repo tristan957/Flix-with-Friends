@@ -9,7 +9,7 @@ from Database import Database
 
 class MovieHeaderBar(Gtk.HeaderBar):
 
-	def __init__(self, parent, reveal, searchBar):
+	def __init__(self, parent):
 		Gtk.HeaderBar.__init__(self, title = "Flix with Friends", show_close_button = True)
 
 		self.db = Database(Database.fileName)
@@ -56,7 +56,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")  # create an image to place on the button
 		self.searchImage = Gtk.Image.new_from_gicon(self.searchIcon, Gtk.IconSize.BUTTON)
 		self.searchButton = Gtk.ToggleButton(image = self.searchImage)  # creates a button with an image
-		self.searchButton.connect("clicked", self.searchButton_cb, reveal, searchBar)  # connects the activate signal to searchButton_cb
+		self.searchButton.connect("clicked", self.searchButton_cb, parent)  # connects the activate signal to searchButton_cb
 		self.pack_end(self.searchButton)  # adds the button to the end of the headerbar
 
 	# callback for when the fileButton is pressed
@@ -75,7 +75,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		print("Release Date:", movie.release_date)
 		print("Rating:", movie.vote)
 		print("Runtime:", movie.runtime)
-		print("Genres:", end=" ")
+		print("Genres:", end = " ")
 		for i in range(0, len(movie.genres)):
 			print(movie.genres[i], end = " ")
 		print("")
@@ -86,14 +86,14 @@ class MovieHeaderBar(Gtk.HeaderBar):
 
 
 	# callback for when the searchButton is pressed
-	def searchButton_cb(self, searchButton, reveal, searchBar):
+	def searchButton_cb(self, searchButton, parent):
 		if searchButton.get_active() is True:
-			reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-			reveal.set_reveal_child(True)
-			searchBar.searchEntry.grab_focus()
+			parent.reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+			parent.reveal.set_reveal_child(True)
+			parent.searchBar.searchEntry.grab_focus()
 		else:
-			reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
-			reveal.set_reveal_child(False)
+			parent.reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
+			parent.reveal.set_reveal_child(False)
 			self.grab_focus()
 
 	def dataButton_cb(self, dataButton):
