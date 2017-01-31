@@ -15,3 +15,7 @@ search criteria like keywords, release date, rating and which of the users has s
 *(Insert Instructions)*
 
 ## Future Development
+
+
+## License
+[Apache 2.0](https://github.com/JosephMart/Flix-with-Friends/blob/master/LICENSE)
