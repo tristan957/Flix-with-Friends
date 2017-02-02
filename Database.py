@@ -243,12 +243,13 @@ class Database:
 
 
 if __name__ == "__main__":
-	db = Database()
-	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-	db.get_google_doc(doc_id)
+    db = Database()
+    doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+    db.get_google_doc(doc_id)
 
-	for movie in db.movies:
-		print(movie.title)
+    for movie in db.movies:
+        print(movie.title)
 
-	db.newMovie('Ben Hur')
-	db.upload_google_doc()
+    db.newMovie('Singing in the Rain')
+    db.update()
+    db.upload_google_doc()
