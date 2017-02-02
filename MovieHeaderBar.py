@@ -49,6 +49,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.pack_start(self.forward)
 
 		self.randomMovieButton = Gtk.Button(label = "Random Movie")
+		self.randomMovieButton.get_style_context().add_class("suggested-action")
 		random.seed()
 		self.randomMovieButton.connect("clicked", self.randomMovieButton_cb)
 		self.pack_start(self.randomMovieButton)
