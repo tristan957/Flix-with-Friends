@@ -22,7 +22,7 @@ class MovieSearchBar(Gtk.Box):
 
 		Database.fileName = location # FIXME move this to the parent class
 
-		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 10)
+		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5)
 		central.get_style_context().add_class("linked")
 
 		self.searchEntry = Gtk.SearchEntry()
@@ -93,6 +93,7 @@ class MovieSearchBar(Gtk.Box):
 		self.ratingButton.connect("toggled", self.rating_cb)
 
 		self.pack_start(central, True, False, 0)
+		self.get_style_context().add_class("inline-toolbar")
 
 		# self.searchResults = SearchResults()
 
