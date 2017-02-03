@@ -1,11 +1,12 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Pango
 import re
 from Database import Database
 from Movie import get_image
 from friends import getFriends
 from search_results import SearchResults
+import datetime
 
 
 class MovieSearchBar(Gtk.Box):
@@ -44,27 +45,40 @@ class MovieSearchBar(Gtk.Box):
 		self.datePopover = Gtk.Popover()
 		self.datePopover.connect("closed", self.closed_cb)
 		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		self.dateEntry = Gtk.Entry()
-		self.dateEntry.set_text("Enter a year")
+
+		store = Gtk.ListStore(str)
+		x = datetime.datetime.now().year
+		while x >= 1970:
+			store.append([str(x)])
+			x -= 1
+
+		combo = Gtk.ComboBox.new_with_model(store)
+
+		renderer = Gtk.CellRendererText(align_set = True, alignment = Pango.Alignment.CENTER)
+		combo.pack_start(renderer, True)
+		combo.add_attribute(renderer, "text", 0)
+		# self.dateEntry = Gtk.Entry()
+		# self.dateEntry.set_text("Enter a year")
 		self.dateAfter = Gtk.Switch()
-		self.dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
-		self.switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
-		self.switchBox.add(self.dateAfter)
-		self.switchBox.add(self.dateLabel)
-		self.dateBox.add(self.dateEntry)
-		self.dateBox.add(self.switchBox)
+		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
+		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
+		switchBox.add(self.dateAfter)
+		switchBox.add(dateLabel)
+		# self.dateBox.add(self.dateEntry)
+		self.dateBox.add(combo)
+		self.dateBox.add(switchBox)
 		self.datePopover.add(self.dateBox)
 
 		self.viewedByPopover = Gtk.Popover()
-		self.viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for friend in getFriends():
 			butt = Gtk.ModelButton(text = friend, role = Gtk.ButtonRole.CHECK, centered = False)
-			self.viewedByBox.add(butt)
+			viewedByBox.add(butt)
 			butt.connect("clicked", self.friendsList_cb)
-		self.viewedByPopover.add(self.viewedByBox)
+		self.viewedByPopover.add(viewedByBox)
 
 		self.ratingPopover = Gtk.Popover()
-		ratingBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 5)
+		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
 		self.scale.connect("value-changed", self.minRating_cb)
