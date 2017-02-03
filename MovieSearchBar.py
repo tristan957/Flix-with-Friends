@@ -45,18 +45,18 @@ class MovieSearchBar(Gtk.Box):
 		self.datePopover = Gtk.Popover()
 		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
-		store = Gtk.ListStore(str)
-		x = datetime.datetime.now().year
-		while x >= 1970:
-			store.append([str(x)])
-			x -= 1
-
-		self.dateCombo = Gtk.ComboBox.new_with_model(store)
+		# store = Gtk.ListStore(str)
+		self.dateCombo = Gtk.ComboBoxText(wrap_width = 4)
 		self.dateCombo.connect("changed", self.search_cb)
 
-		renderer = Gtk.CellRendererText()
-		self.dateCombo.pack_start(renderer, True)
-		self.dateCombo.add_attribute(renderer, "text", 0)
+		x = datetime.datetime.now().year
+		while x >= 1970:
+			self.dateCombo.append_text(str(x))
+			x -= 1
+
+		# renderer = Gtk.CellRendererText()
+		# self.dateCombo.pack_start(renderer, True)
+		# self.dateCombo.add_attribute(renderer, "text", 0)
 
 		self.dateAfter = Gtk.Switch()
 		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
