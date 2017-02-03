@@ -85,7 +85,6 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		# get_image(movie.poster_path, movie.title)
 		print('')
 
-
 	# callback for when the searchButton is pressed
 	def searchButton_cb(self, searchButton, reveal, searchBar):
 		if searchButton.get_active() is True:
