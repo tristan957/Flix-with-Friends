@@ -137,7 +137,8 @@ class MovieSearchBar(Gtk.Box):
 
 	def run_search(self):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
-
+		results = []
+		
 		for movie in self.db.movies:
 			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
@@ -177,6 +178,7 @@ class MovieSearchBar(Gtk.Box):
 
 			# If passes checks, then print Movie info
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating):
+				results.append(movie)
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
