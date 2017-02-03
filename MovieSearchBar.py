@@ -43,7 +43,6 @@ class MovieSearchBar(Gtk.Box):
 		self.genrePopover.add(self.genreBox)
 
 		self.datePopover = Gtk.Popover()
-		self.datePopover.connect("closed", self.closed_cb)
 		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
 		store = Gtk.ListStore(str)
@@ -52,20 +51,20 @@ class MovieSearchBar(Gtk.Box):
 			store.append([str(x)])
 			x -= 1
 
-		combo = Gtk.ComboBox.new_with_model(store)
+		self.dateCombo = Gtk.ComboBox.new_with_model(store)
+		self.dateCombo.connect("changed", self.search_cb)
 
-		renderer = Gtk.CellRendererText(align_set = True, alignment = Pango.Alignment.CENTER)
-		combo.pack_start(renderer, True)
-		combo.add_attribute(renderer, "text", 0)
-		# self.dateEntry = Gtk.Entry()
-		# self.dateEntry.set_text("Enter a year")
+		renderer = Gtk.CellRendererText()
+		self.dateCombo.pack_start(renderer, True)
+		self.dateCombo.add_attribute(renderer, "text", 0)
+
 		self.dateAfter = Gtk.Switch()
 		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
 		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		switchBox.add(self.dateAfter)
 		switchBox.add(dateLabel)
 		# self.dateBox.add(self.dateEntry)
-		self.dateBox.add(combo)
+		self.dateBox.add(self.dateCombo)
 		self.dateBox.add(switchBox)
 		self.datePopover.add(self.dateBox)
 
@@ -140,9 +139,6 @@ class MovieSearchBar(Gtk.Box):
 
 	def releaseDate_cb(self, dateButton):
 		self.datePopover.show_all()
-
-	def closed_cb(self, datePopover):
-		self.run_search()
 
 	def viewedBy_cb(self, viewedByButton):
 		self.viewedByPopover.show_all()
