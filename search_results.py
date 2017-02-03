@@ -20,7 +20,7 @@ class LoadingPage(Gtk.Box):
         self.spinner.set_size_request(-1, 64)
         # self.spinner.start()
         # "Witty" loading page, loading search results
-        lab = _("Concentrating really hard") + u"…"
+        lab = "Concentrating really hard" + u"…"
         self.label = Gtk.Label("<big>{}</big>".format(lab))
         self.label.set_use_markup(True)
 
@@ -37,7 +37,7 @@ class NotFoundPage(Gtk.Box):
         self.set_halign(Gtk.Align.CENTER)
         # Unable to find any matching search results
         self.label = Gtk.Label("<big>{}</big>".format(
-                               _("No results found")))
+                               "No results found"))
         self.label.set_use_markup(True)
 
         self.pack_start(self.label, False, False, 0)
@@ -55,7 +55,7 @@ class BlankPage(Gtk.Box):
         self.set_halign(Gtk.Align.CENTER)
         # Search page, prompt to begin searching
         self.label = Gtk.Label("<big>{}</big>".format(
-                               _("Type a query to get started")))
+                               "Type a query to get started"))
         self.label.set_use_markup(True)
 
         self.pack_start(self.label, False, False, 0)
@@ -63,9 +63,9 @@ class BlankPage(Gtk.Box):
 
 class SearchResults(Gtk.Box):
 
-    def __init__(self, search_page):
+    def __init__(self): #, search_page):
         Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
-        self.search_page = search_page
+        # self.search_page = search_page
 
         self.stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
         self.pack_start(self.stack, True, True, 0)
@@ -117,7 +117,6 @@ class SearchResults(Gtk.Box):
 
         # line 178 solus-sc/search-results...what's it do
 
-
     def set_search_view(self):
         model = Gtk.ListStore(str, str, Gtk.Image, str)
 
@@ -134,7 +133,6 @@ class SearchResults(Gtk.Box):
             image = Gtk.Image.new_from_file("./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg")
 
             model.append([text, movie, image, "go-next-symbolic"])
-
 
             while (Gtk.events_pending()):
                 Gtk.main_iteration()

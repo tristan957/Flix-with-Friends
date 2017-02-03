@@ -94,7 +94,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.pack_start(central, True, False, 0)
 
-		# self.searchResults = SearchResults()
+		self.searchResults = SearchResults()
 
 	def search_cb(self, widget):
 		self.run_search()
@@ -190,4 +190,4 @@ class MovieSearchBar(Gtk.Box):
 				# get_image(movie.poster_path, movie.title)
 				print('')
 
-		# self.searchResults.set_search_view()
+		self.searchResults.set_search_view()
