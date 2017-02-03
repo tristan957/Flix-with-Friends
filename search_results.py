@@ -122,7 +122,7 @@ class SearchResults(Gtk.Box):
 
         self.reset()
 
-        for movie in results:
+        for movie in MovieSearchBar.results:
             desc = movie.overview
             if len(desc) > 76:
                 desc = "%s..." % desc[0:76]
@@ -137,7 +137,7 @@ class SearchResults(Gtk.Box):
             while (Gtk.events_pending()):
                 Gtk.main_iteration()
 
-        if len(results) is 0:
+        if len(MovieSearchBar.results) is 0:
             self.stack.set_visible_child_name("not-found")
         else:
             self.stack.set_visible_child_name("available")
