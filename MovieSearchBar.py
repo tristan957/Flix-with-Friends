@@ -10,8 +10,6 @@ from search_results import SearchResults
 
 class MovieSearchBar(Gtk.Box):
 
-	global results
-
 	def __init__(self, location):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
@@ -138,7 +136,7 @@ class MovieSearchBar(Gtk.Box):
 	def run_search(self):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
 		results = []
-		
+
 		for movie in self.db.movies:
 			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
@@ -192,4 +190,4 @@ class MovieSearchBar(Gtk.Box):
 				# get_image(movie.poster_path, movie.title)
 				print('')
 
-		self.searchResults.set_search_view()
+		self.searchResults.set_search_view(results)

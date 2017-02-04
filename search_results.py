@@ -1,6 +1,6 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, GdkPixbuf
+from gi.repository import Gtk, Gio, GdkPixbuf, GLib
 import MovieSearchBar
 
 
@@ -117,12 +117,12 @@ class SearchResults(Gtk.Box):
 
         # line 178 solus-sc/search-results...what's it do
 
-    def set_search_view(self):
+    def set_search_view(self, results):
         model = Gtk.ListStore(str, str, Gtk.Image, str)
 
         self.reset()
 
-        for movie in MovieSearchBar.results:
+        for movie in results:
             desc = movie.overview
             if len(desc) > 76:
                 desc = "%s..." % desc[0:76]
