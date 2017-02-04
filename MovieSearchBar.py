@@ -168,10 +168,11 @@ class MovieSearchBar(Gtk.Box):
 			if genreSearchCheck == len(self.genres):
 				searchGenre = True
 
-			if str(self.dateEntry.get_text()) != "Enter a year":
-				if self.dateEntry.get_text() <= movie.release_date[:4]:
+			# print(self.dateCombo.get_active_text())
+			if str(self.dateCombo.get_active_text()) != 'Choose a year':
+				if self.dateCombo.get_active_text() <= movie.release_date[:4]:
 					if self.dateAfter.get_active():
-						if self.dateEntry.get_text() == movie.release_date[:4]:
+						if self.dateCombo.get_active_text() == movie.release_date[:4]:
 							searchDate = True
 						else:
 							searchDate = False
@@ -180,7 +181,7 @@ class MovieSearchBar(Gtk.Box):
 				else:
 					searchDate = False
 			else:
-				searchDate = True
+				searchDate = False
 
 			# Check Rating
 			if float(movie.vote) >= self.scale.get_value():
