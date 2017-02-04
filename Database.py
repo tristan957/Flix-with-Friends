@@ -250,6 +250,6 @@ if __name__ == "__main__":
     for movie in db.movies:
         print(movie.title)
 
-    db.newMovie('Eagle Eye')
+    db.newMovie('Sex and the City')
     # db.update()
     db.upload_google_doc()
