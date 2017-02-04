@@ -135,7 +135,6 @@ class SearchResults(Gtk.Box):
 
             model.append([text, movie, image, "go-next-symbolic"])
 
-
             while (Gtk.events_pending()):
                 Gtk.main_iteration()
 
