@@ -3,16 +3,14 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
-MOVIE_INDEX = 60
+MOVIE_INDEX = 10
 
 
 class MovieBox(Gtk.Box):
 
     def __init__(self):
         db = Database(Database.location)
-        movie = db.movies[10]
-
-
+        movie = db.movies[MOVIE_INDEX]
 
         Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
