@@ -132,12 +132,12 @@ class SearchResults(Gtk.Box):
 
             image = Gtk.Image.new_from_file("./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg")
 
-            model.append([text, movie, image, "go-next-symbolic"])
+            model.append([text, movie.title, image, "go-next-symbolic"])
 
             while (Gtk.events_pending()):
                 Gtk.main_iteration()
 
-        if len(MovieSearchBar.results) is 0:
+        if len(results) is 0:
             self.stack.set_visible_child_name("not-found")
         else:
             self.stack.set_visible_child_name("available")
