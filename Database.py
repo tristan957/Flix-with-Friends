@@ -25,6 +25,8 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Flix with Friends'
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
+# GOOGLE_DOC_FILE = 'GoogleDocDB.xlsx'
+GOOGLE_DOC_FILE = 'testing.xlsx'
 
 
 class Database:
@@ -39,6 +41,7 @@ class Database:
 		self.listGenres = []
 		self.MISSING_DATA = 'N/A'
 		self.spreadsheetID = ''
+		self.oldest_year = 3000
 
 		if FN is not None:
 			self.loadDB()
@@ -132,6 +135,9 @@ class Database:
 				if g != '' and g != self.MISSING_DATA:
 					(self.listGenres).append(g)
 
+		if MOVIE.release_date[:4] < str(self.oldest_year):
+			self.oldest_year = MOVIE.release_date[:4]
+
 		self.movies.append(MOVIE)
 
 	def newMovie(self, movie_title):
@@ -205,8 +211,8 @@ class Database:
 				sheet1.write(i, 8, row[8])
 				i += 1
 
-		book.save("GoogleDocDB.xlsx")
-		self.fileName = Database.location = "GoogleDocDB.xlsx"
+		book.save(GOOGLE_DOC_FILE)
+		self.fileName = Database.location = GOOGLE_DOC_FILE
 		self.loadDB()
 
 	def upload_google_doc(self):
@@ -250,6 +256,6 @@ if __name__ == "__main__":
     for movie in db.movies:
         print(movie.title)
 
-    db.newMovie('Sex and the City')
+    # db.newMovie('top gun')
     # db.update()
-    db.upload_google_doc()
+    # db.upload_google_doc()

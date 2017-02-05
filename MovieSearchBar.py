@@ -150,7 +150,7 @@ class MovieSearchBar(Gtk.Box):
 
 	def run_search(self):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
-
+		print(self.db.oldest_year)
 		for movie in self.db.movies:
 			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
