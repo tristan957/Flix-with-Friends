@@ -48,7 +48,7 @@ class Movie:
 	def __init__(self, dictionary):
 		self.title = dictionary['Title']
 		self.ID = dictionary['ID']
-		self.viewers = dictionary['ViewedBy']
+		self.viewers = dictionary['ViewedBy'].split(', ')
 		self.runtime = dictionary['Runtime']
 		self.genres = dictionary['Genres'].split(', ')
 		self.release_date = dictionary['ReleaseDate']

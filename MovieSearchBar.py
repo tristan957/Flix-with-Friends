@@ -150,7 +150,7 @@ class MovieSearchBar(Gtk.Box):
 
 	def run_search(self):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
-		print(self.db.oldest_year)
+
 		for movie in self.db.movies:
 			# Check if search word passes regex check for either Movie title or description
 			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
@@ -200,6 +200,9 @@ class MovieSearchBar(Gtk.Box):
 					print(movie.genres[i], end = " ")
 				print("")
 				print("Overview:", movie.overview)
+				print("Viewers:", end=" ")
+				for i in range(0, len(movie.viewers)):
+					print(movie.viewers[i], end=" ")
 				# GOing to need a try except for this,
 				# get_image(movie.poster_path, movie.title)
 				print('')
