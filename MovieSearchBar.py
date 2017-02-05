@@ -50,7 +50,7 @@ class MovieSearchBar(Gtk.Box):
 		self.dateCombo.connect("changed", self.search_cb)
 
 		x = datetime.datetime.now().year
-		while x >= 1970:
+		while x >= self.db.oldest_year:
 			self.dateCombo.append_text(str(x))
 			x -= 1
 		self.dateCombo.set_active(-1)

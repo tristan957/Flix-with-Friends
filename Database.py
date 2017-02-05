@@ -136,7 +136,7 @@ class Database:
 					(self.listGenres).append(g)
 
 		if MOVIE.release_date[:4] < str(self.oldest_year):
-			self.oldest_year = MOVIE.release_date[:4]
+			self.oldest_year = int(MOVIE.release_date[:4])
 
 		self.movies.append(MOVIE)
 
