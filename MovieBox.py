@@ -21,9 +21,9 @@ class MovieBox(Gtk.Box):
 
         self.titleLabel = Gtk.Label(label = "<big><b>" + movie.title + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
         self.poster = Gtk.Image(file = "./imagePosters/" + movie.title.replace(" ", "") + "_w342.jpg")
-        self.viewedLabel = Gtk.Label(label = "<b>Viewed By:</b> " + ' '.join(movie.viewers), justify = Gtk.Justification.LEFT, use_markup = True)
+        self.viewedLabel = Gtk.Label(label = "<b>Viewed By:</b> " + ', '.join(movie.viewers).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
         self.viewedLabel.set_xalign(0)
-        self.genreLabel = Gtk.Label(label = "<b>Genres:</b> " + ' '.join(movie.genres), justify = Gtk.Justification.LEFT, use_markup = True)
+        self.genreLabel = Gtk.Label(label = "<b>Genres:</b> " + ', '.join(movie.genres).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
         self.genreLabel.set_xalign(0)
         self.ratingLabel = Gtk.Label(label = "<b>Rating:</b> " + str(movie.vote) + "/10", justify = Gtk.Justification.LEFT, use_markup = True)
         self.ratingLabel.set_xalign(0)
