@@ -205,6 +205,6 @@ class MovieSearchBar(Gtk.Box):
 					print(movie.viewers[i], end=" ")
 				# GOing to need a try except for this,
 				# get_image(movie.poster_path, movie.title)
-				print('')
+				print('\n')
 
 		# self.searchResults.set_search_view()

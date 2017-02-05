@@ -42,6 +42,7 @@ class Database:
 		self.MISSING_DATA = 'N/A'
 		self.spreadsheetID = ''
 		self.oldest_year = 3000
+		self.friends = []
 
 		if FN is not None:
 			self.loadDB()
@@ -138,6 +139,11 @@ class Database:
 		if MOVIE.release_date[:4] < str(self.oldest_year):
 			self.oldest_year = int(MOVIE.release_date[:4])
 
+
+		for v in MOVIE.viewers:
+			if v not in self.friends:
+				self.friends.append(v)
+				
 		self.movies.append(MOVIE)
 
 	def newMovie(self, movie_title):
