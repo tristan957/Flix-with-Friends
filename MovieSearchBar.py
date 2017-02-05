@@ -53,6 +53,8 @@ class MovieSearchBar(Gtk.Box):
 		while x >= 1970:
 			self.dateCombo.append_text(str(x))
 			x -= 1
+		self.dateCombo.set_active(-1)
+		# print(self.dateCombo.get_active_text())
 
 		# renderer = Gtk.CellRendererText()
 		# self.dateCombo.pack_start(renderer, True)
@@ -169,7 +171,7 @@ class MovieSearchBar(Gtk.Box):
 				searchGenre = True
 
 			# print(self.dateCombo.get_active_text())
-			if str(self.dateCombo.get_active_text()) != 'Choose a year':
+			if self.dateCombo.get_active() != -1:
 				if self.dateCombo.get_active_text() <= movie.release_date[:4]:
 					if self.dateAfter.get_active():
 						if self.dateCombo.get_active_text() == movie.release_date[:4]:
@@ -181,7 +183,7 @@ class MovieSearchBar(Gtk.Box):
 				else:
 					searchDate = False
 			else:
-				searchDate = False
+				searchDate = True
 
 			# Check Rating
 			if float(movie.vote) >= self.scale.get_value():
