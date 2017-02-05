@@ -159,6 +159,9 @@ class MovieSearchBar(Gtk.Box):
 			genreSearchCheck = 0
 			searchGenre = 0
 			searchRating = 0
+			friendSearchCheck = 0
+			searchFriend = 0
+
 
 			# Check how many matches for self genre are in Movie Genre
 			for g in self.genres:
@@ -170,7 +173,7 @@ class MovieSearchBar(Gtk.Box):
 			if genreSearchCheck == len(self.genres):
 				searchGenre = True
 
-			# print(self.dateCombo.get_active_text())
+			# Check to see if date search criteria match
 			if self.dateCombo.get_active() != -1:
 				if self.dateCombo.get_active_text() <= movie.release_date[:4]:
 					if self.dateAfter.get_active():
@@ -189,8 +192,20 @@ class MovieSearchBar(Gtk.Box):
 			if float(movie.vote) >= self.scale.get_value():
 				searchRating = True
 
+			# Check friends
+			# Check how many matches for self genre are in Movie Genre
+			for f in self.friends:
+				for c in movie.viewers:
+					if f == c:
+						friendSearchCheck += 1
+
+			# Make sure Number of genres in Movie match number of self genres
+			if friendSearchCheck == len(self.friends):
+				searchFriend = True
+
+
 			# If passes checks, then print Movie info
-			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating):
+			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
 				print("Title:", movie.title)
 				print("Release Date:", movie.release_date)
 				print("Rating:", movie.vote)
