@@ -142,8 +142,9 @@ class Database:
 
 		for v in MOVIE.viewers:
 			if v not in self.friends:
-				self.friends.append(v)
-				
+				if v != '':
+					self.friends.append(v)
+
 		self.movies.append(MOVIE)
 
 	def newMovie(self, movie_title):

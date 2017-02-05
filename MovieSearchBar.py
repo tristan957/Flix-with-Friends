@@ -72,7 +72,7 @@ class MovieSearchBar(Gtk.Box):
 
 		self.viewedByPopover = Gtk.Popover()
 		viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		for friend in getFriends():
+		for friend in self.db.friends:
 			butt = Gtk.ModelButton(text = friend, role = Gtk.ButtonRole.CHECK, centered = False)
 			viewedByBox.add(butt)
 			butt.connect("clicked", self.friendsList_cb)
