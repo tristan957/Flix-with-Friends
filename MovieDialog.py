@@ -13,16 +13,16 @@ class MovieDialog(Gtk.Dialog):
 
 		self.type = action.lower()
 		self.area = self.get_content_area()	 # area is a Gtk.Box
+		self.area.get_style_context().add_class("linked")
 		self.area.set_orientation(Gtk.Orientation.HORIZONTAL)
-		self.area.set_spacing(5)
 
 		self.entry = Gtk.Entry(text = "Enter the name of a movie to " + action.lower())
 		self.entry.grab_focus()
-		self.area.add(self.entry)
+		self.area.pack_start(self.entry, True, False, 0)
 
 		self.enterButton = Gtk.Button(label = "Enter")
 		self.enterButton.connect("clicked", self.enterButton_cb)
-		self.area.add(self.enterButton)
+		self.area.pack_end(self.enterButton, True, False, 0)
 
 		self.show_all()
 		# if the action is deleting, create an autocompletion tree

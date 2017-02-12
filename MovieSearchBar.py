@@ -11,8 +11,6 @@ import datetime
 
 class MovieSearchBar(Gtk.Box):
 
-	global results
-
 	def __init__(self, location):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
@@ -110,7 +108,7 @@ class MovieSearchBar(Gtk.Box):
 		self.pack_start(central, True, False, 0)
 		self.get_style_context().add_class("inline-toolbar")
 
-		# self.searchResults = SearchResults()
+		self.searchResults = SearchResults()
 
 	def search_cb(self, widget):
 		self.run_search()
@@ -150,6 +148,7 @@ class MovieSearchBar(Gtk.Box):
 
 	def run_search(self):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
+		results = []
 
 		for movie in self.db.movies:
 			# Check if search word passes regex check for either Movie title or description
@@ -222,4 +221,4 @@ class MovieSearchBar(Gtk.Box):
 				# get_image(movie.poster_path, movie.title)
 				print('\n')
 
-		# self.searchResults.set_search_view()
+		self.searchResults.set_search_view(results)

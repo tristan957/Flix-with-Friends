@@ -84,7 +84,7 @@ class MovieWindow(Gtk.Window):
 		imdbBox = MovieBox()
 		box.add(imdbBox)  # self.searchBar.searchResults)
 
-		self.header = MovieHeaderBar(self, self.reveal, self.searchBar)
+		self.header = MovieHeaderBar(self)
 		self.set_titlebar(self.header)
 		self.connect("key-press-event", self.key_pressed_cb)
 
