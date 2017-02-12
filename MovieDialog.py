@@ -33,7 +33,7 @@ class MovieDialog(Gtk.Dialog):
 
 			try:
 				self.db.newMovie(self.entry.get_text())
-				print(self.entry.get_text(),'added as', self.db.movies[-1].title)
+				print(self.entry.get_text(), 'added as', self.db.movies[-1].title)
 			except:
 				print('Error adding', self.entry.get_text())
 
