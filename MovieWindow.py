@@ -52,6 +52,7 @@ class MovieWindow(Gtk.Window):
 		self.reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 		self.header.searchButton.set_active(True)
 		self.reveal.set_reveal_child(True)
+		return self.searchBar.search.handle_event(event)
 
 	def google_cb(self, google):
 		print(google.get_label())
