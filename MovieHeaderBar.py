@@ -60,13 +60,6 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.searchButton.connect("clicked", self.searchButton_cb, parent)  # connects the activate signal to searchButton_cb
 		self.pack_end(self.searchButton)  # adds the button to the end of the headerbar
 
-	# callback for when the fileButton is pressed
-	def fileButton_cb(self, fileButton):
-		filename = fileButton.get_filename()
-		db = Database(filename)
-		Database.location = filename
-		print('here I am')
-
 	def randomMovieButton_cb(self, randomMovieButton):
 		number_movies = len(self.db.movies) - 1
 		movie_position = random.randint(0, number_movies)
