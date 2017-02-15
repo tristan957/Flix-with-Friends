@@ -8,7 +8,7 @@ class LocationChooser(Gtk.Box):
 	def __init__(self):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, margin = 20, spacing = 10)
 
-		label = Gtk.Label("<big>Choose the location of your file.</big>", use_markup = True)
+		label = Gtk.Label("<big>Choose the location of your spreadsheet.</big>", use_markup = True)
 		self.pack_start(label, True, True, 0)
 
 		googleIcon = Gio.ThemedIcon(name = "google")
@@ -23,8 +23,9 @@ class LocationChooser(Gtk.Box):
 		buttonBox.get_style_context().add_class("linked")
 		buttonBox.pack_start(self.google, True, True, 0)
 		buttonBox.pack_end(self.local, True, True, 0)
+		buttonBox.set_size_request(500, 100)
 
-		self.pack_end(buttonBox, True, True, 0)
+		self.pack_end(buttonBox, False, True, 0)
 
 class MovieWindow(Gtk.Window):
 
@@ -47,7 +48,7 @@ class MovieWindow(Gtk.Window):
 		movie = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		i = 0
 		while i < 15:
-			movie.add(Gtk.Button(label = "hello " + str(i)))
+			# movie.add(Gtk.Button(label = "hello " + str(i)))
 			i = i + 1
 
 		self.stack.add_named(movie, "movie")
