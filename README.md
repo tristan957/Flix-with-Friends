@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/JosephMart/Flix-with-Friends.png?label=ready&title=Ready)](https://waffle.io/JosephMart/Flix-with-Friends)
 # Flix with Friends
 
 Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957)
