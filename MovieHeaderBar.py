@@ -81,12 +81,12 @@ class MovieHeaderBar(Gtk.HeaderBar):
 	# callback for when the searchButton is pressed
 	def searchButton_cb(self, searchButton, parent):
 		if searchButton.get_active() is True:
-			parent.reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-			parent.reveal.set_reveal_child(True)
-			parent.searchBar.searchEntry.grab_focus()
+			parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+			parent.searchBar.set_reveal_child(True)
+			# parent.searchBar.searchEntry.grab_focus() # problem line
 		else:
-			parent.reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
-			parent.reveal.set_reveal_child(False)
+			parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
+			parent.searchBar.set_reveal_child(False)
 			self.grab_focus()
 
 	def dataButton_cb(self, dataButton):

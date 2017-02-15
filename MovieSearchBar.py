@@ -9,10 +9,12 @@ from search_results import SearchResults
 import datetime
 
 
-class MovieSearchBar(Gtk.Box):
+class MovieSearchBar(Gtk.Revealer):
 
 	def __init__(self, location):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
+		Gtk.Box.__init__(self, transition_duration = 300)
+
+		searchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
 
 		self.genres = []
 		self.friends = []
@@ -43,7 +45,6 @@ class MovieSearchBar(Gtk.Box):
 		self.datePopover = Gtk.Popover()
 		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
-		# store = Gtk.ListStore(str)
 		self.dateCombo = Gtk.ComboBoxText(wrap_width = 4)
 		self.dateCombo.connect("changed", self.search_cb)
 
@@ -52,18 +53,12 @@ class MovieSearchBar(Gtk.Box):
 			self.dateCombo.append_text(str(x))
 			x -= 1
 		self.dateCombo.set_active(-1)
-		# print(self.dateCombo.get_active_text())
-
-		# renderer = Gtk.CellRendererText()
-		# self.dateCombo.pack_start(renderer, True)
-		# self.dateCombo.add_attribute(renderer, "text", 0)
 
 		self.dateAfter = Gtk.Switch()
 		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
 		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		switchBox.add(self.dateAfter)
 		switchBox.add(dateLabel)
-		# self.dateBox.add(self.dateEntry)
 		self.dateBox.add(self.dateCombo)
 		self.dateBox.add(switchBox)
 		self.datePopover.add(self.dateBox)
@@ -105,8 +100,10 @@ class MovieSearchBar(Gtk.Box):
 		self.viewedByButton.connect("toggled", self.viewedBy_cb)
 		self.ratingButton.connect("toggled", self.rating_cb)
 
-		self.pack_start(central, True, False, 0)
-		self.get_style_context().add_class("inline-toolbar")
+		searchBox.pack_start(central, True, False, 0)
+		searchBox.get_style_context().add_class("inline-toolbar")
+
+		self.set_property("child", searchBox)
 
 		self.searchResults = SearchResults()
 

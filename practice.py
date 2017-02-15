@@ -1,6 +1,10 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
+from Database import Database
+from MovieBox import MovieBox
+from MovieSearchBar import MovieSearchBar
+from MovieHeaderBar import MovieHeaderBar
 
 
 class LocationChooser(Gtk.Box):
@@ -45,27 +49,15 @@ class MovieWindow(Gtk.Window):
 		label1 = Gtk.Label("Choose the location of your file", use_markup = True)
 		self.stack.add_named(label1, "label")
 
-		movie = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		i = 0
-		while i < 15:
-			# movie.add(Gtk.Button(label = "hello " + str(i)))
-			i = i + 1
-
-		self.stack.add_named(movie, "movie")
-
 		self.add(self.stack)
-		self.connect("key-press-event", self.key_pressed_cb)
 
 		self.show_all()
 
 	def key_pressed_cb(self, win, event):
-		# self.reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-		# self.header.searchButton.set_active(True)
-		# self.reveal.set_reveal_child(True)
-		header = Gtk.HeaderBar(title = "Test", show_close_button = True)
-		self.set_titlebar(header)
-		self.stack.set_visible_child_name("movie")
-		self.show_all()
+		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+		self.header.searchButton.set_active(True)
+		self.searchBar.set_reveal_child(True)
+		# self.searchBar.searchEntry.grab_focus()
 
 	def google_cb(self, google):
 		self.stack.set_visible_child_name("label")
@@ -78,10 +70,32 @@ class MovieWindow(Gtk.Window):
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 		if fileChooser.run() is 0:
 			# Database.location = fileChooser.get_filename()
-			# Database.location = 'testing.xlsx' # TEMP
-			# self.addSearchStack(Database.location)
-			# self.main_stack.set_visible_child_name("movies")
-			fileChooser.destroy()
+			Database.location = 'testing.xlsx' # TEMP
+			self.addMainStack(Database.location)
+			self.stack.set_visible_child_name("main")
+		fileChooser.destroy()
+
+	def doubleClickEnter_cb(self, fileChooser):
+		# Database.location = fileChooser.get_filename()
+		Database.location = 'testing.xlsx' # TEMP
+		fileChooser.destroy()
+		self.addMainStack(Database.location)
+		self.stack.set_visible_child_name("main")
+
+	def addMainStack(self, location):
+		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		self.searchBar = MovieSearchBar(location)
+		box.add(self.searchBar)
+		imdbBox = MovieBox()
+		box.add(imdbBox)
+		self.stack.add_named(box, "main")
+
+		self.header = MovieHeaderBar(self)
+		self.set_titlebar(self.header)
+
+		self.connect("key-press-event", self.key_pressed_cb)
+
+		self.show_all()
 
 
 win = MovieWindow()	 # create the GUI
