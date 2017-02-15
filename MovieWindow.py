@@ -1,21 +1,19 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
-from MovieHeaderBar import MovieHeaderBar
-from MovieSearchBar import MovieSearchBar
-from MovieBox import MovieBox
 from Database import Database
+from MovieBox import MovieBox
+from MovieSearchBar import MovieSearchBar
+from MovieHeaderBar import MovieHeaderBar
 
 
-class FileChooserBox(Gtk.Box):
+class LocationChooser(Gtk.Box):
 
 	def __init__(self):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, spacing = 50)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, margin = 20, spacing = 10)
 
-		self.buttonBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 25)
-		self.label = Gtk.Label("Choose the location of your file", use_markup = True)
-
-		# alignment could probably be ffixed with a Gtk.Button.new_with_label() and Gtk.Label with right alighnment
+		label = Gtk.Label("<big>Choose the location of your spreadsheet.</big>", use_markup = True)
+		self.pack_start(label, True, True, 0)
 
 		googleIcon = Gio.ThemedIcon(name = "google")
 		googleImage = Gtk.Image.new_from_gicon(googleIcon, Gtk.IconSize.BUTTON)
@@ -25,36 +23,44 @@ class FileChooserBox(Gtk.Box):
 		localImage = Gtk.Image.new_from_gicon(localIcon, Gtk.IconSize.BUTTON)
 		self.local = Gtk.Button(label = "Local Spreadsheet", image = localImage, image_position = Gtk.PositionType.LEFT, always_show_image = True)
 
-		self.buttonBox.add(self.google)
-		self.buttonBox.add(self.local)
-		self.add(self.label)
-		self.add(self.buttonBox)
+		buttonBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+		buttonBox.get_style_context().add_class("linked")
+		buttonBox.pack_start(self.google, True, True, 0)
+		buttonBox.pack_end(self.local, True, True, 0)
+		buttonBox.set_size_request(500, 100)
+
+		self.pack_end(buttonBox, False, True, 0)
 
 class MovieWindow(Gtk.Window):
 
 	def __init__(self):
 		Gtk.Window.__init__(self)
 
-		header = Gtk.HeaderBar(title = "Flix with Friends", show_close_button = True)	 # create headerbar
-		self.set_titlebar(header)  # add it to the window
+		header = Gtk.HeaderBar(title = "Flix with Friends", show_close_button = True)
+		self.set_titlebar(header)
 
-		self.main_stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.SLIDE_UP_DOWN, homogeneous = True)
-		self.add(self.main_stack)
+		self.stack = Gtk.Stack(homogeneous = True, transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
 
-		self.filePage = FileChooserBox()
-		self.filePage.google.connect("clicked", self.google_cb)
-		self.filePage.local.connect("clicked", self.local_cb)
-		self.main_stack.add_named(self.filePage, "file-chooser")
+		spreadsheetBox = LocationChooser()
+		spreadsheetBox.google.connect("clicked", self.google_cb)
+		spreadsheetBox.local.connect("clicked", self.local_cb)
+		self.stack.add_named(spreadsheetBox, "data-chooser")
+
+		label1 = Gtk.Label("Choose the location of your file", use_markup = True)
+		self.stack.add_named(label1, "label")
+
+		self.add(self.stack)
 
 		self.show_all()
 
 	def key_pressed_cb(self, win, event):
-		self.reveal.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 		self.header.searchButton.set_active(True)
-		self.reveal.set_reveal_child(True)
+		self.searchBar.set_reveal_child(True)
+		# self.searchBar.searchEntry.grab_focus()
 
 	def google_cb(self, google):
-		print(google.get_label())
+		self.stack.set_visible_child_name("label")
 
 	def local_cb(self, local):
 		fileChooser = Gtk.FileChooserDialog(self, title = "Choose a Spreadsheet")
@@ -65,28 +71,28 @@ class MovieWindow(Gtk.Window):
 		if fileChooser.run() is 0:
 			# Database.location = fileChooser.get_filename()
 			Database.location = 'testing.xlsx' # TEMP
-			self.addSearchStack(Database.location)
-			self.main_stack.set_visible_child_name("movies")
+			self.addMainStack(Database.location)
+			self.stack.set_visible_child_name("main")
 		fileChooser.destroy()
 
 	def doubleClickEnter_cb(self, fileChooser):
 		# Database.location = fileChooser.get_filename()
 		Database.location = 'testing.xlsx' # TEMP
 		fileChooser.destroy()
-		self.addSearchStack(Database.location)
-		self.main_stack.set_visible_child_name("movies")
+		self.addMainStack(Database.location)
+		self.stack.set_visible_child_name("main")
 
-	def addSearchStack(self, location):
+	def addMainStack(self, location):
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = MovieSearchBar(location)
-		self.reveal = Gtk.Revealer(child = self.searchBar, transition_duration = 300)
-		box.add(self.reveal)
+		box.add(self.searchBar)
 		imdbBox = MovieBox()
-		box.add(imdbBox)  # self.searchBar.searchResults)
+		box.add(imdbBox)
+		self.stack.add_named(box, "main")
 
 		self.header = MovieHeaderBar(self)
 		self.set_titlebar(self.header)
+
 		self.connect("key-press-event", self.key_pressed_cb)
 
-		self.main_stack.add_named(box, "movies")
 		self.show_all()
