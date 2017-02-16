@@ -1,4 +1,5 @@
-[![Head to the Waffle.io board](https://badge.waffle.io/JosephMart/Flix-with-Friends.png?label=ready&title=Waffle.io)](https://waffle.io/JosephMart/Flix-with-Friends)
+[![Head to the Waffle.io board](https://img.shields.io/badge/Waffle.io--blue.svg?label=Waffle.io&title=Waffle.io&style=social)](https://waffle.io/JosephMart/Flix-with-Friends) [![Head to the Slack channel](https://img.shields.io/badge/Slack--lightgrey.svg?label=Slack&title=Slack&style=social)](https://return0software.slack.com/messages/general/) [![Python Version](https://img.shields.io/badge/python-3.5.2-orange.svg?title=3.5.2&style=flat-square)](https://docs.python.org/release/3.5.2/) [![GTK+ Version](https://img.shields.io/badge/GTK%2B-3.22-brightgreen.svg?style=flat-square)](https://developer.gnome.org/gtk3/stable/)
+
 # Flix with Friends
 
 Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957)
