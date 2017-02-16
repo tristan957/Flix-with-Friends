@@ -1,7 +1,8 @@
-[![Head to the Waffle.io board](https://img.shields.io/badge/Waffle.io--blue.svg?label=Waffle.io&title=Waffle.io&style=social)](https://waffle.io/JosephMart/Flix-with-Friends) [![Head to the Slack channel](https://img.shields.io/badge/Slack--lightgrey.svg?label=Slack&title=Slack&style=social)](https://return0software.slack.com/messages/general/) [![Python Version](https://img.shields.io/badge/python-3.5.2-orange.svg?title=3.5.2&style=flat-square)](https://docs.python.org/release/3.5.2/) [![GTK+ Version](https://img.shields.io/badge/GTK%2B-3.22-brightgreen.svg?style=flat-square)](https://developer.gnome.org/gtk3/stable/)
+[![Head to Waffle.io](https://img.shields.io/badge/Waffle.io--blue.svg?label=Waffle.io&title=Waffle.io&style=social)](https://waffle.io/JosephMart/Flix-with-Friends) [![Head to Slack](https://img.shields.io/badge/Slack--lightgrey.svg?label=Slack&title=Slack&style=social)](https://return0software.slack.com/messages/general/) [![Python Documentation](https://img.shields.io/badge/python-3.5.2-orange.svg?title=3.5.2&style=flat-square)](https://docs.python.org/release/3.5.2/) [![GTK+ Documentation](https://img.shields.io/badge/GTK%2B-3.22-brightgreen.svg?style=flat-square)](https://developer.gnome.org/gtk3/stable/)
 # Flix with Friends
 
-Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957)
+Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957).
+Developed on [Solus](https://solus-project.com/) using [Atom](https://atom.io/).
 
 Flix with Friends is a program that helps users decide what movie they should watch. It reads
 through spreadsheets or Google Sheets that have names of movies that users would like to watch.
