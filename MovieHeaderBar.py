@@ -1,7 +1,7 @@
 import gi
 import random
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, GLib
+from gi.repository import Gtk, Gdk, Gio, GLib
 from MovieDialog import MovieDialog
 from FriendDialog import FriendDialog
 from Database import Database
@@ -84,6 +84,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 			parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 			parent.searchBar.set_reveal_child(True)
 			# parent.searchBar.searchEntry.grab_focus() # problem line
+			# return parent.searchBar.searchEntry.handle_event(Gdk.Event(Gdk.EventFocus))
 		else:
 			parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
 			parent.searchBar.set_reveal_child(False)

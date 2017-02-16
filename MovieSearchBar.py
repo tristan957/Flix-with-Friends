@@ -35,15 +35,15 @@ class MovieSearchBar(Gtk.Revealer):
 		self.searchEntry.connect("changed", self.search_cb)
 
 		self.genrePopover = Gtk.Popover()
-		self.genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
 			butt = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK, centered = False)
-			self.genreBox.add(butt)
+			genreBox.add(butt)
 			butt.connect("clicked", self.genresList_cb)
-		self.genrePopover.add(self.genreBox)
+		self.genrePopover.add(genreBox)
 
 		self.datePopover = Gtk.Popover()
-		self.dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
 		self.dateCombo = Gtk.ComboBoxText(wrap_width = 4)
 		self.dateCombo.connect("changed", self.search_cb)
@@ -59,9 +59,9 @@ class MovieSearchBar(Gtk.Revealer):
 		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		switchBox.add(self.dateAfter)
 		switchBox.add(dateLabel)
-		self.dateBox.add(self.dateCombo)
-		self.dateBox.add(switchBox)
-		self.datePopover.add(self.dateBox)
+		dateBox.add(self.dateCombo)
+		dateBox.add(switchBox)
+		self.datePopover.add(dateBox)
 
 		self.viewedByPopover = Gtk.Popover()
 		viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
