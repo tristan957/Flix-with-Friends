@@ -221,6 +221,7 @@ class MovieSearchBar(Gtk.Revealer):
 				# GOing to need a try except for this,
 				# get_image(movie.poster_path, movie.title)
 				print('\n')
+				results.append(movie)
 
 		self.searchResults.set_search_view(results)
 		self.parent.stack.set_visible_child_name("search-results")
