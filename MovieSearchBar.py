@@ -29,7 +29,7 @@ class MovieSearchBar(Gtk.Revealer):
 		central.get_style_context().add_class("linked")
 
 		self.searchEntry = Gtk.SearchEntry()
-		self.searchEntry.grab_focus()
+		self.searchEntry.set_can_focus(True)
 		central.pack_start(self.searchEntry, True, True, 0)
 
 		# Callback for when enter key is pressed
