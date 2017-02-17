@@ -225,6 +225,41 @@ class Database:
 		self.fileName = Database.location = GOOGLE_DOC_FILE
 		self.loadDB()
 
+	def tmdb_search(self, keyword):
+		search = tmdb.Search() # Setup search to run API query
+		response = search.movie(query = keyword)  # Search for movie
+		i = 0
+		for s in search.results:  # for loop return first search result FIXME
+			i = 1 + i
+			if i == 1:
+				titleID = s['id']
+				daMovie = tmdb.Movies(titleID)
+				response = daMovie.info()
+				# Get Genres into one line
+				genreResult = response['genres']
+				gen = ''
+				for i in range(0, len(genreResult)):
+					gen += genreResult[i]['name']
+					if i < (len(genreResult) - 1):
+						gen += ', '
+				# Write info to appropriate (row,column)
+				print(response['title'])
+				print(response['runtime'])
+				if (gen is None) or (len(gen) == 0):
+					print('N/A')
+				else:
+					print(gen)
+				print(response['release_date'])
+				print(response['vote_average'])
+				print(response['overview'])
+				print(titleID)
+
+				if (response['poster_path'] is None) or (len(response['poster_path']) == 0):
+					print('N/A')
+				else:
+					print(response['poster_path'])
+
+
 	def upload_google_doc(self):
 		# Run Google OAuth2
 		credentials = self.get_credentials()
@@ -260,11 +295,11 @@ class Database:
 
 if __name__ == "__main__":
     db = Database()
-    doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-    db.get_google_doc(doc_id)
-
-    for movie in db.movies:
-        print(movie.title)
+    # doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+    # db.get_google_doc(doc_id)
+    db.tmdb_search('Saving private ryan')
+    # for movie in db.movies:
+    #     print(movie.title)
 
     # db.newMovie('top gun')
     # db.update()
