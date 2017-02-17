@@ -85,9 +85,11 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		if searchButton.get_active() is True:
 			self.parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 			self.parent.searchBar.set_reveal_child(True)
-			# if self.parent.searchBar.searchEntry.has_focus() is False:
-			self.parent.searchBar.searchEntry.grab_focus() # problem line
-			# return parent.searchBar.searchEntry.handle_event(Gdk.Event(Gdk.EventFocus))
+			if self.parent.searchBar.searchEntry.has_focus() is False:
+				# self.parent.searchBar.signals.map_event
+				self.parent.searchBar.searchEntry.grab_focus() # problem line
+			# eturn self.parent.searchBar.searchEntry.handle_event(gi.overrides.Gdk.EventKey)
+			# self.parent.key_pressed_cb(self.parent, self.sea)
 		else:
 			self.parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
 			self.parent.searchBar.set_reveal_child(False)

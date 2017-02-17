@@ -58,11 +58,11 @@ class MovieWindow(Gtk.Window):
 
 	def key_pressed_cb(self, win, event):
 		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-		self.header.searchButton.set_active(True)
 		self.searchBar.set_reveal_child(True)
 		if self.searchBar.searchEntry.has_focus() is False:
 			self.searchBar.searchEntry.grab_focus()
-			return self.searchBar.searchEntry.handle_event(event)
+		self.header.searchButton.set_active(True)
+		return self.searchBar.searchEntry.handle_event(event)
 
 	def google_cb(self, google):
 		self.stack.set_visible_child_name("label")
