@@ -128,7 +128,7 @@ class SearchResults(Gtk.Box):
                 desc = "%s..." % desc[0:76]
 
             desc = GLib.markup_escape_text(desc)
-            text = "<b>%s</b>\n%s" % (movie.title, desc)
+            text = "<b>%s</b>\n%s" % (movie.title.replace('&','&amp;'), desc)
 
             image = Gtk.Image.new_from_file("./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg")
 
