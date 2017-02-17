@@ -3,7 +3,6 @@ import os
 import xlwt
 import xlrd
 import tmdbsimple as tmdb
-import operator
 
 from xlutils.copy import copy
 from Movie import Movie, get_image
