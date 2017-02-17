@@ -1,7 +1,8 @@
-[![Stories in Ready](https://badge.waffle.io/JosephMart/Flix-with-Friends.png?label=ready&title=Ready)](https://waffle.io/JosephMart/Flix-with-Friends)
+[![Head to Waffle.io](https://img.shields.io/badge/Waffle.io--blue.svg?label=Waffle.io&title=Waffle.io&style=social)](https://waffle.io/JosephMart/Flix-with-Friends) [![Head to Slack](https://img.shields.io/badge/Slack--lightgrey.svg?label=Slack&title=Slack&style=social)](https://return0software.slack.com/messages/general/) [![Python Documentation](https://img.shields.io/badge/python-3.5.2-orange.svg?title=3.5.2&style=flat-square)](https://docs.python.org/release/3.5.2/) [![GTK+ Documentation](https://img.shields.io/badge/GTK%2B-3.22-brightgreen.svg?style=flat-square)](https://developer.gnome.org/gtk3/stable/)
 # Flix with Friends
 
-Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957)
+Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957).
+Developed on [Solus](https://solus-project.com/) using [Atom](https://atom.io/).
 
 Flix with Friends is a program that helps users decide what movie they should watch. It reads
 through spreadsheets or Google Sheets that have names of movies that users would like to watch.
@@ -13,10 +14,12 @@ search criteria like keywords, release date, rating and which of the users has s
 *(Insert App Usage)*
 
 ## How to Install
-*(Insert Instructions)*
+Currently throwing around ideas which could include a `Makefile` or a `setup.py`. Stay tuned. Dependencies are currently written in `dependencies.txt`. Make sure to install them. Python dependencies should be installed using `pip3`.
+
+As of right now you can clone the repository and run `python3 MovieMain.py`.
 
 ## Future Development
-
+Flix with Friends is leveraging the latest Python and GTK+ versions available on Solus. We, the developers will keep it up to date to the best of our ability with 
 
 ## License
-[Apache 2.0](https://github.com/JosephMart/Flix-with-Friends/blob/master/LICENSE)
+[GPL 2.0](https://github.com/JosephMart/Flix-with-Friends/blob/master/LICENSE)
