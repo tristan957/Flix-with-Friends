@@ -30,6 +30,7 @@ class MovieSearchBar(Gtk.Revealer):
 
 		self.searchEntry = Gtk.SearchEntry()
 		self.searchEntry.set_can_focus(True)
+		self.searchEntry.set_size_request(250, -1)
 		central.pack_start(self.searchEntry, True, True, 0)
 
 		# Callback for when enter key is pressed
@@ -88,9 +89,13 @@ class MovieSearchBar(Gtk.Revealer):
 		self.ratingPopover.add(ratingBox)
 
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
+		self.genreButton.set_size_request(100, -1)
 		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
+		self.dateButton.set_size_request(100, -1)
 		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
+		self.viewedByButton.set_size_request(100, -1)
 		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
+		self.ratingButton.set_size_request(100, -1)
 
 		central.pack_start(self.genreButton, True, True, 0)
 		central.pack_start(self.dateButton, True, True, 0)
