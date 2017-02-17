@@ -11,8 +11,10 @@ import datetime
 
 class MovieSearchBar(Gtk.Revealer):
 
-	def __init__(self, location):
+	def __init__(self, location, parent):
 		Gtk.Box.__init__(self, transition_duration = 300)
+
+		self.parent = parent
 
 		searchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
 
@@ -106,6 +108,8 @@ class MovieSearchBar(Gtk.Revealer):
 		self.set_property("child", searchBox)
 
 		self.searchResults = SearchResults()
+
+		self.parent.stack.add_named(self.searchResults, "search-results")
 
 	def search_cb(self, widget):
 		self.run_search()
@@ -219,3 +223,4 @@ class MovieSearchBar(Gtk.Revealer):
 				print('\n')
 
 		self.searchResults.set_search_view(results)
+		self.parent.stack.set_visible_child_name("search-results")

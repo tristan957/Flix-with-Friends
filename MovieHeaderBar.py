@@ -12,6 +12,8 @@ class MovieHeaderBar(Gtk.HeaderBar):
 	def __init__(self, parent):
 		Gtk.HeaderBar.__init__(self, title = "Flix with Friends", show_close_button = True)
 
+		self.parent = parent
+
 		self.db = Database(Database.fileName)
 
 		# button to display popover displaying add/delete options to data
@@ -19,14 +21,14 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.dataImage = Gtk.Image.new_from_gicon(self.dataIcon, Gtk.IconSize.BUTTON)
 
 		self.addMovieButton = Gtk.ModelButton(text = "Add a Movie")
-		self.addMovieButton.connect("clicked", self.manipulateMovieButton_cb, parent, "Add")
+		self.addMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Add")
 		self.deleteMovieButton = Gtk.ModelButton(text = "Delete a Movie")
-		self.deleteMovieButton.connect("clicked", self.manipulateMovieButton_cb, parent, "Delete")
+		self.deleteMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Delete")
 		self.dataSeparator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
 		self.addFriendButton = Gtk.ModelButton(text = "Add a Friend")
-		self.addFriendButton.connect("clicked", self.manipulateFriend_cb, parent, "Add")
+		self.addFriendButton.connect("clicked", self.manipulateFriend_cb, "Add")
 		self.deleteFriendButton = Gtk.ModelButton(text = "Delete a Friend")
-		self.deleteFriendButton.connect("clicked", self.manipulateFriend_cb, parent, "Delete")
+		self.deleteFriendButton.connect("clicked", self.manipulateFriend_cb, "Delete")
 		self.dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dataBox.add(self.addMovieButton)
 		self.dataBox.add(self.deleteMovieButton)
@@ -57,7 +59,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")  # create an image to place on the button
 		self.searchImage = Gtk.Image.new_from_gicon(self.searchIcon, Gtk.IconSize.BUTTON)
 		self.searchButton = Gtk.ToggleButton(image = self.searchImage)  # creates a button with an image
-		self.searchButton.connect("clicked", self.searchButton_cb, parent)  # connects the activate signal to searchButton_cb
+		self.searchButton.connect("clicked", self.searchButton_cb)  # connects the activate signal to searchButton_cb
 		self.pack_end(self.searchButton)  # adds the button to the end of the headerbar
 
 	def randomMovieButton_cb(self, randomMovieButton):
@@ -79,22 +81,22 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		print('')
 
 	# callback for when the searchButton is pressed
-	def searchButton_cb(self, searchButton, parent):
+	def searchButton_cb(self, searchButton):
 		if searchButton.get_active() is True:
-			parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-			parent.searchBar.set_reveal_child(True)
+			self.parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+			self.parent.searchBar.set_reveal_child(True)
 			# parent.searchBar.searchEntry.grab_focus() # problem line
 			# return parent.searchBar.searchEntry.handle_event(Gdk.Event(Gdk.EventFocus))
 		else:
-			parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
-			parent.searchBar.set_reveal_child(False)
+			self.parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
+			self.parent.searchBar.set_reveal_child(False)
 			self.grab_focus()
 
 	def dataButton_cb(self, dataButton):
 		self.dataPopover.show_all()
 
-	def manipulateMovieButton_cb(self, movieButton, parent, action):
-		manipulateDialog = MovieDialog(parent, action)
+	def manipulateMovieButton_cb(self, movieButton, action):
+		manipulateDialog = MovieDialog(self.parent, action)
 
 	def manipulateFriend_cb(self, friendButton, parent, action):
-		manipulateDialog = FriendDialog(parent, action)
+		manipulateDialog = FriendDialog(self.parent, action)

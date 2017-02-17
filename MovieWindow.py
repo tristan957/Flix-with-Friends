@@ -49,7 +49,10 @@ class MovieWindow(Gtk.Window):
 		label1 = Gtk.Label("Choose the location of your file", use_markup = True)
 		self.stack.add_named(label1, "label")
 
-		self.add(self.stack)
+		self.box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		self.box.pack_end(self.stack, True, True, 0)
+
+		self.add(self.box)
 
 		self.show_all()
 
@@ -58,7 +61,6 @@ class MovieWindow(Gtk.Window):
 		self.header.searchButton.set_active(True)
 		self.searchBar.set_reveal_child(True)
 		self.searchBar.searchEntry.grab_focus()
-		print(type(event))
 		return self.searchBar.searchEntry.handle_event(event)
 
 	def google_cb(self, google):
@@ -86,11 +88,11 @@ class MovieWindow(Gtk.Window):
 
 	def addMainStack(self, location):
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		self.searchBar = MovieSearchBar(location)
-		box.add(self.searchBar)
+		self.searchBar = MovieSearchBar(location, self)
+		self.box.pack_start(self.searchBar, False, False, 0)
 		imdbBox = MovieBox()
-		box.add(imdbBox)
-		self.stack.add_named(box, "main")
+		# box.add(imdbBox)
+		self.stack.add_named(imdbBox, "main")
 
 		self.header = MovieHeaderBar(self)
 		self.set_titlebar(self.header)

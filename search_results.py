@@ -63,7 +63,7 @@ class BlankPage(Gtk.Box):
 
 class SearchResults(Gtk.Box):
 
-    def __init__(self): #, search_page):
+    def __init__(self): # , search_page):
         Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
         # self.search_page = search_page
 
