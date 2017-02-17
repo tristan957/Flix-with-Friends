@@ -17,29 +17,29 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.db = Database(Database.fileName)
 
 		# button to display popover displaying add/delete options to data
-		self.dataIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
-		self.dataImage = Gtk.Image.new_from_gicon(self.dataIcon, Gtk.IconSize.BUTTON)
+		dataIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
+		dataImage = Gtk.Image.new_from_gicon(dataIcon, Gtk.IconSize.BUTTON)
 
-		self.addMovieButton = Gtk.ModelButton(text = "Add a Movie")
-		self.addMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Add")
-		self.deleteMovieButton = Gtk.ModelButton(text = "Delete a Movie")
-		self.deleteMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Delete")
-		self.dataSeparator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
-		self.addFriendButton = Gtk.ModelButton(text = "Add a Friend")
-		self.addFriendButton.connect("clicked", self.manipulateFriend_cb, "Add")
-		self.deleteFriendButton = Gtk.ModelButton(text = "Delete a Friend")
-		self.deleteFriendButton.connect("clicked", self.manipulateFriend_cb, "Delete")
-		self.dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		self.dataBox.add(self.addMovieButton)
-		self.dataBox.add(self.deleteMovieButton)
-		self.dataBox.add(self.dataSeparator)
-		self.dataBox.add(self.addFriendButton)
-		self.dataBox.add(self.deleteFriendButton)
-		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)  # , relative_to = self.dataButton)
-		self.dataPopover.add(self.dataBox)
-		self.dataButton = Gtk.MenuButton(image = self.dataImage, use_popover = True, popover = self.dataPopover)
-		self.dataButton.connect("clicked", self.dataButton_cb)
-		self.pack_end(self.dataButton)
+		addMovieButton = Gtk.ModelButton(text = "Add a Movie")
+		addMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Add")
+		deleteMovieButton = Gtk.ModelButton(text = "Delete a Movie")
+		deleteMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Delete")
+		dataSeparator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+		addFriendButton = Gtk.ModelButton(text = "Add a Friend")
+		addFriendButton.connect("clicked", self.manipulateFriend_cb, "Add")
+		deleteFriendButton = Gtk.ModelButton(text = "Delete a Friend")
+		deleteFriendButton.connect("clicked", self.manipulateFriend_cb, "Delete")
+		dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		dataBox.add(addMovieButton)
+		dataBox.add(deleteMovieButton)
+		dataBox.add(dataSeparator)
+		dataBox.add(addFriendButton)
+		dataBox.add(deleteFriendButton)
+		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)  # , relative_to = dataButton)
+		self.dataPopover.add(dataBox)
+		dataButton = Gtk.MenuButton(image = dataImage, use_popover = True, popover = self.dataPopover)
+		dataButton.connect("clicked", self.dataButton_cb)
+		self.pack_end(dataButton)
 
 		backIcon = Gio.ThemedIcon(name = "go-previous-symbolic")
 		backImage = Gtk.Image.new_from_gicon(backIcon, Gtk.IconSize.BUTTON)
@@ -56,9 +56,9 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.randomMovieButton.connect("clicked", self.randomMovieButton_cb)
 		self.pack_start(self.randomMovieButton)
 
-		self.searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")  # create an image to place on the button
-		self.searchImage = Gtk.Image.new_from_gicon(self.searchIcon, Gtk.IconSize.BUTTON)
-		self.searchButton = Gtk.ToggleButton(image = self.searchImage)  # creates a button with an image
+		searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")  # create an image to place on the button
+		searchImage = Gtk.Image.new_from_gicon(searchIcon, Gtk.IconSize.BUTTON)
+		self.searchButton = Gtk.ToggleButton(image = searchImage)  # creates a button with an image
 		self.searchButton.connect("clicked", self.searchButton_cb)  # connects the activate signal to searchButton_cb
 		self.pack_end(self.searchButton)  # adds the button to the end of the headerbar
 
@@ -86,10 +86,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 			self.parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 			self.parent.searchBar.set_reveal_child(True)
 			if self.parent.searchBar.searchEntry.has_focus() is False:
-				# self.parent.searchBar.signals.map_event
-				self.parent.searchBar.searchEntry.grab_focus() # problem line
-			# eturn self.parent.searchBar.searchEntry.handle_event(gi.overrides.Gdk.EventKey)
-			# self.parent.key_pressed_cb(self.parent, self.sea)
+				self.parent.searchBar.searchEntry.grab_focus()
 		else:
 			self.parent.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
 			self.parent.searchBar.set_reveal_child(False)
