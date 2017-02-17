@@ -3,6 +3,7 @@ import os
 import xlwt
 import xlrd
 import tmdbsimple as tmdb
+import operator
 
 from xlutils.copy import copy
 from Movie import Movie, get_image
@@ -53,6 +54,9 @@ class Database:
 		# Add Movies to movie list
 		for movie in self.dictionary:
 			self.addMovie(Movie(movie))
+
+		# self.dictionary = OrderedDict(sorted(self.dictionary.key(), key=lambda t: t[0]))
+		self.movies.sort(key=lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
 
 	def createDictionary(self):
