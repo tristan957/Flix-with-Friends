@@ -1,7 +1,7 @@
 import gi
 import random
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, Gio, GLib
+from gi.repository import Gtk, Gio, GLib
 from MovieDialog import MovieDialog
 from FriendDialog import FriendDialog
 from Database import Database
