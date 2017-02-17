@@ -206,22 +206,22 @@ class MovieSearchBar(Gtk.Revealer):
 
 			# If passes checks, then print Movie info
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
-				print("Title:", movie.title)
-				print("Release Date:", movie.release_date)
-				print("Rating:", movie.vote)
-				print("Runtime:", movie.runtime)
-				print("Genres:", end=" ")
-				for i in range(0, len(movie.genres)):
-					print(movie.genres[i], end = " ")
-				print("")
-				print("Overview:", movie.overview)
-				print("Viewers:", end=" ")
-				for i in range(0, len(movie.viewers)):
-					print(movie.viewers[i], end=" ")
+				results.append(movie)
+				# print("Title:", movie.title)
+				# print("Release Date:", movie.release_date)
+				# print("Rating:", movie.vote)
+				# print("Runtime:", movie.runtime)
+				# print("Genres:", end=" ")
+				# for i in range(0, len(movie.genres)):
+				# 	print(movie.genres[i], end = " ")
+				# print("")
+				# print("Overview:", movie.overview)
+				# print("Viewers:", end=" ")
+				# for i in range(0, len(movie.viewers)):
+				# 	print(movie.viewers[i], end=" ")
 				# GOing to need a try except for this,
 				# get_image(movie.poster_path, movie.title)
-				print('\n')
-				results.append(movie)
+				# print('\n')
 
 		self.searchResults.set_search_view(results)
 		self.parent.stack.set_visible_child_name("search-results")
