@@ -5,28 +5,28 @@ import xlrd
 import tmdbsimple as tmdb
 
 from xlutils.copy import copy
-from Movie import Movie, get_image
+from Movie import Movie
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-# Not really sure what this is, how Google documentation coded it
 try:
-    import argparse
-    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+	import argparse
+	flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
 except ImportError:
-    flags = None
-
+	flags = None
 
 # Flix with Friends special variables
 # Creds stored at ~/.credentials/sheets.googleapis.flix-with-friends.json
+# The google doc ID = 1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8
+
+# This scope gives read and write access
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Flix with Friends'
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
-# GOOGLE_DOC_FILE = 'GoogleDocDB.xlsx'
-GOOGLE_DOC_FILE = 'testing.xlsx'
+LOCAL_EXCEL_FILE = 'testing.xlsx'
 
 
 class Database:
@@ -54,18 +54,18 @@ class Database:
 		for movie in self.dictionary:
 			self.addMovie(Movie(movie))
 
-		# self.dictionary = OrderedDict(sorted(self.dictionary.key(), key=lambda t: t[0]))
 		self.movies.sort(key=lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
 
 	def createDictionary(self):
-		# This method converts all the data in the excelDB into a Listed PY dictionary
+		# This method converts all the data in the excelDB into a list of dictionaries
 		# Access data by self.dictionary[row]['columnName']
 		workbook = xlrd.open_workbook(self.fileName, on_demand=True)
 		worksheet = workbook.sheet_by_index(0)
 		first_row = []  # The row where we stock the name of the column
 		for col in range(worksheet.ncols):
 			first_row.append(worksheet.cell_value(0, col))
+
 		# transform the workbook to a list of dictionaries
 		for row in range(1, worksheet.nrows):
 			elm = {}
@@ -87,6 +87,7 @@ class Database:
 				titleID = s['id']
 				daMovie = tmdb.Movies(titleID)
 				response = daMovie.info()
+
 				# Get Genres into one line
 				genreResult = response['genres']
 				gen = ''
@@ -94,26 +95,28 @@ class Database:
 					gen += genreResult[i]['name']
 					if i < (len(genreResult) - 1):
 						gen += ', '
+
+				if (gen is None) or (len(gen) == 0):
+					gen = 'N/A'
+
+				if (response['poster_path'] is None) or (len(response['poster_path']) == 0):
+					poster = 'N/A'
+				else:
+					poster = response['poster_path']
+
 				# Write info to appropriate (row,column)
 				w_sheet.write(row, 0, response['title'])
 				w_sheet.write(row, 2, response['runtime'])
-				if (gen is None) or (len(gen) == 0):
-					w_sheet.write(row, 3, 'N/A')
-				else:
-					w_sheet.write(row, 3, gen)
+				w_sheet.write(row, 3, gen)
 				w_sheet.write(row, 4, response['release_date'])
 				w_sheet.write(row, 5, response['vote_average'])
 				w_sheet.write(row, 6, response['overview'])
 				w_sheet.write(row, 7, titleID)
-
-				if (response['poster_path'] is None) or (len(response['poster_path']) == 0):
-					w_sheet.write(row, 8, 'N/A')
-				else:
-					w_sheet.write(row, 8, response['poster_path'])
+				w_sheet.write(row, 8, poster)
 
 		if i == 0:  # If no search results
 			print(movie, self.MISSING_DATA)  # Print to console
-			w_sheet.write(row, 2, self.MISSING_DATA) #runtime
+			w_sheet.write(row, 2, '0') #runtime
 			w_sheet.write(row, 3, self.MISSING_DATA) # genres
 			w_sheet.write(row, 4, self.MISSING_DATA) # release date
 			w_sheet.write(row, 5, '0') # vote count
@@ -142,7 +145,6 @@ class Database:
 		if MOVIE.release_date[:4] < str(self.oldest_year):
 			self.oldest_year = int(MOVIE.release_date[:4])
 
-
 		for v in MOVIE.viewers:
 			if v not in self.friends:
 				if v != '':
@@ -153,19 +155,51 @@ class Database:
 	def newMovie(self, movie_title):
 		# Add a new movie just with a movie title
 		self.updateMovieDB(movie_title, len(self.movies) + 1)
-		get_image(self.movies[-1].poster_path, self.movies[-1].title)
+		self.movies[-1].get_image()
 		self.loadDB()
 
-	# The following are functions if info is being pulled from a Google Sheet
+	def tmdb_search(self, keyword):
+		# This function is used to run a keyword and return the results as
+		# a list of movies
+		# FIXME search works, need to setup return array
 
+		search = tmdb.Search() # Setup search to run API query
+		response = search.movie(query = keyword)  # Search for movie
+		results = []
+		for s in search.results:  # for loop return first search result FIXME
+			titleID = s['id']
+			daMovie = tmdb.Movies(titleID)
+			response = daMovie.info()
+			# Get Genres into one line
+			genreResult = response['genres']
+			gen = []
+			for i in range(0, len(genreResult)):
+				gen.append(i)
+
+			dictionary = {
+				'Title': response['title'],
+				'ID': titleID,
+				'Runtime': response['runtime'],
+				'Genres': gen,
+				'ReleaseDate': response['release_date'],
+				'Vote': response['vote_average'],
+				'Overview': response['overview'],
+				'ViewedBy': '',
+				'Poster': response['poster_path']
+				}
+			results.append(Movie(dictionary))
+		for movie in results:
+			print(movie.title)
+
+		return results
+
+	# The following are functions accesing and pushing from a Google Sheet
 	def get_credentials(self):
-		"""Gets valid user credentials from storage.
+		# Gets valid user credentials from storage.
+		# If nothing has been stored, or if the stored credentials are invalid,
+		# the OAuth2 flow is completed to obtain the new credentials.
+		# Returns: Credentials, the obtained credential.
 
-		If nothing has been stored, or if the stored credentials are invalid,
-		the OAuth2 flow is completed to obtain the new credentials.
-
-		Returns: Credentials, the obtained credential.
-		"""
 		home_dir = os.path.expanduser('~')
 		credential_dir = os.path.join(home_dir, '.credentials')
 		if not os.path.exists(credential_dir):
@@ -195,7 +229,6 @@ class Database:
 									discoveryServiceUrl=discoveryUrl)
 
 		# Pull data from the Google Sheet
-		# self.spreadsheetID = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 		docID = self.spreadsheetID = sheetID
 		rangeName = 'Sheet1!A:I'
 		result = service.spreadsheets().values().get(
@@ -221,44 +254,9 @@ class Database:
 				sheet1.write(i, 8, row[8])
 				i += 1
 
-		book.save(GOOGLE_DOC_FILE)
-		self.fileName = Database.location = GOOGLE_DOC_FILE
+		book.save(LOCAL_EXCEL_FILE)
+		self.fileName = Database.location = LOCAL_EXCEL_FILE
 		self.loadDB()
-
-	def tmdb_search(self, keyword):
-		search = tmdb.Search() # Setup search to run API query
-		response = search.movie(query = keyword)  # Search for movie
-		i = 0
-		for s in search.results:  # for loop return first search result FIXME
-			i = 1 + i
-			if i == 1:
-				titleID = s['id']
-				daMovie = tmdb.Movies(titleID)
-				response = daMovie.info()
-				# Get Genres into one line
-				genreResult = response['genres']
-				gen = ''
-				for i in range(0, len(genreResult)):
-					gen += genreResult[i]['name']
-					if i < (len(genreResult) - 1):
-						gen += ', '
-				# Write info to appropriate (row,column)
-				print(response['title'])
-				print(response['runtime'])
-				if (gen is None) or (len(gen) == 0):
-					print('N/A')
-				else:
-					print(gen)
-				print(response['release_date'])
-				print(response['vote_average'])
-				print(response['overview'])
-				print(titleID)
-
-				if (response['poster_path'] is None) or (len(response['poster_path']) == 0):
-					print('N/A')
-				else:
-					print(response['poster_path'])
-
 
 	def upload_google_doc(self):
 		# Run Google OAuth2
@@ -268,8 +266,6 @@ class Database:
 						'version=v4')
 		service = discovery.build('sheets', 'v4', http=http,
 									discoveryServiceUrl=discoveryUrl)
-
-		# self.spreadsheetId = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 
 		# Open the Excel sheet to read in data
 		workbook = xlrd.open_workbook(self.fileName, on_demand=True)
@@ -294,13 +290,13 @@ class Database:
 
 
 if __name__ == "__main__":
-    db = Database()
-    # doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-    # db.get_google_doc(doc_id)
-    db.tmdb_search('Saving private ryan')
-    # for movie in db.movies:
-    #     print(movie.title)
+	db = Database()
+	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	# db.get_google_doc(doc_id)
+	db.tmdb_search('Saving private ryan')
+	# for movie in db.movies:
+	#     print(movie.title)
 
-    # db.newMovie('top gun')
-    # db.update()
-    # db.upload_google_doc()
+	# db.newMovie('top gun')
+	# db.update()
+	# db.upload_google_doc()
