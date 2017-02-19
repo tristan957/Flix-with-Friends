@@ -190,9 +190,6 @@ class Database:
 				'Poster': response['poster_path']
 				}
 			results.append(Movie(dictionary))
-		for movie in results:
-			print(movie.title)
-
 		return results
 
 	# The following are functions accesing and pushing from a Google Sheet

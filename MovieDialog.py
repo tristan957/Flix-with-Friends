@@ -32,8 +32,14 @@ class MovieDialog(Gtk.Dialog):
 			print('Movie to add:', self.entry.get_text())
 
 			try:
-				self.db.newMovie(self.entry.get_text())
-				print(self.entry.get_text(), 'added as', self.db.movies[-1].title)
+				# self.db.newMovie(self.entry.get_text())
+				# print(self.entry.get_text(), 'added as', self.db.movies[-1].title)
+				search = self.db.tmdb_search(self.entry.get_text())
+				print('Searh Results:\n')
+				for movie in search:
+					print('Title:',movie.title)
+					print('Overview:',movie.overview)
+					print()
 			except:
 				print('Error adding', self.entry.get_text())
 
