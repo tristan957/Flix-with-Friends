@@ -172,9 +172,11 @@ class Database:
 			response = daMovie.info()
 			# Get Genres into one line
 			genreResult = response['genres']
-			gen = []
+			gen = ''
 			for i in range(0, len(genreResult)):
-				gen.append(i)
+				gen = gen + str(genreResult[i]['name'])
+				if i < len(genreResult):
+					gen = gen + ', '
 
 			dictionary = {
 				'Title': response['title'],
@@ -293,7 +295,9 @@ if __name__ == "__main__":
 	db = Database()
 	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 	# db.get_google_doc(doc_id)
-	db.tmdb_search('Saving private ryan')
+	result = db.tmdb_search('Saving private ryan')
+	for i in result:
+		print(i.genres)
 	# for movie in db.movies:
 	#     print(movie.title)
 

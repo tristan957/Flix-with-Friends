@@ -20,10 +20,7 @@ class Movie:
 		self.ID = dictionary['ID']
 		self.viewers = dictionary['ViewedBy'].split(', ')
 		self.runtime = dictionary['Runtime']
-		if isinstance([], list):
-			self.genres = dictionary['Genres']
-		else:
-			self.genres = dictionary['Genres'].split(', ')
+		self.genres = dictionary['Genres'].split(', ')
 		self.release_date = dictionary['ReleaseDate']
 		self.vote = dictionary['Vote']
 		self.overview = dictionary['Overview']
