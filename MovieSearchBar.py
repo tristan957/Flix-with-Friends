@@ -3,7 +3,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Pango
 import re
 from Database import Database
-from Movie import get_image
 from friends import getFriends
 from search_results import SearchResults
 import datetime
@@ -225,7 +224,7 @@ class MovieSearchBar(Gtk.Revealer):
 				# for i in range(0, len(movie.viewers)):
 				# 	print(movie.viewers[i], end=" ")
 				# GOing to need a try except for this,
-				# get_image(movie.poster_path, movie.title)
+				# movie.get_image(movie.poster_path, movie.title)
 				# print('\n')
 
 		self.searchResults.set_search_view(results)

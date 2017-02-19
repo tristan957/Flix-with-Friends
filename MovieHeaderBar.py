@@ -77,7 +77,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		print("")
 		print("Overview:", movie.overview)
 		# GOing to need a try except for this,
-		# get_image(movie.poster_path, movie.title)
+		# movie.get_image(movie.poster_path, movie.title)
 		print('')
 
 	# callback for when the searchButton is pressed
