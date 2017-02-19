@@ -1,14 +1,14 @@
 Python:
-      xlutils
-      xlwt
-      xlrd
-      tmdbsimple
+      xlutils==2.0.0
+      xlwt==1.1.2
+      xlrd==1.0.0
+      tmdbsimple==1.4.0
       urllib
       sys
       os
-      httplib2
+      httplib2==0.9.2
       apiclient
-      oauth2client
+      oauth2client==4.0.0
 
 System:
       gnome-python
