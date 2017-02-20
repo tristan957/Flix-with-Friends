@@ -106,7 +106,7 @@ class SearchResults(Gtk.Box):
         ren.set_padding(5, 5)
         column = Gtk.TreeViewColumn("Details", ren, icon_name = 3)
         self.tview.append_column(column)
-        ren.set_property("xalign", 1.0)
+        ren.set_property("xalign", 0.0)
 
         self.stack.set_visible_child_name("empty")
 
@@ -125,8 +125,20 @@ class SearchResults(Gtk.Box):
 
         for movie in results:
             desc = movie.overview
-            if len(desc) > 76:
-                desc = "%s..." % desc[0:76]
+            if len(desc) > 100:
+                #     i = 100
+                #     j = 0
+                #     z = 0
+                #     while i < len(desc) and j < 2:
+                #         if i % 100 is 0:
+                #             if desc[i].isspace() is False:
+                #                 z = 1
+                #                 while i + z < len(desc) and desc[i + z].isspace() is False:
+                #                     z = z + 1
+                #             desc = desc[:i + z] + '\n' + desc[i + z:]
+                #         i = i + 100
+                #         j = j + 1
+                desc = "%s..." % desc[0:100]
 
             desc = GLib.markup_escape_text(desc)
             text = "<b>%s</b>\n%s" % (movie.title.replace('&', '&amp;'), desc)
