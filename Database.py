@@ -80,7 +80,7 @@ class Database:
 		wb = copy(rb)  # make a writeable copy of the open excel file
 		w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
 
-		results = self.tmdb_search(movie)
+		results = self.tmdb_search(movie,1)
 		if len(results) == 0:
 			print(movie, self.MISSING_DATA)  # Print to console
 			w_sheet.write(row, 2, '0') #runtime
@@ -135,7 +135,7 @@ class Database:
 		self.movies[-1].get_image()
 		self.loadDB()
 
-	def tmdb_search(self, keyword):
+	def tmdb_search(self, keyword, num=5):
 		# This function is used to run a keyword and return the results as
 		# a list of movies
 		# FIXME search works, need to setup return array
@@ -143,6 +143,7 @@ class Database:
 		search = tmdb.Search() # Setup search to run API query
 		response = search.movie(query = keyword)  # Search for movie
 		results = []
+		i = 0
 		for s in search.results:  # for loop return first search result FIXME
 			titleID = s['id']
 			daMovie = tmdb.Movies(titleID)
@@ -167,6 +168,9 @@ class Database:
 				'Poster': response['poster_path']
 				}
 			results.append(Movie(dictionary))
+			i += 1
+			if i == num:
+				break
 		return results
 
 	# The following are functions accesing and pushing from a Google Sheet
