@@ -47,3 +47,11 @@ class Movie:
 
 	def genres_string(self):
 		return ', '.join(self.genres).rstrip(',')
+
+	def bad_movie(self):
+		bad_title = (self.title == 'N/A')# or (len(self.title) == 0)
+		bad_ID = (self.ID == '0')# or len(self.ID) == 0)
+		bad_runtime = (self.runtime == '0')# or (len(self.runtime) == 0)
+		bad_overview = (self.overview == 'N/A')# or (len(self.overview) == 0)
+
+		return bad_ID or bad_overview or bad_runtime or bad_title

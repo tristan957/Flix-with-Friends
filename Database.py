@@ -39,10 +39,11 @@ class Database:
 		self.movies = []  # array of movies as class Movies
 		self.fileName = FN
 		self.listGenres = []
-		self.MISSING_DATA = 'N/A'
+		self.MISSING_DATA = 'N/A' #need to update Movie.bad_movie if this is changed
 		self.spreadsheetID = ''
 		self.oldest_year = 3000
 		self.friends = []
+		self.troubled_list = [] # array of movies with bad data
 
 		if FN is not None:
 			self.loadDB()
@@ -53,10 +54,18 @@ class Database:
 
 		# Add Movies to movie list
 		for movie in self.dictionary:
-			self.addMovie(Movie(movie))
+			m = Movie(movie)
+			if m.bad_movie():
+				self.troubled_list.append(m)
+			else:
+				self.addMovie(m)
 
 		self.movies.sort(key=lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
+		if len(self.troubled_list) > 0:
+			print('Troubled Movies:')
+			for m in self.troubled_list:
+				print(m.title)
 
 	def createDictionary(self):
 		# This method converts all the data in the excelDB into a list of dictionaries
