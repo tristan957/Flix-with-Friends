@@ -44,3 +44,6 @@ class Movie:
 					# COMMENT ME OUT TO NOT DOWNLOAD EVERYTHING
 					urllib.request.urlretrieve(imagePage, fullfilename)
 			print('')
+
+	def genres_string(self):
+		return ', '.join(self.genres).rstrip(',')
