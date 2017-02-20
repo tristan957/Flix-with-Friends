@@ -100,6 +100,7 @@ class Database:
 			w_sheet.write(row, 6, movie.overview)
 			w_sheet.write(row, 7, movie.ID)
 			w_sheet.write(row, 8, movie.poster_path)
+			movie.get_image()
 
 		wb.save(self.fileName)  # Save DB edits
 
@@ -132,7 +133,6 @@ class Database:
 	def newMovie(self, movie_title):
 		# Add a new movie just with a movie title
 		self.updateMovieInfo(movie_title, len(self.movies) + 1)
-		self.movies[-1].get_image()
 		self.loadDB()
 
 	def tmdb_search(self, keyword, num=5):
