@@ -39,23 +39,33 @@ class Database:
 		self.movies = []  # array of movies as class Movies
 		self.fileName = FN
 		self.listGenres = []
-		self.MISSING_DATA = 'N/A'
+		self.MISSING_DATA = 'N/A' #need to update Movie.bad_movie if this is changed
 		self.spreadsheetID = ''
 		self.oldest_year = 3000
 		self.friends = []
+		self.troubled_list = [] # array of movies with bad data
 
 		if FN is not None:
 			self.loadDB()
 
 	def loadDB(self):
+		# Get data from Excel and load it into the Database object
 		self.createDictionary()
 
 		# Add Movies to movie list
 		for movie in self.dictionary:
-			self.addMovie(Movie(movie))
+			m = Movie(movie)
+			if m.bad_movie():
+				self.troubled_list.append(m)
+			else:
+				self.addMovie(m)
 
 		self.movies.sort(key=lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
+		if len(self.troubled_list) > 0:
+			print('Troubled Movies:')
+			for m in self.troubled_list:
+				print(m.title)
 
 	def createDictionary(self):
 		# This method converts all the data in the excelDB into a list of dictionaries
@@ -73,48 +83,14 @@ class Database:
 				elm[first_row[col]] = worksheet.cell_value(row, col)
 			self.dictionary.append(elm)
 
-	def updateMovieDB(self, movie, row):
+	def updateMovieInfo(self, movie, row):
 		# This method updates all columns of a single movie in the DB
 		rb = xlrd.open_workbook(self.fileName)  # Open the excel file
 		wb = copy(rb)  # make a writeable copy of the open excel file
 		w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
-		search = tmdb.Search() # Setup search to run API query
-		response = search.movie(query = movie)  # Search for movie
-		i = 0
-		for s in search.results:  # for loop return first search result FIXME
-			i = 1 + i
-			if i == 1:
-				titleID = s['id']
-				daMovie = tmdb.Movies(titleID)
-				response = daMovie.info()
 
-				# Get Genres into one line
-				genreResult = response['genres']
-				gen = ''
-				for i in range(0, len(genreResult)):
-					gen += genreResult[i]['name']
-					if i < (len(genreResult) - 1):
-						gen += ', '
-
-				if (gen is None) or (len(gen) == 0):
-					gen = 'N/A'
-
-				if (response['poster_path'] is None) or (len(response['poster_path']) == 0):
-					poster = 'N/A'
-				else:
-					poster = response['poster_path']
-
-				# Write info to appropriate (row,column)
-				w_sheet.write(row, 0, response['title'])
-				w_sheet.write(row, 2, response['runtime'])
-				w_sheet.write(row, 3, gen)
-				w_sheet.write(row, 4, response['release_date'])
-				w_sheet.write(row, 5, response['vote_average'])
-				w_sheet.write(row, 6, response['overview'])
-				w_sheet.write(row, 7, titleID)
-				w_sheet.write(row, 8, poster)
-
-		if i == 0:  # If no search results
+		results = self.tmdb_search(movie,1)
+		if len(results) == 0:
 			print(movie, self.MISSING_DATA)  # Print to console
 			w_sheet.write(row, 2, '0') #runtime
 			w_sheet.write(row, 3, self.MISSING_DATA) # genres
@@ -123,6 +99,17 @@ class Database:
 			w_sheet.write(row, 6, self.MISSING_DATA) # overview
 			w_sheet.write(row, 7, '0') # TMDB ID number
 			w_sheet.write(row, 8, self.MISSING_DATA) # poster path
+		else:
+			movie = results[0]
+			w_sheet.write(row, 0, movie.title)
+			w_sheet.write(row, 2, movie.runtime)
+			w_sheet.write(row, 3, movie.genres_string())
+			w_sheet.write(row, 4, movie.release_date)
+			w_sheet.write(row, 5, movie.vote)
+			w_sheet.write(row, 6, movie.overview)
+			w_sheet.write(row, 7, movie.ID)
+			w_sheet.write(row, 8, movie.poster_path)
+			movie.get_image()
 
 		wb.save(self.fileName)  # Save DB edits
 
@@ -130,7 +117,7 @@ class Database:
 		# Updates all movies' data in DB
 		p = len(self.dictionary)
 		for i, Movie in enumerate(self.dictionary):
-			self.updateMovieDB(Movie['Title'], i + 1)
+			self.updateMovieInfo(Movie['Title'], i + 1)
 			# Display Percentage to console
 			print('Percentage Complete: {0:.0f} %'.format(i / p * 100))
 		print('Percentage Complete: 100 %')
@@ -154,11 +141,10 @@ class Database:
 
 	def newMovie(self, movie_title):
 		# Add a new movie just with a movie title
-		self.updateMovieDB(movie_title, len(self.movies) + 1)
-		self.movies[-1].get_image()
+		self.updateMovieInfo(movie_title, len(self.movies) + 1)
 		self.loadDB()
 
-	def tmdb_search(self, keyword):
+	def tmdb_search(self, keyword, num=5):
 		# This function is used to run a keyword and return the results as
 		# a list of movies
 		# FIXME search works, need to setup return array
@@ -166,6 +152,7 @@ class Database:
 		search = tmdb.Search() # Setup search to run API query
 		response = search.movie(query = keyword)  # Search for movie
 		results = []
+		i = 0
 		for s in search.results:  # for loop return first search result FIXME
 			titleID = s['id']
 			daMovie = tmdb.Movies(titleID)
@@ -190,6 +177,9 @@ class Database:
 				'Poster': response['poster_path']
 				}
 			results.append(Movie(dictionary))
+			i += 1
+			if i == num:
+				break
 		return results
 
 	# The following are functions accesing and pushing from a Google Sheet
@@ -289,15 +279,8 @@ class Database:
 
 
 if __name__ == "__main__":
-	db = Database()
+	db = Database('local.xlsx')
 	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 	# db.get_google_doc(doc_id)
-	result = db.tmdb_search('Saving private ryan')
-	for i in result:
-		print(i.genres)
-	# for movie in db.movies:
-	#     print(movie.title)
-
-	# db.newMovie('top gun')
-	# db.update()
+	db.update()
 	# db.upload_google_doc()
