@@ -75,14 +75,14 @@ class MovieWindow(Gtk.Window):
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 		if fileChooser.run() is 0:
 			# Database.location = fileChooser.get_filename()
-			Database.location = 'testing.xlsx' # TEMP
+			Database.location = 'local.xlsx' # TEMP
 			self.addMainStack(Database.location)
 			self.stack.set_visible_child_name("main")
 		fileChooser.destroy()
 
 	def doubleClickEnter_cb(self, fileChooser):
 		# Database.location = fileChooser.get_filename()
-		Database.location = 'testing.xlsx' # TEMP
+		Database.location = 'local.xlsx' # TEMP
 		fileChooser.destroy()
 		self.addMainStack(Database.location)
 		self.stack.set_visible_child_name("main")

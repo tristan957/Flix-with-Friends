@@ -26,7 +26,7 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Flix with Friends'
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
-LOCAL_EXCEL_FILE = 'testing.xlsx'
+LOCAL_EXCEL_FILE = 'local.xlsx'
 
 
 class Database:
