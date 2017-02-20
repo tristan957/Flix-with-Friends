@@ -2,6 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GdkPixbuf, GLib
 import MovieSearchBar
+import os.path
 
 
 INDEX_FIELD_DISPLAY = 0
@@ -90,14 +91,14 @@ class SearchResults(Gtk.Box):
         self.scroll.add(self.tview)
 
         ren = Gtk.CellRendererPixbuf()
-        ren.set_property("stock-size", Gtk.IconSize.DIALOG)
+        # ren.set_property("stock-size", Gtk.IconSize.DIALOG)
         ren.set_padding(5, 2)
-        column = Gtk.TreeViewColumn("Icon", ren, pixbuf = 2)
+        column = Gtk.TreeViewColumn("Poster", ren, pixbuf = 2)
         self.tview.append_column(column)
 
         ren = Gtk.CellRendererText()
         ren.set_padding(5, 5)
-        column = Gtk.TreeViewColumn("Name", ren, markup = 0)
+        column = Gtk.TreeViewColumn("Title", ren, markup = 0)
         self.tview.append_column(column)
         self.tview.set_search_column(1)
 
@@ -118,7 +119,7 @@ class SearchResults(Gtk.Box):
         # line 178 solus-sc/search-results...what's it do
 
     def set_search_view(self, results):
-        model = Gtk.ListStore(str, str, Gtk.Image, str)
+        model = Gtk.ListStore(str, str, GdkPixbuf.Pixbuf, str)
 
         self.reset()
 
@@ -128,9 +129,13 @@ class SearchResults(Gtk.Box):
                 desc = "%s..." % desc[0:76]
 
             desc = GLib.markup_escape_text(desc)
-            text = "<b>%s</b>\n%s" % (movie.title.replace('&','&amp;'), desc)
+            text = "<b>%s</b>\n%s" % (movie.title.replace('&', '&amp;'), desc)
 
-            image = Gtk.Image.new_from_file("./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg")
+            poster = "./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg"
+            if os.path.isfile(poster) is True:
+                image = GdkPixbuf.Pixbuf.new_from_file(poster)
+            else:
+                image = None
 
             model.append([text, movie.title, image, "go-next-symbolic"])
 
