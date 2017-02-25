@@ -152,13 +152,12 @@ class Database:
 	def tmdb_search(self, keyword, num=5):
 		# This function is used to run a keyword and return the results as
 		# a list of movies
-		# FIXME search works, need to setup return array
 
 		search = tmdb.Search() # Setup search to run API query
 		response = search.movie(query = keyword)  # Search for movie
 		results = []
 		i = 0
-		for s in search.results:  # for loop return first search result FIXME
+		for s in search.results:
 			titleID = s['id']
 			daMovie = tmdb.Movies(titleID)
 			response = daMovie.info()
