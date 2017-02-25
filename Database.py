@@ -144,6 +144,11 @@ class Database:
 		self.updateMovieInfo(movie_title, len(self.movies) + 1)
 		self.loadDB()
 
+	def find_movie(self, title):
+		for movie in self.movies:
+			if movie.title == title:
+				return movie
+
 	def tmdb_search(self, keyword, num=5):
 		# This function is used to run a keyword and return the results as
 		# a list of movies
@@ -286,20 +291,6 @@ if __name__ == "__main__":
 	rb = xlrd.open_workbook(db.fileName)  # Open the excel file
 	wb = copy(rb)  # make a writeable copy of the open excel file
 	w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
-
-	for i,movie in enumerate(db.movies):
-		watcher = movie.viewers[0]
-		movie.viewers = []
-		for w in watcher.split(','):
-			if w == 'j':
-				movie.viewers.append('Joseph')
-			if w == 'e':
-				movie.viewers.append('Elizabeth')
-			if w == 's':
-				movie.viewers.append('Savannah')
-		print(movie.viewers)
-		print(i)
-		w_sheet.write(i+1, 1, ', '.join(movie.viewers).rstrip(','))
 
 
 	wb.save(db.fileName)  # Save DB edits

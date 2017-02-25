@@ -15,7 +15,8 @@ class MovieBox(Gtk.Box):
         if movie is not None:
             Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
-            movie = db.get_movie(movie) # needs to be implemented
+            movie = db.find_movie(movie) # needs to be implemented
+            print(movie.title)
 
             imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
             infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
