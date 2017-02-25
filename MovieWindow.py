@@ -91,7 +91,7 @@ class MovieWindow(Gtk.Window):
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = MovieSearchBar(location, self)
 		self.box.pack_start(self.searchBar, False, False, 0)
-		imdbBox = MovieBox()
+		imdbBox = MovieBox(None)
 		# box.add(imdbBox)
 		self.stack.add_named(imdbBox, "main")
 

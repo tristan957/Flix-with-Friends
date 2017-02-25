@@ -2,6 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GdkPixbuf, GLib
 import MovieSearchBar
+from MovieBox import MovieBox
 import os.path
 
 
@@ -64,7 +65,7 @@ class BlankPage(Gtk.Box):
 
 class SearchResults(Gtk.Box):
 
-    def __init__(self): # , search_page):
+    def __init__(self, imdbBox): # , search_page):
         Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
         # self.search_page = search_page
 
@@ -87,7 +88,7 @@ class SearchResults(Gtk.Box):
 
         self.tview = Gtk.TreeView(activate_on_single_click = True, enable_grid_lines = False, headers_visible = False)
         self.tview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
-        self.tview.connect_after('row-activated', self.on_row_activated)
+        self.tview.connect_after('row-activated', self.on_row_activated, imdbBox)
         self.scroll.add(self.tview)
 
         ren = Gtk.CellRendererPixbuf()
@@ -98,7 +99,7 @@ class SearchResults(Gtk.Box):
 
         ren = Gtk.CellRendererText()
         ren.set_padding(5, 5)
-        column = Gtk.TreeViewColumn("Title", ren, markup = 0)
+        column = Gtk.TreeViewColumn("Movie", ren, markup = 0)
         self.tview.append_column(column)
         self.tview.set_search_column(1)
 
@@ -110,11 +111,13 @@ class SearchResults(Gtk.Box):
 
         self.stack.set_visible_child_name("empty")
 
-    def on_row_activated(self, tview, path, column):
+    def on_row_activated(self, tview, path, column, imdbBox):
         model = tview.get_model()
         row = model[path]
 
         movie = row[INDEX_FIELD_NAME]
+
+        imdbBox = MovieBox(movie)
 
         # line 178 solus-sc/search-results...what's it do
 

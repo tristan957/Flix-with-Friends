@@ -5,6 +5,7 @@ import re
 from Database import Database
 from friends import getFriends
 from search_results import SearchResults
+from MovieBox import MovieBox
 import datetime
 
 
@@ -111,9 +112,13 @@ class MovieSearchBar(Gtk.Revealer):
 
 		self.set_property("child", searchBox)
 
-		self.searchResults = SearchResults()
+		self.imdbBox = MovieBox(None)
+		self.searchResults = SearchResults(self.imdbBox)
+		searchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4)
+		searchBox.pack_start(self.searchResults, False, False, 0)
+		searchBox.pack_end(self.imdbBox, False, False, 0)
 
-		self.parent.stack.add_named(self.searchResults, "search-results")
+		self.parent.stack.add_named(searchBox, "search-results")
 
 	def search_cb(self, widget):
 		self.run_search()
