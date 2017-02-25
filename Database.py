@@ -279,8 +279,30 @@ class Database:
 
 
 if __name__ == "__main__":
-	db = Database('local.xlsx')
-	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-	# db.get_google_doc(doc_id)
-	db.update()
-	# db.upload_google_doc()
+	db = Database()
+	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	db.get_google_doc(doc_id)
+	# db.update()
+	rb = xlrd.open_workbook(db.fileName)  # Open the excel file
+	wb = copy(rb)  # make a writeable copy of the open excel file
+	w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
+
+	for i,movie in enumerate(db.movies):
+		watcher = movie.viewers[0]
+		movie.viewers = []
+		for w in watcher.split(','):
+			if w == 'j':
+				movie.viewers.append('Joseph')
+			if w == 'e':
+				movie.viewers.append('Elizabeth')
+			if w == 's':
+				movie.viewers.append('Savannah')
+		print(movie.viewers)
+		print(i)
+		w_sheet.write(i+1, 1, ', '.join(movie.viewers).rstrip(','))
+
+
+	wb.save(db.fileName)  # Save DB edits
+
+
+	db.upload_google_doc()
