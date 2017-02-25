@@ -12,7 +12,7 @@ class MovieBox(Gtk.Box):
         db = Database(Database.location)
         # movie = db.movies[MOVIE_INDEX]
 
-        if movie_num is not None:
+        if movie is not None:
             Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
             movie = db.get_movie(movie) # needs to be implemented
