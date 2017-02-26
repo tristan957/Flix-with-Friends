@@ -113,7 +113,7 @@ class MovieSearchBar(Gtk.Revealer):
 		self.set_property("child", searchBox)
 
 		self.imdbBox = MovieBox(None)
-		self.searchResults = SearchResults(self.imdbBox)
+		self.searchResults = SearchResults(self)
 		searchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4)
 		searchBox.pack_start(self.searchResults, False, False, 0)
 		searchBox.pack_end(self.imdbBox, False, False, 0)

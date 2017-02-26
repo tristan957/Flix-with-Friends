@@ -65,7 +65,7 @@ class BlankPage(Gtk.Box):
 
 class SearchResults(Gtk.Box):
 
-    def __init__(self, imdbBox): # , search_page):
+    def __init__(self, searchBar): # , search_page):
         Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
         # self.search_page = search_page
 
@@ -88,7 +88,7 @@ class SearchResults(Gtk.Box):
 
         self.tview = Gtk.TreeView(activate_on_single_click = True, enable_grid_lines = False, headers_visible = False)
         self.tview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
-        self.tview.connect_after('row-activated', self.on_row_activated, imdbBox)
+        self.tview.connect_after('row-activated', self.on_row_activated, searchBar)
         self.scroll.add(self.tview)
 
         ren = Gtk.CellRendererPixbuf()
@@ -111,13 +111,13 @@ class SearchResults(Gtk.Box):
 
         self.stack.set_visible_child_name("empty")
 
-    def on_row_activated(self, tview, path, column, imdbBox):
+    def on_row_activated(self, tview, path, column, searchBar):
         model = tview.get_model()
         row = model[path]
 
-        movie = row[INDEX_FIELD_NAME]
+        movie_name = row[INDEX_FIELD_NAME]
 
-        imdbBox = MovieBox(movie)
+        searchBar.imdbBox.update(movie_name)
 
         # line 178 solus-sc/search-results...what's it do
 
