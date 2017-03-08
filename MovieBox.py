@@ -5,6 +5,10 @@ from Database import Database
 
 MOVIE_INDEX = 11
 
+# class NoneBox():
+    # Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
+    # titleLabel = Gtk.Label(label = "<big><b>Start typing or click\nthe search icon to begin a search</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
+    # self.add(titleLabel)
 
 class MovieBox(Gtk.Box):
 
@@ -12,43 +16,40 @@ class MovieBox(Gtk.Box):
         self.db = Database(Database.location)
         # movie = db.movies[MOVIE_INDEX]
 
-        if movie_name is not None:
-            Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
+        Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
-            self.movie = self.db.find_movie(movie_name)
+        self.movie = self.db.find_movie(movie_name)
 
-            imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
-            infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
+        if self.movie is None:
+            self.movie = self.db.movies[0]
+        imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
+        infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
 
-            self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
-            self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
-            self.viewedLabel = Gtk.Label(label = "<b>Viewed By:</b> " + ', '.join(self.movie.viewers).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
-            self.viewedLabel.set_xalign(0)
-            self.genreLabel = Gtk.Label(label = "<b>Genres:</b> " + ', '.join(self.movie.genres).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
-            self.genreLabel.set_xalign(0)
-            self.ratingLabel = Gtk.Label(label = "<b>Rating:</b> " + str(self.movie.vote) + "/10", justify = Gtk.Justification.LEFT, use_markup = True)
-            self.ratingLabel.set_xalign(0)
-            self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
-            self.runtimeLabel.set_xalign(0)
+        self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
+        self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
+        self.viewedLabel = Gtk.Label(label = "<b>Viewed By:</b> " + ', '.join(self.movie.viewers).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
+        self.viewedLabel.set_xalign(0)
+        self.genreLabel = Gtk.Label(label = "<b>Genres:</b> " + ', '.join(self.movie.genres).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
+        self.genreLabel.set_xalign(0)
+        self.ratingLabel = Gtk.Label(label = "<b>Rating:</b> " + str(self.movie.vote) + "/10", justify = Gtk.Justification.LEFT, use_markup = True)
+        self.ratingLabel.set_xalign(0)
+        self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
+        self.runtimeLabel.set_xalign(0)
 
-            self.description = Gtk.Label(label = "<b>Description:</b> " + self.generateDescription(self.movie.overview), justify = Gtk.Justification.LEFT, use_markup = True)
-            self.description.set_xalign(0)
+        self.description = Gtk.Label(label = "<b>Description:</b> " + self.generateDescription(self.movie.overview), justify = Gtk.Justification.LEFT, use_markup = True)
+        self.description.set_xalign(0)
 
-            imageBox.add(self.titleLabel)
-            imageBox.add(self.poster)
+        imageBox.add(self.titleLabel)
+        imageBox.add(self.poster)
 
-            infoBox.add(self.viewedLabel)
-            infoBox.add(self.genreLabel)
-            infoBox.add(self.ratingLabel)
-            infoBox.add(self.runtimeLabel)
-            infoBox.add(self.description)
+        infoBox.add(self.viewedLabel)
+        infoBox.add(self.genreLabel)
+        infoBox.add(self.ratingLabel)
+        infoBox.add(self.runtimeLabel)
+        infoBox.add(self.description)
 
-            self.add(imageBox)
-            self.add(infoBox)
-        else:
-            Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
-            titleLabel = Gtk.Label(label = "<big><b>Start typing or click\nthe search icon to begin a search</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
-            self.add(titleLabel)
+        self.add(imageBox)
+        self.add(infoBox)
 
     def update(self, movie_name):
         self.movie = self.db.find_movie(movie_name)
