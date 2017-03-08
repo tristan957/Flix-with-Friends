@@ -3,13 +3,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
-MOVIE_INDEX = 11
 
-# class NoneBox():
     # Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
-    # titleLabel = Gtk.Label(label = "<big><b>Start typing or click\nthe search icon to begin a search</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
-    # self.add(titleLabel)
-
 class MovieBox(Gtk.Box):
 
     def __init__(self, movie_name):
