@@ -12,8 +12,6 @@ class MovieBox(Gtk.Box):
         self.db = Database(Database.location)
         # movie = db.movies[MOVIE_INDEX]
 
-        movie_name = "A Beautiful Mind"
-
         if movie_name is not None:
             Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
 
