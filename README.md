@@ -19,7 +19,15 @@ Currently throwing around ideas which could include a `Makefile` or a `setup.py`
 As of right now you can clone the repository and run `python3 MovieMain.py`.
 
 ## Future Development
-Flix with Friends is leveraging the latest Python and GTK+ versions available on Solus. We, the developers will keep it up to date to the best of our ability with 
+Flix with Friends is leveraging the latest Python and GTK+ versions available on Solus. We, the developers will keep it up to date to the best of our ability with
+
+In no particular order:
+- [ ] Create Server with RasberryPi
+- [ ] Solid State Drive for Storage
+- [ ] Implement a Load from Server Button
+- [ ] New Movie Box UI as Reveler
+- [ ] Fully Implement the Google Doc
+- [ ] Create Logo
 
 ## License
 [GPL 2.0](https://github.com/JosephMart/Flix-with-Friends/blob/master/LICENSE)
