@@ -62,10 +62,10 @@ class Database:
 
 		self.movies.sort(key=lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
-		if len(self.troubled_list) > 0:
-			print('Troubled Movies:')
-			for m in self.troubled_list:
-				print(m.title)
+		# if len(self.troubled_list) > 0:
+		# 	print('Troubled Movies:')
+		# 	for m in self.troubled_list:
+		# 		print(m.title)
 
 	def createDictionary(self):
 		# This method converts all the data in the excelDB into a list of dictionaries
