@@ -17,6 +17,7 @@ class MovieBox(Gtk.Box):
 
         if self.movie is None:
             self.movie = self.db.movies[0]
+
         imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
         infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
 

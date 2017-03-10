@@ -55,9 +55,10 @@ class MovieSearchBar(Gtk.Revealer):
 		while x >= self.db.oldest_year:
 			self.dateCombo.append_text(str(x))
 			x -= 1
-		self.dateCombo.set_active(-1)
+		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year);
 
-		self.dateAfter = Gtk.Switch()
+		self.dateAfter = Gtk.Switch(active = False, state = False)
+		self.dateAfter.connect("state-set", self.switch_cb)
 		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
 		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		switchBox.add(self.dateAfter)
@@ -77,7 +78,7 @@ class MovieSearchBar(Gtk.Revealer):
 		self.ratingPopover = Gtk.Popover()
 		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
-		self.scale = Gtk.Scale(draw_value = True, has_origin = True).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
+		self.scale = Gtk.Scale(draw_value = True, has_origin = True, value_pos = 0).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
 		self.scale.connect("value-changed", self.minRating_cb)
 		i = 1
 		while i <= 10:
@@ -120,11 +121,8 @@ class MovieSearchBar(Gtk.Revealer):
 
 		self.parent.stack.add_named(searchBox, "search-results")
 
-	def search_cb(self, widget):
-		self.run_search()
-
 	def genresList_cb(self, genreButton):
-		genreButton.props.active = not genreButton.props.active
+		genreButton.set_property("active", not genreButton.get_property("active"))
 		if genreButton.props.active is True:
 			self.genres.append(genreButton.props.text)
 		else:
@@ -140,8 +138,13 @@ class MovieSearchBar(Gtk.Revealer):
 			self.friends.remove(friendButton.props.text)
 		self.run_search()
 
+	def search_cb(self, widget):
+		self.run_search()
+
+	def switch_cb(self, switch, state):
+		self.run_search()
+
 	def minRating_cb(self, scale):
-		self.rating = scale.get_value()
 		self.run_search()
 
 	def genre_cb(self, genreButton):
