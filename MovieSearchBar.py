@@ -20,7 +20,6 @@ class MovieSearchBar(Gtk.Revealer):
 
 		self.genres = []
 		self.friends = []
-		self.rating = 0
 		self.db = Database(location)
 
 		Database.fileName = location # FIXME move this to the parent class
