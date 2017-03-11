@@ -115,19 +115,18 @@ class MovieSearchBar(Gtk.Revealer):
 
 	def genresList_cb(self, genreButton):
 		genreButton.set_property("active", not genreButton.get_property("active"))
-		if genreButton.props.active is True:
-			self.genres.append(genreButton.props.text)
+		if genreButton.get_property("active") is True:
+			self.genres.append(genreButton.get_property("text"))
 		else:
-			self.genres.remove(genreButton.props.text)
+			self.genres.remove(genreButton.get_property("text"))
 		self.run_search()
 
 	def friendsList_cb(self, friendButton):
-		friendButton.props.active = not friendButton.props.active
-		if friendButton.props.active is True:
-			self.friends.append(friendButton.props.text)
-			print(self.friends)
+		friendButton.set_property("active", not friendButton.get_property("active"))
+		if friendButton.get_property("active") is True:
+			self.friends.append(friendButton.get_property("text"))
 		else:
-			self.friends.remove(friendButton.props.text)
+			self.friends.remove(friendButton.get_property("text"))
 		self.run_search()
 
 	def search_cb(self, widget):
