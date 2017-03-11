@@ -18,7 +18,7 @@ except ImportError:
 	flags = None
 
 # Flix with Friends special variables
-# Creds stored at ~/.credentials/sheets.googleapis.flix-with-friends.json
+# Creds stored at ~/.config/Flix-with-Friends/sheets.googleapis.flix-with-friends.json
 # The google doc ID = 1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8
 
 # This scope gives read and write access
@@ -195,7 +195,7 @@ class Database:
 		# Returns: Credentials, the obtained credential.
 
 		home_dir = os.path.expanduser('~')
-		credential_dir = os.path.join(home_dir, '.credentials')
+		credential_dir = os.path.join(home_dir, '.config/Flix-with-Friends')
 		if not os.path.exists(credential_dir):
 			os.makedirs(credential_dir)
 		credential_path = os.path.join(credential_dir,
@@ -294,4 +294,4 @@ if __name__ == "__main__":
 
 	wb.save(db.fileName)  # Save DB edits
 
-	db.upload_google_doc()
+	# db.upload_google_doc()
