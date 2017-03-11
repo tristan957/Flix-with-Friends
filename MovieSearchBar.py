@@ -16,7 +16,14 @@ class MovieSearchBar(Gtk.Revealer):
 
 		self.parent = parent
 
-		searchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+		self.imdbBox = MovieBox(None)
+		self.searchResults = SearchResults(self)
+		searchPage = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4)
+		searchPage.pack_start(self.searchResults, False, False, 0)
+		searchPage.pack_end(self.imdbBox, False, False, 0)
+
+		searchCriteria = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+		self.parent.stack.add_named(searchPage, "search-results")
 
 		self.genres = []
 		self.friends = []
@@ -24,14 +31,13 @@ class MovieSearchBar(Gtk.Revealer):
 
 		Database.fileName = location # FIXME move this to the parent class
 
-		central = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5)
-		central.get_style_context().add_class("linked")
+		filters = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5)
+		filters.get_style_context().add_class("linked")
 
 		self.searchEntry = Gtk.SearchEntry()
 		self.searchEntry.set_can_focus(True)
 		self.searchEntry.set_size_request(250, -1)
-		central.pack_start(self.searchEntry, True, True, 0)
-
+		filters.pack_start(self.searchEntry, True, True, 0)
 		# Callback for when enter key is pressed
 		self.searchEntry.connect("activate", self.search_cb)
 		self.searchEntry.connect("changed", self.search_cb)
@@ -44,24 +50,35 @@ class MovieSearchBar(Gtk.Revealer):
 			butt.connect("clicked", self.genresList_cb)
 		self.genrePopover.add(genreBox)
 
+		self.ratingPopover = Gtk.Popover()
+		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
+		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
+		self.scale = Gtk.Scale(draw_value = True, has_origin = True, value_pos = 0).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
+		self.scale.connect("value-changed", self.search_cb)
+		i = 1
+		while i <= 10:
+			self.scale.add_mark(i, Gtk.PositionType.TOP)
+			i = i + 1
+		self.scale.set_size_request(150, 40)
+		ratingBox.add(ratingLabel)
+		ratingBox.add(self.scale)
+		self.ratingPopover.add(ratingBox)
+
 		self.datePopover = Gtk.Popover()
 		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-
-		self.dateCombo = Gtk.ComboBoxText(wrap_width = 4)
-		self.dateCombo.connect("changed", self.search_cb)
-
-		x = datetime.datetime.now().year
-		while x >= self.db.oldest_year:
-			self.dateCombo.append_text(str(x))
-			x -= 1
-		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year);
-
 		self.dateAfter = Gtk.Switch(active = False, state = False)
 		self.dateAfter.connect("state-set", self.switch_cb)
 		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
 		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
 		switchBox.add(self.dateAfter)
 		switchBox.add(dateLabel)
+		self.dateCombo = Gtk.ComboBoxText(wrap_width = 4)
+		self.dateCombo.connect("changed", self.search_cb)
+		x = datetime.datetime.now().year
+		while x >= self.db.oldest_year:
+			self.dateCombo.append_text(str(x))
+			x -= 1
+		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year);
 		dateBox.add(self.dateCombo)
 		dateBox.add(switchBox)
 		self.datePopover.add(dateBox)
@@ -74,51 +91,29 @@ class MovieSearchBar(Gtk.Revealer):
 			butt.connect("clicked", self.friendsList_cb)
 		self.viewedByPopover.add(viewedByBox)
 
-		self.ratingPopover = Gtk.Popover()
-		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
-		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
-		self.scale = Gtk.Scale(draw_value = True, has_origin = True, value_pos = 0).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
-		self.scale.connect("value-changed", self.minRating_cb)
-		i = 1
-		while i <= 10:
-			self.scale.add_mark(i, Gtk.PositionType.TOP)
-			i = i + 1
-		self.scale.set_size_request(150, 40)
-		ratingBox.add(ratingLabel)
-		ratingBox.add(self.scale)
-		self.ratingPopover.add(ratingBox)
-
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
 		self.genreButton.set_size_request(100, -1)
+		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
+		self.ratingButton.set_size_request(100, -1)
 		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
 		self.dateButton.set_size_request(100, -1)
 		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
 		self.viewedByButton.set_size_request(100, -1)
-		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
-		self.ratingButton.set_size_request(100, -1)
 
-		central.pack_start(self.genreButton, True, True, 0)
-		central.pack_start(self.dateButton, True, True, 0)
-		central.pack_start(self.viewedByButton, True, True, 0)
-		central.pack_end(self.ratingButton, True, True, 0)
+		filters.pack_start(self.genreButton, True, True, 0)
+		filters.pack_start(self.ratingButton, True, True, 0)
+		filters.pack_start(self.dateButton, True, True, 0)
+		filters.pack_end(self.viewedByButton, True, True, 0)
 
 		self.genreButton.connect("toggled", self.genre_cb)
 		self.dateButton.connect("toggled", self.releaseDate_cb)
-		self.viewedByButton.connect("toggled", self.viewedBy_cb)
 		self.ratingButton.connect("toggled", self.rating_cb)
+		self.viewedByButton.connect("toggled", self.viewedBy_cb)
 
-		searchBox.pack_start(central, True, False, 0)
-		searchBox.get_style_context().add_class("inline-toolbar")
+		searchCriteria.pack_start(filters, True, False, 0)
+		searchCriteria.get_style_context().add_class("inline-toolbar")
 
-		self.set_property("child", searchBox)
-
-		self.imdbBox = MovieBox(None)
-		self.searchResults = SearchResults(self)
-		searchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4)
-		searchBox.pack_start(self.searchResults, False, False, 0)
-		searchBox.pack_end(self.imdbBox, False, False, 0)
-
-		self.parent.stack.add_named(searchBox, "search-results")
+		self.set_property("child", searchCriteria)
 
 	def genresList_cb(self, genreButton):
 		genreButton.set_property("active", not genreButton.get_property("active"))
@@ -141,9 +136,6 @@ class MovieSearchBar(Gtk.Revealer):
 		self.run_search()
 
 	def switch_cb(self, switch, state):
-		self.run_search()
-
-	def minRating_cb(self, scale):
 		self.run_search()
 
 	def genre_cb(self, genreButton):
