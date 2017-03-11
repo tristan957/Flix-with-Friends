@@ -219,14 +219,14 @@ class Database:
 		http = credentials.authorize(httplib2.Http())
 		discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
 						'version=v4')
-		service = discovery.build('sheets', 'v4', http=http,
-									discoveryServiceUrl=discoveryUrl)
+		service = discovery.build('sheets', 'v4', http = http,
+									discoveryServiceUrl = discoveryUrl)
 
 		# Pull data from the Google Sheet
 		docID = self.spreadsheetID = sheetID
 		rangeName = 'Sheet1!A:I'
 		result = service.spreadsheets().values().get(
-			spreadsheetId=self.spreadsheetID, range=rangeName).execute()
+			spreadsheetId = self.spreadsheetID, range = rangeName).execute()
 		values = result.get('values', [])
 
 		# Add values to the Excel sheet
