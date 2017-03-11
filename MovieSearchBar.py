@@ -125,7 +125,6 @@ class MovieSearchBar(Gtk.Revealer):
 		friendButton.props.active = not friendButton.props.active
 		if friendButton.props.active is True:
 			self.friends.append(friendButton.props.text)
-			print(self.friends)
 		else:
 			self.friends.remove(friendButton.props.text)
 		self.run_search()
