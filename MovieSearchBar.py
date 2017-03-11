@@ -133,9 +133,11 @@ class MovieSearchBar(Gtk.Revealer):
 		self.run_search()
 
 	def randomMovieButton_cb(self, randomMovieButton):
-		number_movies = len(self.db.movies) - 1
+		movieResults = self.run_search(False)
+		number_movies = len(movieResults) - 1
 		movie_position = random.randint(0, number_movies)
-		movie = self.db.movies[movie_position]
+
+		movie = movieResults[movie_position]
 
 		print("Title:", movie.title)
 		print("Release Date:", movie.release_date)
@@ -168,7 +170,7 @@ class MovieSearchBar(Gtk.Revealer):
 	def rating_cb(self, ratingButton):
 		self.ratingPopover.show_all()
 
-	def run_search(self):
+	def run_search(self, update_search_view=True):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
 		results = []
 
@@ -243,6 +245,8 @@ class MovieSearchBar(Gtk.Revealer):
 				# GOing to need a try except for this,
 				# movie.get_image(movie.poster_path, movie.title)
 				# print('\n')
-
-		self.searchResults.set_search_view(results)
-		self.parent.stack.set_visible_child_name("search-results")
+		if update_search_view:
+			self.searchResults.set_search_view(results)
+			self.parent.stack.set_visible_child_name("search-results")
+		else:
+			return results
