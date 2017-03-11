@@ -20,6 +20,8 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		dataIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
 		dataImage = Gtk.Image.new_from_gicon(dataIcon, Gtk.IconSize.BUTTON)
 
+		newSource = Gtk.ModelButton(label = "Change Source")
+		dataSeparator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
 		addMovieButton = Gtk.ModelButton(text = "Add a Movie")
 		addMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Add")
 		deleteMovieButton = Gtk.ModelButton(text = "Delete a Movie")
@@ -30,11 +32,14 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		deleteFriendButton = Gtk.ModelButton(text = "Delete a Friend")
 		deleteFriendButton.connect("clicked", self.manipulateFriend_cb, "Delete")
 		dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+
+		dataBox.add(newSource)
 		dataBox.add(addMovieButton)
 		dataBox.add(deleteMovieButton)
 		dataBox.add(dataSeparator)
 		dataBox.add(addFriendButton)
 		dataBox.add(deleteFriendButton)
+
 		self.dataPopover = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)  # , relative_to = dataButton)
 		self.dataPopover.add(dataBox)
 		dataButton = Gtk.MenuButton(image = dataImage, use_popover = True, popover = self.dataPopover)
