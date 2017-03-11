@@ -1,5 +1,4 @@
 import gi
-import random
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 from MovieDialog import MovieDialog
@@ -48,8 +47,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 
 		self.randomMovieButton = Gtk.Button(label = "Random Movie")
 		self.randomMovieButton.get_style_context().add_class("suggested-action")
-		random.seed()
-		self.randomMovieButton.connect("clicked", self.randomMovieButton_cb)
+		self.randomMovieButton.connect("clicked", parent.searchBar.randomMovieButton_cb)
 		self.pack_start(self.randomMovieButton)
 
 		searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")  # create an image to place on the button
@@ -57,24 +55,6 @@ class MovieHeaderBar(Gtk.HeaderBar):
 		self.searchButton = Gtk.ToggleButton(image = searchImage)  # creates a button with an image
 		self.searchButton.connect("clicked", self.searchButton_cb)  # connects the activate signal to searchButton_cb
 		self.pack_end(self.searchButton)  # adds the button to the end of the headerbar
-
-	def randomMovieButton_cb(self, randomMovieButton):
-		number_movies = len(self.db.movies) - 1
-		movie_position = random.randint(0, number_movies)
-		movie = self.db.movies[movie_position]
-
-		print("Title:", movie.title)
-		print("Release Date:", movie.release_date)
-		print("Rating:", movie.vote)
-		print("Runtime:", movie.runtime)
-		print("Genres:", end = " ")
-		for i in range(0, len(movie.genres)):
-			print(movie.genres[i], end = " ")
-		print("")
-		print("Overview:", movie.overview)
-		# GOing to need a try except for this,
-		# movie.get_image(movie.poster_path, movie.title)
-		print('')
 
 	# callback for when the searchButton is pressed
 	def searchButton_cb(self, searchButton):

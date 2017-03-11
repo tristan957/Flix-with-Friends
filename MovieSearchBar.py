@@ -1,12 +1,13 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Pango
+import random
 import re
+import datetime
+from gi.repository import Gtk, Pango
 from Database import Database
 from friends import getFriends
 from search_results import SearchResults
 from MovieBox import MovieBox
-import datetime
 
 
 class MovieSearchBar(Gtk.Revealer):
@@ -19,6 +20,8 @@ class MovieSearchBar(Gtk.Revealer):
 		self.friends = []
 		self.db = Database(location)
 		Database.fileName = location # FIXME move this to the parent class
+
+		random.seed()
 
 		self.imdbBox = MovieBox(None)
 		self.searchResults = SearchResults(self)
@@ -128,6 +131,24 @@ class MovieSearchBar(Gtk.Revealer):
 		else:
 			self.friends.remove(friendButton.get_property("text"))
 		self.run_search()
+
+	def randomMovieButton_cb(self, randomMovieButton):
+		number_movies = len(self.db.movies) - 1
+		movie_position = random.randint(0, number_movies)
+		movie = self.db.movies[movie_position]
+
+		print("Title:", movie.title)
+		print("Release Date:", movie.release_date)
+		print("Rating:", movie.vote)
+		print("Runtime:", movie.runtime)
+		print("Genres:", end = " ")
+		for i in range(0, len(movie.genres)):
+			print(movie.genres[i], end = " ")
+		print("")
+		print("Overview:", movie.overview)
+		# GOing to need a try except for this,
+		# movie.get_image(movie.poster_path, movie.title)
+		print('')
 
 	def search_cb(self, widget):
 		self.run_search()
