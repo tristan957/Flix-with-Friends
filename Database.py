@@ -60,8 +60,9 @@ class Database:
 			else:
 				self.addMovie(m)
 
-		self.movies.sort(key=lambda x: x.title)
+		self.movies.sort(key = lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
+		self.friends = sorted(self.friends)
 		# if len(self.troubled_list) > 0:
 		# 	print('Troubled Movies:')
 		# 	for m in self.troubled_list:
@@ -229,7 +230,7 @@ class Database:
 		values = result.get('values', [])
 
 		# Add values to the Excel sheet
-		book = xlwt.Workbook(encoding="utf-8")
+		book = xlwt.Workbook(encoding = "utf-8")
 		sheet1 = book.add_sheet("Sheet 1")
 		if not values:
 			print('No data found.')
@@ -257,11 +258,11 @@ class Database:
 		http = credentials.authorize(httplib2.Http())
 		discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
 						'version=v4')
-		service = discovery.build('sheets', 'v4', http=http,
-									discoveryServiceUrl=discoveryUrl)
+		service = discovery.build('sheets', 'v4', http = http,
+									discoveryServiceUrl = discoveryUrl)
 
 		# Open the Excel sheet to read in data
-		workbook = xlrd.open_workbook(self.fileName, on_demand=True)
+		workbook = xlrd.open_workbook(self.fileName, on_demand = True)
 		worksheet = workbook.sheet_by_index(0)
 
 		# transform the workbook to a 2D list
@@ -291,8 +292,6 @@ if __name__ == "__main__":
 	wb = copy(rb)  # make a writeable copy of the open excel file
 	w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
 
-
 	wb.save(db.fileName)  # Save DB edits
-
 
 	db.upload_google_doc()

@@ -15,6 +15,10 @@ class MovieSearchBar(Gtk.Revealer):
 		Gtk.Box.__init__(self, transition_duration = 300)
 
 		self.parent = parent
+		self.genres = []
+		self.friends = []
+		self.db = Database(location)
+		Database.fileName = location # FIXME move this to the parent class
 
 		self.imdbBox = MovieBox(None)
 		self.searchResults = SearchResults(self)
@@ -24,12 +28,6 @@ class MovieSearchBar(Gtk.Revealer):
 
 		searchCriteria = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
 		self.parent.stack.add_named(searchPage, "search-results")
-
-		self.genres = []
-		self.friends = []
-		self.db = Database(location)
-
-		Database.fileName = location # FIXME move this to the parent class
 
 		filters = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5)
 		filters.get_style_context().add_class("linked")
