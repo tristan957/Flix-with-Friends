@@ -6,8 +6,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from Window import Window
 
-import sys
-
 if __name__ == "__main__":
     win = Window()	 # create the GUI
     win.connect("delete-event", Gtk.main_quit)	 # when delete-event signal is received, calls Gtk.main_quit
