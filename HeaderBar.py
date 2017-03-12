@@ -6,7 +6,7 @@ from FriendDialog import FriendDialog
 from Database import Database
 
 
-class MovieHeaderBar(Gtk.HeaderBar):
+class HeaderBar(Gtk.HeaderBar):
 
 	def __init__(self, parent):
 		Gtk.HeaderBar.__init__(self, title = "Flix with Friends", show_close_button = True)

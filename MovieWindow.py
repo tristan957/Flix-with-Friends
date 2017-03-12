@@ -4,7 +4,7 @@ from gi.repository import Gtk, Gio
 from Database import Database
 from InfoBox import InfoBox
 from MovieSearchBar import MovieSearchBar
-from MovieHeaderBar import MovieHeaderBar
+from HeaderBar import HeaderBar
 
 
 class LocationChooser(Gtk.Box):
@@ -95,7 +95,7 @@ class MovieWindow(Gtk.Window):
 		# box.add(imdbBox)
 		self.stack.add_named(noneBox, "main")
 
-		self.header = MovieHeaderBar(self)
+		self.header = HeaderBar(self)
 		self.set_titlebar(self.header)
 
 		self.connect("key-press-event", self.key_pressed_cb)
