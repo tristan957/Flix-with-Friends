@@ -29,7 +29,7 @@ class Movie:
 	def get_image(self):
 		if (self.poster_path != 'N/A'):
 			# Create imagePosters directory if not present
-			os.makedirs("./imagePosters", exist_ok=True)
+			os.makedirs("./imagePosters", exist_ok = True)
 			baseURL = 'https://image.tmdb.org/t/p/'
 			posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2', 'w342', 'w500', 'w780'] #'original']
 
