@@ -133,7 +133,7 @@ class MovieSearchBar(Gtk.Revealer):
 			self.friends.remove(friendButton.get_property("text"))
 		self.run_search()
 
-	def randomMovieButton_cb(self, randomMovieButton,parent):
+	def randomMovieButton_cb(self, randomMovieButton, parent):
 		movieResults = self.run_search(False)
 		movie_position = random.randint(0, len(movieResults) - 1)
 		parent.searchBar.imdbBox.update(movieResults[movie_position].title)
