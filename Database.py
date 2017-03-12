@@ -125,14 +125,19 @@ class Database:
 		print('Database Update Complete')
 
 	def addMovie(self, MOVIE):
+		# Add Movie to List of Movies
+
+		# Check if Movie has a new genre
 		for g in MOVIE.genres:
 			if g not in self.listGenres:
 				if g != '' and g != self.MISSING_DATA:
-					(self.listGenres).append(g)
+					self.listGenres.append(g)
 
+		# Check if Movie has a new Oldest release year
 		if MOVIE.release_date[:4] < str(self.oldest_year):
 			self.oldest_year = int(MOVIE.release_date[:4])
 
+		# Add Friend if Movie has a friend not accounted for
 		for v in MOVIE.viewers:
 			if v not in self.friends:
 				if v != '':
