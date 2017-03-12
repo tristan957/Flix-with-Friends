@@ -10,6 +10,7 @@ from HeaderBar import HeaderBar
 class LocationChooser(Gtk.Box):
 
 	def __init__(self):
+		"""initial box to choose the location of the database"""
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, margin = 20, spacing = 10)
 
 		label = Gtk.Label("<big>Choose the location of your spreadsheet.</big>", use_markup = True)
@@ -28,20 +29,20 @@ class LocationChooser(Gtk.Box):
 		buttonBox.pack_start(self.google, True, True, 0)
 		buttonBox.pack_end(self.local, True, True, 0)
 		buttonBox.set_size_request(500, 100)
-
 		self.pack_end(buttonBox, False, True, 0)
 
 class MovieWindow(Gtk.Window):
 
 	def __init__(self):
+		"""the main application window"""
 		Gtk.Window.__init__(self)
 
-		header = Gtk.HeaderBar(title = "Flix with Friends", show_close_button = True)
+		header = Gtk.HeaderBar(title = "Flix with Friends", show_close_button = True) # dummy header bar
 		self.set_titlebar(header)
 
-		self.stack = Gtk.Stack(homogeneous = True, transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+		self.stack = Gtk.Stack(homogeneous = True, transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT) # creates the main stack
 
-		spreadsheetBox = LocationChooser()
+		spreadsheetBox = LocationChooser() # look up
 		spreadsheetBox.google.connect("clicked", self.google_cb)
 		spreadsheetBox.local.connect("clicked", self.local_cb)
 		self.stack.add_named(spreadsheetBox, "data-chooser")
@@ -57,6 +58,7 @@ class MovieWindow(Gtk.Window):
 		self.show_all()
 
 	def key_pressed_cb(self, win, event):
+		"""grab key presses to open the search bar"""
 		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
 		self.searchBar.set_reveal_child(True)
 		if self.searchBar.searchEntry.has_focus() is False:
@@ -68,12 +70,13 @@ class MovieWindow(Gtk.Window):
 		self.stack.set_visible_child_name("label")
 
 	def local_cb(self, local):
+		"""ask the user for an excel file"""
 		fileChooser = Gtk.FileChooserDialog(self, title = "Choose a Spreadsheet")
 		fileChooser.add_button("Open", Gtk.FileChooserAction.OPEN)
 		fileChooser.add_button("Cancel", Gtk.ResponseType.CANCEL)
 		fileChooser.set_transient_for(self)
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
-		if fileChooser.run() is 0:
+		if fileChooser.run() is 0: # 0 stands for file being chosen
 			# Database.location = fileChooser.get_filename()
 			Database.location = 'local.xlsx' # TEMP
 			self.addMainStack(Database.location)
@@ -81,6 +84,7 @@ class MovieWindow(Gtk.Window):
 		fileChooser.destroy()
 
 	def doubleClickEnter_cb(self, fileChooser):
+		"""enable double click functionality in the file chooser"""
 		# Database.location = fileChooser.get_filename()
 		Database.location = 'local.xlsx' # TEMP
 		fileChooser.destroy()
@@ -88,10 +92,11 @@ class MovieWindow(Gtk.Window):
 		self.stack.set_visible_child_name("main")
 
 	def addMainStack(self, location):
+		"""adds the main stack to the window"""
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = MovieSearchBar(location, self)
 		self.box.pack_start(self.searchBar, False, False, 0)
-		noneBox = InfoBox(None)
+		noneBox = InfoBox(None) # initial box after location has been chosen
 		# box.add(imdbBox)
 		self.stack.add_named(noneBox, "main")
 

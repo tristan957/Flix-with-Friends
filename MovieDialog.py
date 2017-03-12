@@ -7,6 +7,7 @@ from Database import Database
 class MovieDialog(Gtk.Dialog):
 
 	def __init__(self, parent, action):
+		"""Create a dialog for adding and deleting movies"""
 		Gtk.Dialog.__init__(self, action + " a Movie", parent, Gtk.DialogFlags.MODAL, use_header_bar = True)
 
 		self.db = Database(Database.location)
@@ -28,6 +29,7 @@ class MovieDialog(Gtk.Dialog):
 		# if the action is deleting, create an autocompletion tree
 
 	def enterButton_cb(self, enterButton):
+		"""Reads the text entry and searches for a new movie to add"""
 		if (self.type == 'add') and (self.entry.get_text() != 'Enter the name of a movie to add'):
 			print('Movie to add:', self.entry.get_text())
 
@@ -37,8 +39,8 @@ class MovieDialog(Gtk.Dialog):
 				search = self.db.tmdb_search(self.entry.get_text())
 				print('Searh Results:\n')
 				for movie in search:
-					print('Title:',movie.title)
-					print('Overview:',movie.overview)
+					print('Title:', movie.title)
+					print('Overview:', movie.overview)
 					print()
 			except:
 				print('Error adding', self.entry.get_text())

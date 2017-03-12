@@ -8,6 +8,7 @@ from Database import Database
 class InfoBox(Gtk.Box):
 
     def __init__(self, movie_name):
+        """Create a box to display relevant movie information"""
         self.db = Database(Database.location)
         # movie = db.movies[MOVIE_INDEX]
 
@@ -48,6 +49,7 @@ class InfoBox(Gtk.Box):
         self.add(infoBox)
 
     def update(self, movie_name):
+        """Update the box to show new information"""
         self.movie = self.db.find_movie(movie_name)
         self.titleLabel.set_label("<big><b>" + self.movie.title + "</b></big>")
         self.viewedLabel.set_label("<b>Viewed By:</b> " + ', '.join(self.movie.viewers).rstrip(','))
