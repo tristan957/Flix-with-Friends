@@ -31,7 +31,7 @@ class LocationChooser(Gtk.Box):
 		buttonBox.set_size_request(500, 100)
 		self.pack_end(buttonBox, False, True, 0)
 
-class MovieWindow(Gtk.Window):
+class Window(Gtk.Window):
 
 	def __init__(self):
 		"""the main application window"""
