@@ -1,7 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from friends import addFriend, deleteFriend
+# from friends import addFriend, deleteFriend
 
 
 class FriendDialog(Gtk.Dialog):
@@ -28,8 +28,8 @@ class FriendDialog(Gtk.Dialog):
 		# if the action is deleting, create an autocompletion tree
 
 	def enterButton_cb(self, enterButton, action):
-		if action is "Add":
-			addFriend(self.entry.get_text())
-		elif action is "Delete":
-			deleteFriend(self.entry.get_text())
+		# if action is "Add":
+		# 	addFriend(self.entry.get_text())
+		# elif action is "Delete":
+		# 	deleteFriend(self.entry.get_text())
 		self.destroy()
