@@ -13,6 +13,7 @@ from MovieBox import MovieBox
 class MovieSearchBar(Gtk.Revealer):
 
 	def __init__(self, location, parent):
+		"""Creates a search bar with an entry and filters"""
 		Gtk.Box.__init__(self, transition_duration = 300)
 
 		self.parent = parent
@@ -24,17 +25,18 @@ class MovieSearchBar(Gtk.Revealer):
 		random.seed()
 
 		self.imdbBox = MovieBox(None)
-		self.searchResults = SearchResults(self)
-		searchPage = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4)
+		self.searchResults = SearchResults(self) # puts the search results in a Gtk.Box
+		searchPage = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4) # creates the page that holds the scrolled window and the info box
 		searchPage.pack_start(self.searchResults, False, False, 0)
 		searchPage.pack_end(self.imdbBox, False, False, 0)
 
-		searchCriteria = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+		searchCriteria = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL) # box for the 5 search criteria
 		self.parent.stack.add_named(searchPage, "search-results")
 
-		filters = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5)
+		filters = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5) # box for the 4 search filters
 		filters.get_style_context().add_class("linked")
 
+		# search entry related functions
 		self.searchEntry = Gtk.SearchEntry()
 		self.searchEntry.set_can_focus(True)
 		self.searchEntry.set_size_request(250, -1)
@@ -43,6 +45,7 @@ class MovieSearchBar(Gtk.Revealer):
 		self.searchEntry.connect("activate", self.search_cb)
 		self.searchEntry.connect("changed", self.search_cb)
 
+		# genre related functions
 		self.genrePopover = Gtk.Popover()
 		genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
@@ -51,6 +54,7 @@ class MovieSearchBar(Gtk.Revealer):
 			butt.connect("clicked", self.genresList_cb)
 		self.genrePopover.add(genreBox)
 
+		# rating related functions
 		self.ratingPopover = Gtk.Popover()
 		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
@@ -58,16 +62,17 @@ class MovieSearchBar(Gtk.Revealer):
 		self.scale.connect("value-changed", self.search_cb)
 		i = 1
 		while i <= 10:
-			self.scale.add_mark(i, Gtk.PositionType.TOP)
+			self.scale.add_mark(i, Gtk.PositionType.TOP) # add marks to the top of the scale
 			i = i + 1
 		self.scale.set_size_request(150, 40)
 		ratingBox.add(ratingLabel)
 		ratingBox.add(self.scale)
 		self.ratingPopover.add(ratingBox)
 
+		# date related fucntions
 		self.datePopover = Gtk.Popover()
 		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		self.dateAfter = Gtk.Switch(active = False, state = False)
+		self.dateAfter = Gtk.Switch(active = False, state = False) # if the user only wants to view movies fromt that year
 		self.dateAfter.connect("state-set", self.switch_cb)
 		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
 		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
@@ -84,6 +89,7 @@ class MovieSearchBar(Gtk.Revealer):
 		dateBox.add(switchBox)
 		self.datePopover.add(dateBox)
 
+		# viewed by related functions
 		self.viewedByPopover = Gtk.Popover()
 		viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for friend in self.db.friends:
@@ -92,6 +98,7 @@ class MovieSearchBar(Gtk.Revealer):
 			butt.connect("clicked", self.friendsList_cb)
 		self.viewedByPopover.add(viewedByBox)
 
+		# creating the menu buttons
 		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
 		self.genreButton.set_size_request(100, -1)
 		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
@@ -106,6 +113,7 @@ class MovieSearchBar(Gtk.Revealer):
 		filters.pack_start(self.dateButton, True, True, 0)
 		filters.pack_end(self.viewedByButton, True, True, 0)
 
+		# connect the buttons to their callbacks
 		self.genreButton.connect("toggled", self.genre_cb)
 		self.dateButton.connect("toggled", self.releaseDate_cb)
 		self.ratingButton.connect("toggled", self.rating_cb)
@@ -117,6 +125,7 @@ class MovieSearchBar(Gtk.Revealer):
 		self.set_property("child", searchCriteria)
 
 	def genresList_cb(self, genreButton):
+		"""adds selected genres to self.genres"""
 		genreButton.set_property("active", not genreButton.get_property("active"))
 		if genreButton.get_property("active") is True:
 			self.genres.append(genreButton.get_property("text"))
@@ -125,6 +134,7 @@ class MovieSearchBar(Gtk.Revealer):
 		self.run_search()
 
 	def friendsList_cb(self, friendButton):
+		"""adds selected friends to self.friends """
 		friendButton.set_property("active", not friendButton.get_property("active"))
 		if friendButton.get_property("active") is True:
 			self.friends.append(friendButton.get_property("text"))
@@ -133,6 +143,7 @@ class MovieSearchBar(Gtk.Revealer):
 		self.run_search()
 
 	def randomMovieButton_cb(self, randomMovieButton,parent):
+		"""finds a random movie and displays it"""
 		movieResults = self.run_search(False)
 		number_movies = len(movieResults) - 1
 		movie_position = random.randint(0, number_movies)
@@ -153,9 +164,11 @@ class MovieSearchBar(Gtk.Revealer):
 		print('')
 
 	def search_cb(self, widget):
+		"""generic function to run the sarch"""
 		self.run_search()
 
 	def switch_cb(self, switch, state):
+		"""run search function for the dateAfter switch"""
 		self.run_search()
 
 	def genre_cb(self, genreButton):
@@ -170,7 +183,8 @@ class MovieSearchBar(Gtk.Revealer):
 	def rating_cb(self, ratingButton):
 		self.ratingPopover.show_all()
 
-	def run_search(self, update_search_view=True):
+	def run_search(self, update_search_view = True):
+		"""runs the search to get a list of relevant movies"""
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
 		results = []
 
