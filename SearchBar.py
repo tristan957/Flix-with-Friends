@@ -5,7 +5,6 @@ import re
 import datetime
 from gi.repository import Gtk, Pango
 from Database import Database
-from friends import getFriends
 from search_results import SearchResults
 from InfoBox import InfoBox
 

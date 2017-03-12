@@ -2,7 +2,6 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from Database import Database
-from friends import addFriend, deleteFriend
 
 
 class MovieDialog(Gtk.Dialog):

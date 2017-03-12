@@ -16,7 +16,7 @@ search criteria like keywords, release date, rating and which of the users has s
 ## How to Install
 Currently throwing around ideas which could include a `Makefile` or a `setup.py`. Stay tuned. Dependencies are currently written in `dependencies.txt`. Make sure to install them. Python dependencies should be installed using `pip3`.
 
-As of right now you can clone the repository and run `python3 MovieMain.py`.
+As of right now you can clone the repository and run `python3 Main.py` or simply `make`.
 
 ## Future Development
 Flix with Friends is leveraging the latest Python and GTK+ versions available on Solus. We, the developers will keep it up to date to the best of our ability with
