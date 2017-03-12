@@ -106,10 +106,11 @@ class MovieSearchBar(Gtk.Revealer):
 		filters.pack_start(self.dateButton, True, True, 0)
 		filters.pack_end(self.viewedByButton, True, True, 0)
 
-		self.genreButton.connect("toggled", self.genre_cb)
-		self.dateButton.connect("toggled", self.releaseDate_cb)
-		self.ratingButton.connect("toggled", self.rating_cb)
-		self.viewedByButton.connect("toggled", self.viewedBy_cb)
+		self.genreButton.connect("toggled", self.test_cb, genrePopover)
+		self.dateButton.connect("toggled", self.test_cb, datePopover)
+		self.ratingButton.connect("toggled", self.test_cb, viewedByPopover)
+		self.viewedByButton.connect("toggled", self.test_cb, ratingPopover)
+
 
 		searchCriteria.pack_start(filters, True, False, 0)
 		searchCriteria.get_style_context().add_class("inline-toolbar")
@@ -158,17 +159,20 @@ class MovieSearchBar(Gtk.Revealer):
 	def switch_cb(self, switch, state):
 		self.run_search()
 
-	def genre_cb(self, genreButton):
-		self.genrePopover.show_all()
+	# def genre_cb(self, genreButton):
+	# 	self.genrePopover.show_all()
+	#
+	# def releaseDate_cb(self, dateButton):
+	# 	self.datePopover.show_all()
+	#
+	# def viewedBy_cb(self, viewedByButton):
+	# 	self.viewedByPopover.show_all()
+	#
+	# def rating_cb(self, ratingButton):
+	# 	self.ratingPopover.show_all()
 
-	def releaseDate_cb(self, dateButton):
-		self.datePopover.show_all()
-
-	def viewedBy_cb(self, viewedByButton):
-		self.viewedByPopover.show_all()
-
-	def rating_cb(self, ratingButton):
-		self.ratingPopover.show_all()
+	def test_cb(self, btn, func):
+		self.func.show_all()
 
 	def run_search(self, update_search_view=True):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
