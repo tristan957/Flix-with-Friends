@@ -45,6 +45,10 @@ class InfoBox(Gtk.Box):
         infoBox.add(self.runtimeLabel)
         infoBox.add(self.description)
 
+        # infoBox.get_style_context().add_class("list")
+        # Try using a gtk.frame and a class style context of inline-toolbar for every subsection and we'll see how it goes (toolbar, frame, rubberband)
+        # self.get_style_context().add_class("inline-toolbar")
+
         self.add(imageBox)
         self.add(infoBox)
 
