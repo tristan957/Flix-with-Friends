@@ -170,7 +170,7 @@ class MovieSearchBar(Gtk.Revealer):
 	def rating_cb(self, ratingButton):
 		self.ratingPopover.show_all()
 
-	def run_search(self, update_search_view = True):
+	def run_search(self, update_search_view=True):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
 		results = []
 
@@ -231,8 +231,9 @@ class MovieSearchBar(Gtk.Revealer):
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
 				results.append(movie)
 
-		# if update_search_view:
-		self.searchResults.set_search_view(results)
-		self.parent.stack.set_visible_child_name("search-results")
-		# else:
-		return results
+		if update_search_view:
+			self.searchResults.set_search_view(results)
+			self.parent.stack.set_visible_child_name("search-results")
+		else:
+			self.parent.stack.set_visible_child_name("search-results")
+			return results
