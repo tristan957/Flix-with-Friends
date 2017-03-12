@@ -114,10 +114,10 @@ class MovieSearchBar(Gtk.Revealer):
 		filters.pack_end(self.viewedByButton, True, True, 0)
 
 		# connect the buttons to their callbacks
+		self.genreButton.connect("toggled", self.showPopover_cb, genrePopover) 
 		self.dateButton.connect("toggled", self.showPopover_cb, datePopover)
 		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPopover)
 		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPopover)
-
 
 		searchCriteria.pack_start(filters, True, False, 0)
 		searchCriteria.get_style_context().add_class("inline-toolbar")
@@ -142,8 +142,8 @@ class MovieSearchBar(Gtk.Revealer):
 			self.friends.remove(friendButton.get_property("text"))
 		self.run_search()
 
-		"""finds a random movie and displays it"""
 	def randomMovieButton_cb(self, randomMovieButton, parent):
+		"""finds a random movie and displays it"""
 		movieResults = self.run_search(False)
 		movie_position = random.randint(0, len(movieResults) - 1)
 		parent.searchBar.imdbBox.update(movieResults[movie_position].title)
