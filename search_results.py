@@ -69,7 +69,7 @@ class SearchResults(Gtk.Box):
         Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
         # self.search_page = search_page
 
-        self.stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+        self.stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.CROSSFADE)
         self.pack_start(self.stack, True, True, 0)
 
         self.empty_page = BlankPage()
