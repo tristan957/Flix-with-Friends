@@ -12,3 +12,5 @@ Python:
 
 System:
       gnome-python
+      gtk3
+      python3
