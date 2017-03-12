@@ -3,7 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
 from Database import Database
 from InfoBox import InfoBox
-from MovieSearchBar import MovieSearchBar
+from SearchBar import SearchBar
 from HeaderBar import HeaderBar
 
 
@@ -94,7 +94,7 @@ class MovieWindow(Gtk.Window):
 	def addMainStack(self, location):
 		"""adds the main stack to the window"""
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		self.searchBar = MovieSearchBar(location, self)
+		self.searchBar = SearchBar(location, self)
 		self.box.pack_start(self.searchBar, False, False, 0)
 		noneBox = InfoBox(None) # initial box after location has been chosen
 		# box.add(imdbBox)

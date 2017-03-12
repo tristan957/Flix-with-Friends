@@ -10,7 +10,7 @@ from search_results import SearchResults
 from InfoBox import InfoBox
 
 
-class MovieSearchBar(Gtk.Revealer):
+class SearchBar(Gtk.Revealer):
 
 	def __init__(self, location, parent):
 		"""Creates a search bar with an entry and filters"""
@@ -114,7 +114,7 @@ class MovieSearchBar(Gtk.Revealer):
 		filters.pack_end(self.viewedByButton, True, True, 0)
 
 		# connect the buttons to their callbacks
-		self.genreButton.connect("toggled", self.showPopover_cb, genrePopover) 
+		self.genreButton.connect("toggled", self.showPopover_cb, genrePopover)
 		self.dateButton.connect("toggled", self.showPopover_cb, datePopover)
 		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPopover)
 		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPopover)
