@@ -1,5 +1,5 @@
 run:
-	python3 Flix-with-Friends
+	python3 flix-with-friends
 
 clean:
 	find . -name '*.pyc' -exec rm --force {} +
