@@ -43,15 +43,15 @@ class MovieSearchBar(Gtk.Revealer):
 		self.searchEntry.connect("activate", self.search_cb)
 		self.searchEntry.connect("changed", self.search_cb)
 
-		self.genrePopover = Gtk.Popover()
+		genrePopover = Gtk.Popover()
 		genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
 			butt = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK, centered = False)
 			genreBox.add(butt)
 			butt.connect("clicked", self.genresList_cb)
-		self.genrePopover.add(genreBox)
+		genrePopover.add(genreBox)
 
-		self.ratingPopover = Gtk.Popover()
+		ratingPopover = Gtk.Popover()
 		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 		self.scale = Gtk.Scale(draw_value = True, has_origin = True, value_pos = 0).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
@@ -63,9 +63,9 @@ class MovieSearchBar(Gtk.Revealer):
 		self.scale.set_size_request(150, 40)
 		ratingBox.add(ratingLabel)
 		ratingBox.add(self.scale)
-		self.ratingPopover.add(ratingBox)
+		ratingPopover.add(ratingBox)
 
-		self.datePopover = Gtk.Popover()
+		datePopover = Gtk.Popover()
 		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dateAfter = Gtk.Switch(active = False, state = False)
 		self.dateAfter.connect("state-set", self.switch_cb)
@@ -82,23 +82,23 @@ class MovieSearchBar(Gtk.Revealer):
 		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year);
 		dateBox.add(self.dateCombo)
 		dateBox.add(switchBox)
-		self.datePopover.add(dateBox)
+		datePopover.add(dateBox)
 
-		self.viewedByPopover = Gtk.Popover()
+		viewedByPopover = Gtk.Popover()
 		viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for friend in self.db.friends:
 			butt = Gtk.ModelButton(text = friend, role = Gtk.ButtonRole.CHECK, centered = False)
 			viewedByBox.add(butt)
 			butt.connect("clicked", self.friendsList_cb)
-		self.viewedByPopover.add(viewedByBox)
+		viewedByPopover.add(viewedByBox)
 
-		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
+		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = genrePopover)
 		self.genreButton.set_size_request(100, -1)
-		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
+		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = ratingPopover)
 		self.ratingButton.set_size_request(100, -1)
-		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
+		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = datePopover)
 		self.dateButton.set_size_request(100, -1)
-		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
+		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = viewedByPopover)
 		self.viewedByButton.set_size_request(100, -1)
 
 		filters.pack_start(self.genreButton, True, True, 0)
@@ -106,10 +106,10 @@ class MovieSearchBar(Gtk.Revealer):
 		filters.pack_start(self.dateButton, True, True, 0)
 		filters.pack_end(self.viewedByButton, True, True, 0)
 
-		self.genreButton.connect("toggled", self.test_cb, genrePopover)
-		self.dateButton.connect("toggled", self.test_cb, datePopover)
-		self.ratingButton.connect("toggled", self.test_cb, viewedByPopover)
-		self.viewedByButton.connect("toggled", self.test_cb, ratingPopover)
+		self.genreButton.connect("toggled", self.showPopover_cb, genrePopover)
+		self.dateButton.connect("toggled", self.showPopover_cb, datePopover)
+		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPopover)
+		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPopover)
 
 
 		searchCriteria.pack_start(filters, True, False, 0)
@@ -159,20 +159,8 @@ class MovieSearchBar(Gtk.Revealer):
 	def switch_cb(self, switch, state):
 		self.run_search()
 
-	# def genre_cb(self, genreButton):
-	# 	self.genrePopover.show_all()
-	#
-	# def releaseDate_cb(self, dateButton):
-	# 	self.datePopover.show_all()
-	#
-	# def viewedBy_cb(self, viewedByButton):
-	# 	self.viewedByPopover.show_all()
-	#
-	# def rating_cb(self, ratingButton):
-	# 	self.ratingPopover.show_all()
-
-	def test_cb(self, btn, func):
-		self.func.show_all()
+	def showPopover_cb(self, btn, func):
+		func.show_all()
 
 	def run_search(self, update_search_view=True):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
