@@ -6,7 +6,7 @@ import urllib.request
 
 class Movie:
 
-	def __init__(self, tI='', rU=0, gE=[], rD='', vO=0, oV='', vI=[]):
+	def __init__(self, tI = '', rU = 0, gE = [], rD = '', vO = 0, oV = '', vI = []):
 		self.title = tI
 		self.runtime = rU
 		self.genres = gE
