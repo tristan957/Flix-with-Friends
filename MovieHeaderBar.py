@@ -47,7 +47,7 @@ class MovieHeaderBar(Gtk.HeaderBar):
 
 		self.randomMovieButton = Gtk.Button(label = "Random Movie")
 		self.randomMovieButton.get_style_context().add_class("suggested-action")
-		self.randomMovieButton.connect("clicked", parent.searchBar.randomMovieButton_cb)
+		self.randomMovieButton.connect("clicked", parent.searchBar.randomMovieButton_cb,parent)
 		self.pack_start(self.randomMovieButton)
 
 		searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")  # create an image to place on the button

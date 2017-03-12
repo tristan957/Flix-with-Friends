@@ -132,13 +132,13 @@ class MovieSearchBar(Gtk.Revealer):
 			self.friends.remove(friendButton.get_property("text"))
 		self.run_search()
 
-	def randomMovieButton_cb(self, randomMovieButton):
+	def randomMovieButton_cb(self, randomMovieButton,parent):
 		movieResults = self.run_search(False)
 		number_movies = len(movieResults) - 1
 		movie_position = random.randint(0, number_movies)
 
 		movie = movieResults[movie_position]
-
+		parent.searchBar.imdbBox.update(movie.title)
 		print("Title:", movie.title)
 		print("Release Date:", movie.release_date)
 		print("Rating:", movie.vote)
@@ -230,21 +230,7 @@ class MovieSearchBar(Gtk.Revealer):
 			# If passes checks, then print Movie info
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
 				results.append(movie)
-				# print("Title:", movie.title)
-				# print("Release Date:", movie.release_date)
-				# print("Rating:", movie.vote)
-				# print("Runtime:", movie.runtime)
-				# print("Genres:", end=" ")
-				# for i in range(0, len(movie.genres)):
-				# 	print(movie.genres[i], end = " ")
-				# print("")
-				# print("Overview:", movie.overview)
-				# print("Viewers:", end=" ")
-				# for i in range(0, len(movie.viewers)):
-				# 	print(movie.viewers[i], end=" ")
-				# GOing to need a try except for this,
-				# movie.get_image(movie.poster_path, movie.title)
-				# print('\n')
+
 		if update_search_view:
 			self.searchResults.set_search_view(results)
 			self.parent.stack.set_visible_child_name("search-results")
