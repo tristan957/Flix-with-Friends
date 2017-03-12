@@ -231,8 +231,8 @@ class MovieSearchBar(Gtk.Revealer):
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
 				results.append(movie)
 
-		if update_search_view:
-			self.searchResults.set_search_view(results)
-			self.parent.stack.set_visible_child_name("search-results")
-		else:
-			return results
+		# if update_search_view:
+		self.searchResults.set_search_view(results)
+		self.parent.stack.set_visible_child_name("search-results")
+		# else:
+		return results
