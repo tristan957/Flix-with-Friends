@@ -135,23 +135,8 @@ class MovieSearchBar(Gtk.Revealer):
 
 	def randomMovieButton_cb(self, randomMovieButton,parent):
 		movieResults = self.run_search(False)
-		number_movies = len(movieResults) - 1
-		movie_position = random.randint(0, number_movies)
-
-		movie = movieResults[movie_position]
-		parent.searchBar.imdbBox.update(movie.title)
-		print("Title:", movie.title)
-		print("Release Date:", movie.release_date)
-		print("Rating:", movie.vote)
-		print("Runtime:", movie.runtime)
-		print("Genres:", end = " ")
-		for i in range(0, len(movie.genres)):
-			print(movie.genres[i], end = " ")
-		print("")
-		print("Overview:", movie.overview)
-		# GOing to need a try except for this,
-		# movie.get_image(movie.poster_path, movie.title)
-		print('')
+		movie_position = random.randint(0, len(movieResults) - 1)
+		parent.searchBar.imdbBox.update(movieResults[movie_position].title)
 
 	def search_cb(self, widget):
 		self.run_search()
