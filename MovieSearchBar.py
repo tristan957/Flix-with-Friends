@@ -170,7 +170,7 @@ class MovieSearchBar(Gtk.Revealer):
 	def rating_cb(self, ratingButton):
 		self.ratingPopover.show_all()
 
-	def run_search(self, update_search_view=True):
+	def run_search(self, update_search_view = True):
 		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
 		results = []
 
