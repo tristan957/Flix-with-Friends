@@ -5,12 +5,11 @@ import re
 import datetime
 from gi.repository import Gtk, Pango
 from Database import Database
-from friends import getFriends
 from search_results import SearchResults
-from MovieBox import MovieBox
+from InfoBox import InfoBox
 
 
-class MovieSearchBar(Gtk.Revealer):
+class SearchBar(Gtk.Revealer):
 
 	def __init__(self, location, parent):
 		"""Creates a search bar with an entry and filters"""
@@ -24,7 +23,7 @@ class MovieSearchBar(Gtk.Revealer):
 
 		random.seed()
 
-		self.imdbBox = MovieBox(None)
+		self.imdbBox = InfoBox(None)
 		self.searchResults = SearchResults(self) # puts the search results in a Gtk.Box
 		searchPage = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4) # creates the page that holds the scrolled window and the info box
 		searchPage.pack_start(self.searchResults, False, False, 0)
@@ -46,16 +45,16 @@ class MovieSearchBar(Gtk.Revealer):
 		self.searchEntry.connect("changed", self.search_cb)
 
 		# genre related functions
-		self.genrePopover = Gtk.Popover()
+		genrePopover = Gtk.Popover()
 		genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for genre in self.db.listGenres:
 			butt = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK, centered = False)
 			genreBox.add(butt)
 			butt.connect("clicked", self.genresList_cb)
-		self.genrePopover.add(genreBox)
+		genrePopover.add(genreBox)
 
 		# rating related functions
-		self.ratingPopover = Gtk.Popover()
+		ratingPopover = Gtk.Popover()
 		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
 		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 		self.scale = Gtk.Scale(draw_value = True, has_origin = True, value_pos = 0).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
@@ -67,10 +66,10 @@ class MovieSearchBar(Gtk.Revealer):
 		self.scale.set_size_request(150, 40)
 		ratingBox.add(ratingLabel)
 		ratingBox.add(self.scale)
-		self.ratingPopover.add(ratingBox)
+		ratingPopover.add(ratingBox)
 
 		# date related fucntions
-		self.datePopover = Gtk.Popover()
+		datePopover = Gtk.Popover()
 		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.dateAfter = Gtk.Switch(active = False, state = False) # if the user only wants to view movies fromt that year
 		self.dateAfter.connect("state-set", self.switch_cb)
@@ -87,25 +86,25 @@ class MovieSearchBar(Gtk.Revealer):
 		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year);
 		dateBox.add(self.dateCombo)
 		dateBox.add(switchBox)
-		self.datePopover.add(dateBox)
+		datePopover.add(dateBox)
 
 		# viewed by related functions
-		self.viewedByPopover = Gtk.Popover()
+		viewedByPopover = Gtk.Popover()
 		viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		for friend in self.db.friends:
 			butt = Gtk.ModelButton(text = friend, role = Gtk.ButtonRole.CHECK, centered = False)
 			viewedByBox.add(butt)
 			butt.connect("clicked", self.friendsList_cb)
-		self.viewedByPopover.add(viewedByBox)
+		viewedByPopover.add(viewedByBox)
 
 		# creating the menu buttons
-		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = self.genrePopover)
+		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = genrePopover)
 		self.genreButton.set_size_request(100, -1)
-		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = self.ratingPopover)
+		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = ratingPopover)
 		self.ratingButton.set_size_request(100, -1)
-		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = self.datePopover)
+		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = datePopover)
 		self.dateButton.set_size_request(100, -1)
-		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = self.viewedByPopover)
+		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = viewedByPopover)
 		self.viewedByButton.set_size_request(100, -1)
 
 		filters.pack_start(self.genreButton, True, True, 0)
@@ -114,10 +113,10 @@ class MovieSearchBar(Gtk.Revealer):
 		filters.pack_end(self.viewedByButton, True, True, 0)
 
 		# connect the buttons to their callbacks
-		self.genreButton.connect("toggled", self.genre_cb)
-		self.dateButton.connect("toggled", self.releaseDate_cb)
-		self.ratingButton.connect("toggled", self.rating_cb)
-		self.viewedByButton.connect("toggled", self.viewedBy_cb)
+		self.genreButton.connect("toggled", self.showPopover_cb, genrePopover)
+		self.dateButton.connect("toggled", self.showPopover_cb, datePopover)
+		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPopover)
+		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPopover)
 
 		searchCriteria.pack_start(filters, True, False, 0)
 		searchCriteria.get_style_context().add_class("inline-toolbar")
@@ -142,26 +141,11 @@ class MovieSearchBar(Gtk.Revealer):
 			self.friends.remove(friendButton.get_property("text"))
 		self.run_search()
 
-	def randomMovieButton_cb(self, randomMovieButton,parent):
+	def randomMovieButton_cb(self, randomMovieButton, parent):
 		"""finds a random movie and displays it"""
 		movieResults = self.run_search(False)
-		number_movies = len(movieResults) - 1
-		movie_position = random.randint(0, number_movies)
-
-		movie = movieResults[movie_position]
-		parent.searchBar.imdbBox.update(movie.title)
-		print("Title:", movie.title)
-		print("Release Date:", movie.release_date)
-		print("Rating:", movie.vote)
-		print("Runtime:", movie.runtime)
-		print("Genres:", end = " ")
-		for i in range(0, len(movie.genres)):
-			print(movie.genres[i], end = " ")
-		print("")
-		print("Overview:", movie.overview)
-		# GOing to need a try except for this,
-		# movie.get_image(movie.poster_path, movie.title)
-		print('')
+		movie_position = random.randint(0, len(movieResults) - 1)
+		parent.searchBar.imdbBox.update(movieResults[movie_position].title)
 
 	def search_cb(self, widget):
 		"""generic function to run the sarch"""
@@ -171,17 +155,8 @@ class MovieSearchBar(Gtk.Revealer):
 		"""run search function for the dateAfter switch"""
 		self.run_search()
 
-	def genre_cb(self, genreButton):
-		self.genrePopover.show_all()
-
-	def releaseDate_cb(self, dateButton):
-		self.datePopover.show_all()
-
-	def viewedBy_cb(self, viewedByButton):
-		self.viewedByPopover.show_all()
-
-	def rating_cb(self, ratingButton):
-		self.ratingPopover.show_all()
+	def showPopover_cb(self, btn, func):
+		func.show_all()
 
 	def run_search(self, update_search_view = True):
 		"""runs the search to get a list of relevant movies"""

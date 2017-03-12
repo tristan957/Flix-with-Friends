@@ -2,9 +2,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
 from Database import Database
-from MovieBox import MovieBox
-from MovieSearchBar import MovieSearchBar
-from MovieHeaderBar import MovieHeaderBar
+from InfoBox import InfoBox
+from SearchBar import SearchBar
+from HeaderBar import HeaderBar
 
 
 class LocationChooser(Gtk.Box):
@@ -31,7 +31,7 @@ class LocationChooser(Gtk.Box):
 		buttonBox.set_size_request(500, 100)
 		self.pack_end(buttonBox, False, True, 0)
 
-class MovieWindow(Gtk.Window):
+class Window(Gtk.Window):
 
 	def __init__(self):
 		"""the main application window"""
@@ -94,13 +94,13 @@ class MovieWindow(Gtk.Window):
 	def addMainStack(self, location):
 		"""adds the main stack to the window"""
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		self.searchBar = MovieSearchBar(location, self)
+		self.searchBar = SearchBar(location, self)
 		self.box.pack_start(self.searchBar, False, False, 0)
-		noneBox = MovieBox(None) # initial box after location has been chosen
+		noneBox = InfoBox(None) # initial box after location has been chosen
 		# box.add(imdbBox)
 		self.stack.add_named(noneBox, "main")
 
-		self.header = MovieHeaderBar(self)
+		self.header = HeaderBar(self)
 		self.set_titlebar(self.header)
 
 		self.connect("key-press-event", self.key_pressed_cb)
