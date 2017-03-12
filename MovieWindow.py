@@ -2,7 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
 from Database import Database
-from MovieBox import MovieBox
+from InfoBox import InfoBox
 from MovieSearchBar import MovieSearchBar
 from MovieHeaderBar import MovieHeaderBar
 
@@ -91,7 +91,7 @@ class MovieWindow(Gtk.Window):
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = MovieSearchBar(location, self)
 		self.box.pack_start(self.searchBar, False, False, 0)
-		noneBox = MovieBox(None)
+		noneBox = InfoBox(None)
 		# box.add(imdbBox)
 		self.stack.add_named(noneBox, "main")
 

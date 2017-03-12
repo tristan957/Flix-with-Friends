@@ -5,7 +5,7 @@ from Database import Database
 
 
     # Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
-class MovieBox(Gtk.Box):
+class InfoBox(Gtk.Box):
 
     def __init__(self, movie_name):
         self.db = Database(Database.location)

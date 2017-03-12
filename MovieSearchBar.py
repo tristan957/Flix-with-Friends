@@ -7,7 +7,7 @@ from gi.repository import Gtk, Pango
 from Database import Database
 from friends import getFriends
 from search_results import SearchResults
-from MovieBox import MovieBox
+from InfoBox import InfoBox
 
 
 class MovieSearchBar(Gtk.Revealer):
@@ -23,7 +23,7 @@ class MovieSearchBar(Gtk.Revealer):
 
 		random.seed()
 
-		self.imdbBox = MovieBox(None)
+		self.imdbBox = InfoBox(None)
 		self.searchResults = SearchResults(self)
 		searchPage = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4)
 		searchPage.pack_start(self.searchResults, False, False, 0)
