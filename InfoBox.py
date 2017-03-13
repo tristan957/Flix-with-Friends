@@ -26,35 +26,35 @@ class InfoBox(Gtk.Box):
         self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
 
         viewedByTitle = Gtk.Label(label = "<b>Viewed By</b>", use_markup = True)
-        self.viewers = Gtk.Label(label = ', '.join(self.movie.viewers).rstrip(','))
+        self.viewers = Gtk.Label(label = ', '.join(self.movie.viewers).rstrip(','), wrap = True)
         viewedByFrame = Gtk.Frame(label_widget = viewedByTitle, label_xalign = .1)
         viewedByBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
         viewedByBox.add(self.viewers)
         viewedByFrame.add(viewedByBox)
 
         genreTitle = Gtk.Label(label = "<b>Genres</b>", use_markup = True)
-        self.genres = Gtk.Label(label = ', '.join(self.movie.genres).rstrip(','))
+        self.genres = Gtk.Label(label = ', '.join(self.movie.genres).rstrip(','), wrap = True)
         genreFrame = Gtk.Frame(label_widget = genreTitle, label_xalign = .1)
         genreBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
         genreBox.add(self.genres)
         genreFrame.add(genreBox)
 
         ratingTitle = Gtk.Label(label = "<b>Rating</b>", use_markup = True)
-        self.rating = Gtk.Label(label = str(self.movie.vote) + "/10")
+        self.rating = Gtk.Label(label = str(self.movie.vote) + "/10", wrap = True)
         ratingFrame = Gtk.Frame(label_widget = ratingTitle, label_xalign = .1)
         ratingBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
         ratingBox.add(self.rating)
         ratingFrame.add(ratingBox)
 
         runtimeTitle = Gtk.Label(label = "<b>Runtime</b>", use_markup = True)
-        self.runtime = Gtk.Label(label = str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes")
+        self.runtime = Gtk.Label(label = str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes", wrap = True)
         runtimeFrame = Gtk.Frame(label_widget = runtimeTitle, label_xalign = .1)
         runtimeBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
         runtimeBox.add(self.runtime)
         runtimeFrame.add(runtimeBox)
 
         descriptionTitle = Gtk.Label(label = "<b>Description</b>", justify = Gtk.Justification.LEFT, use_markup = True)
-        self.description = Gtk.Label(label = self.generateDescription(self.movie.overview))
+        self.description = Gtk.Label(label = self.movie.overview, wrap = True)
         descriptionFrame = Gtk.Frame(label_widget = descriptionTitle, label_xalign = .1)
         descriptionBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
         descriptionBox.add(self.description)
@@ -84,28 +84,6 @@ class InfoBox(Gtk.Box):
         self.genres.set_label(', '.join(self.movie.genres).rstrip(','))
         self.rating.set_label(str(self.movie.vote) + "/10")
         self.runtime.set_label(str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes" )
-        self.description.set_label(self.generateDescription(self.movie.overview))
+        self.description.set_label(self.movie.overview)
         self.poster.set_from_file("./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
         self.queue_draw()
-
-    def generateDescription(self, descriptionText):
-        CHARACTERS_IN_LINE = 50  # Numbers of chars before inserting \n
-        TAB = 18 * ' '
-        i = len(TAB)
-        FLAG = True
-        while i < len(descriptionText):
-            i += 1
-            if (i % CHARACTERS_IN_LINE) == 0:
-                if FLAG:
-                    i -= len(TAB)
-                    FLAG = False
-                while descriptionText[i] != ' ':
-                    if i < len(descriptionText) - 1:
-                        i += 1
-                    else:
-                        break
-                descriptionText = descriptionText[:i] + '\n' + TAB + descriptionText[i:]
-                i += len(TAB)
-                FLAG = True
-
-        return descriptionText
