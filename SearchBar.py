@@ -145,7 +145,7 @@ class SearchBar(Gtk.Revealer):
 		"""finds a random movie and displays it"""
 		movieResults = self.run_search(False)
 		movie_position = random.randint(0, len(movieResults) - 1)
-		parent.searchBar.imdbBox.update(movieResults[movie_position].title)
+		self.imdbBox.update(movieResults[movie_position].title)
 
 	def search_cb(self, widget):
 		"""generic function to run the sarch"""
