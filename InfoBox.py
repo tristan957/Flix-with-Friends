@@ -22,7 +22,6 @@ class InfoBox(Gtk.Box):
         imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
         infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
         infoBox.get_style_context().add_class("inline-toolbar")
-        infoBox.get_style_context().add_class("frame")
 
         self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
         self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
