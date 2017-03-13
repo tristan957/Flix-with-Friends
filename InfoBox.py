@@ -20,8 +20,8 @@ class InfoBox(Gtk.Box):
             self.movie = self.db.movies[0]
 
         imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
-        infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
-        infoBox.get_style_context().add_class("inline-toolbar")
+        info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
+        info.get_style_context().add_class("inline-toolbar")
 
         self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
         self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
@@ -64,18 +64,18 @@ class InfoBox(Gtk.Box):
         imageBox.add(self.titleLabel)
         imageBox.add(self.poster)
 
-        infoBox.add(viewedByFrame)
-        infoBox.add(genreFrame)
-        infoBox.add(ratingFrame)
-        infoBox.add(runtimeFrame)
-        infoBox.add(descriptionFrame)
+        info.add(viewedByFrame)
+        info.add(genreFrame)
+        info.add(ratingFrame)
+        info.add(runtimeFrame)
+        info.add(descriptionFrame)
 
-        # infoBox.get_style_context().add_class("list")
+        # info.get_style_context().add_class("list")
         # Try using a gtk.frame and a class style context of inline-toolbar for every subsection and we'll see how it goes (toolbar, frame, rubberband)
         # self.get_style_context().add_class("inline-toolbar")
 
         self.add(imageBox)
-        self.add(infoBox)
+        self.add(info)
 
     def update(self, movie_name):
         """Update the box to show new information"""
