@@ -4,11 +4,10 @@ from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
 
-    # Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
 class InfoBox(Gtk.Box):
 
     def __init__(self, movie_name):
-        """Create a box to display relevant movie self.information"""
+        """Create a box to display relevant movie information"""
         self.db = Database(Database.location)
         # movie = db.movies[MOVIE_INDEX]
 
@@ -20,8 +19,8 @@ class InfoBox(Gtk.Box):
             self.movie = self.db.movies[0]
 
         imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
-        self.info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
-        self.info.get_style_context().add_class("inline-toolbar")
+        info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
+        info.get_style_context().add_class("inline-toolbar")
 
         self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
         self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
@@ -64,21 +63,21 @@ class InfoBox(Gtk.Box):
         imageBox.add(self.titleLabel)
         imageBox.add(self.poster)
 
-        self.info.add(viewedByFrame)
-        self.info.add(genreFrame)
-        self.info.add(ratingFrame)
-        self.info.add(runtimeFrame)
-        self.info.add(descriptionFrame)
+        info.add(viewedByFrame)
+        info.add(genreFrame)
+        info.add(ratingFrame)
+        info.add(runtimeFrame)
+        info.add(descriptionFrame)
 
-        # self.info.get_style_context().add_class("list")
+        # info.get_style_context().add_class("list")
         # Try using a gtk.frame and a class style context of inline-toolbar for every subsection and we'll see how it goes (toolbar, frame, rubberband)
         # self.get_style_context().add_class("inline-toolbar")
 
         self.add(imageBox)
-        self.add(self.info)
+        self.add(info)
 
     def update(self, movie_name):
-        """Update the box to show new self.information"""
+        """Update the box to show new information"""
         self.movie = self.db.find_movie(movie_name)
         self.titleLabel.set_label("<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>")
         self.viewers.set_label(', '.join(self.movie.viewers).rstrip(','))
@@ -87,10 +86,7 @@ class InfoBox(Gtk.Box):
         self.runtime.set_label(str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes" )
         self.description.set_label(self.generateDescription(self.movie.overview))
         self.poster.set_from_file("./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
-        self.info.queue_resize()
-        self.info.queue_draw()
-        # self.info.show_all()
-        # self.show_all()
+        self.queue_draw()
 
     def generateDescription(self, descriptionText):
         CHARACTERS_IN_LINE = 50  # Numbers of chars before inserting \n
