@@ -44,6 +44,7 @@ class Database:
 		self.oldest_year = 3000
 		self.friends = []
 		self.troubled_list = [] # array of movies with bad data
+		self.movieTitles = []
 
 		if FN is not None:
 			self.loadDB()
@@ -55,7 +56,7 @@ class Database:
 		# Add Movies to movie list
 		for movie in self.dictionary:
 			m = Movie(movie)
-			if m.bad_movie():
+			if m.bad_movie() or m.title in self.movieTitles:
 				self.troubled_list.append(m)
 			else:
 				self.addMovie(m)
@@ -144,6 +145,7 @@ class Database:
 					self.friends.append(v)
 
 		self.movies.append(MOVIE)
+		self.movieTitles.append(MOVIE.title)
 
 	def newMovie(self, movie_title):
 		# Add a new movie just with a movie title
