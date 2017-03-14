@@ -70,7 +70,7 @@ class SearchBar(Gtk.Revealer):
 
 		# date related fucntions
 		datePopover = Gtk.Popover()
-		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 5)
 		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
 		self.dateAfter = Gtk.Switch(active = False, state = False) # if the user only wants to view movies fromt that year
 		self.dateAfter.connect("state-set", self.switch_cb)
