@@ -26,7 +26,7 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Flix with Friends'
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
-LOCAL_EXCEL_FILE = 'local.xlsx'
+LOCAL_EXCEL_FILE = 'local2.xlsx'
 
 
 class Database:
@@ -94,12 +94,12 @@ class Database:
 		results = self.tmdb_search(movie,1)
 		if len(results) == 0:
 			print(movie, self.MISSING_DATA)  # Print to console
-			w_sheet.write(row, 2, '0') #runtime
+			w_sheet.write(row, 2, '1') #runtime
 			w_sheet.write(row, 3, self.MISSING_DATA) # genres
 			w_sheet.write(row, 4, self.MISSING_DATA) # release date
-			w_sheet.write(row, 5, '0') # vote count
+			w_sheet.write(row, 5, '1') # vote count
 			w_sheet.write(row, 6, self.MISSING_DATA) # overview
-			w_sheet.write(row, 7, '0') # TMDB ID number
+			w_sheet.write(row, 7, '1') # TMDB ID number
 			w_sheet.write(row, 8, self.MISSING_DATA) # poster path
 		else:
 			movie = results[0]
@@ -245,19 +245,23 @@ class Database:
 			i = 0
 			for row in values:
 				sheet1.write(i, 0, row[0])
-				sheet1.write(i, 1, row[1])
-				sheet1.write(i, 2, row[2])
-				sheet1.write(i, 3, row[3])
-				sheet1.write(i, 4, row[4])
-				sheet1.write(i, 5, row[5])
-				sheet1.write(i, 6, row[6])
-				sheet1.write(i, 7, row[7])
-				sheet1.write(i, 8, row[8])
+				if len(row) is 9:
+					for j in range(1,9):
+						sheet1.write(i, j, row[j])
+				else:
+					sheet1.write(i, 2, '0') #runtime
+					sheet1.write(i, 3, self.MISSING_DATA) # genres
+					sheet1.write(i, 4, self.MISSING_DATA) # release date
+					sheet1.write(i, 5, '0') # vote count
+					sheet1.write(i, 6, self.MISSING_DATA) # overview
+					sheet1.write(i, 7, '0') # TMDB ID number
+					sheet1.write(i, 8, self.MISSING_DATA) # poster path
 				i += 1
 
 		book.save(LOCAL_EXCEL_FILE)
 		self.fileName = Database.location = LOCAL_EXCEL_FILE
 		self.loadDB()
+
 
 	def upload_google_doc(self):
 		# Run Google OAuth2
@@ -301,4 +305,4 @@ if __name__ == "__main__":
 
 	wb.save(db.fileName)  # Save DB edits
 
-	# db.upload_google_doc()
+	db.upload_google_doc()
