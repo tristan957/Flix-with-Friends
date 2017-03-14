@@ -55,5 +55,6 @@ class Movie:
 		bad_ID = (self.ID == '1')# or len(self.ID) == 0)
 		bad_runtime = (self.runtime == '1')# or (len(self.runtime) == 0)
 		bad_overview = (self.overview == 'N/A')# or (len(self.overview) == 0)
+		bad_poster = self.poster_path == 'N/A'
 
-		return bad_ID or bad_overview or bad_runtime or bad_title
+		return bad_ID or bad_overview or bad_runtime or bad_title or bad_poster

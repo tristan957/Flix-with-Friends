@@ -10,6 +10,7 @@ from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+from itertools import count
 
 try:
 	import argparse
@@ -32,6 +33,7 @@ LOCAL_EXCEL_FILE = 'local2.xlsx'
 class Database:
 	global location
 	global docID
+	_ids = count(0)
 
 	def __init__(self, FN = None):
 		self.fileName = ''
@@ -45,6 +47,9 @@ class Database:
 		self.friends = []
 		self.troubled_list = [] # array of movies with bad data
 		self.movieTitles = []
+		self.id = next(self._ids)
+
+		# print(self._ids)ss
 
 		if FN is not None:
 			self.loadDB()
@@ -64,10 +69,10 @@ class Database:
 		self.movies.sort(key = lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
 		self.friends = sorted(self.friends)
-		# if len(self.troubled_list) > 0:
-		# 	print('Troubled Movies:')
-		# 	for m in self.troubled_list:
-		# 		print(m.title)
+		if len(self.troubled_list) > 0 and self.id == 1:
+			print('Troubled Movies:')
+			for m in self.troubled_list:
+				print(m.title)
 
 	def createDictionary(self):
 		# This method converts all the data in the excelDB into a list of dictionaries
