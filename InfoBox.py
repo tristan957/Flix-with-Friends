@@ -11,15 +11,19 @@ class InfoBox(Gtk.Box):
         self.db = Database(Database.location)
         # movie = db.movies[MOVIE_INDEX]
 
-        Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
+        Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
+        self.get_style_context().add_class("linked")
 
         self.movie = self.db.find_movie(movie_name)
 
         if self.movie is None:
             self.movie = self.db.movies[0]
 
-        imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
+        imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20, margin = 20)
+        imageBox.set_size_request(400, -1)
+        # imageBox.get_style_context().add_class("frame")
         info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
+        info.set_size_request(300, -1)
         info.get_style_context().add_class("inline-toolbar")
 
         self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
@@ -73,8 +77,8 @@ class InfoBox(Gtk.Box):
         # Try using a gtk.frame and a class style context of inline-toolbar for every subsection and we'll see how it goes (toolbar, frame, rubberband)
         # self.get_style_context().add_class("inline-toolbar")
 
-        self.add(imageBox)
-        self.add(info)
+        self.pack_start(imageBox, True, True, 0)
+        self.pack_end(info, True, True, 0)
 
     def update(self, movie_name):
         """Update the box to show new information"""

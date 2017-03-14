@@ -128,7 +128,7 @@ class SearchResults(Gtk.Box):
 
         for movie in results:
             desc = movie.overview
-            if len(desc) > 100:
+            if len(desc) > 125:
                 #     i = 100
                 #     j = 0
                 #     z = 0
@@ -141,7 +141,7 @@ class SearchResults(Gtk.Box):
                 #             desc = desc[:i + z] + '\n' + desc[i + z:]
                 #         i = i + 100
                 #         j = j + 1
-                desc = "%s..." % desc[0:100]
+                desc = "%s..." % desc[0:125]
 
             desc = GLib.markup_escape_text(desc)
             text = "<b>%s</b>\n%s" % (movie.title.replace('&', '&amp;'), desc)
