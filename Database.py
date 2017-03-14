@@ -70,7 +70,7 @@ class Database:
 		self.listGenres = sorted(self.listGenres)
 		self.friends = sorted(self.friends)
 
-		if len(self.troubled_list) > 0 and self.id == 1:
+		if len(self.troubled_list) and self.id == 1:
 			print('Troubled Movies:')
 			for m in self.troubled_list:
 				print(m.title)
@@ -277,7 +277,16 @@ class Database:
 		if updateNum != len(values):
 			for i,row in enumerate(values[updateNum+1:]):
 				self.updateMovieInfo(row[0], i + updateNum)
+				# Check if there were viewers
+				if len(row[1]):
+					rb = xlrd.open_workbook(self.fileName)  # Open the excel file
+					wb = copy(rb)  # make a writeable copy of the open excel file
+					w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
+					w_sheet.write(i + updateNum, 1, row[1]) #Viewers
+					wb.save(self.fileName)  # Save DB edits
 
+
+		# book.save(LOCAL_EXCEL_FILE)
 		self.loadDB()
 
 	def upload_google_doc(self):
