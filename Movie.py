@@ -6,16 +6,6 @@ import urllib.request
 
 class Movie:
 
-	def __init__(self, tI = '', rU = 0, gE = [], rD = '', vO = 0, oV = '', vI = []):
-		self.title = tI
-		self.runtime = rU
-		self.genres = gE
-		self.release_date = rD
-		self.vote = vO
-		self.overview = oV
-		self.viewers = vI
-		self.excelRow = 0
-
 	def __init__(self, dictionary):
 		self.title = dictionary['Title']
 		self.ID = dictionary['ID']
