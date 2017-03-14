@@ -5,6 +5,7 @@ from Database import Database
 from InfoBox import InfoBox
 from SearchBar import SearchBar
 from HeaderBar import HeaderBar
+from search_results import BlankPage
 
 
 class LocationChooser(Gtk.Box):
@@ -100,7 +101,7 @@ class Window(Gtk.Window):
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 		self.searchBar = SearchBar(location, self)
 		self.box.pack_start(self.searchBar, False, False, 0)
-		noneBox = InfoBox(None) # initial box after location has been chosen
+		noneBox = BlankPage() # initial box after location has been chosen
 		# box.add(imdbBox)
 		self.stack.add_named(noneBox, "main")
 

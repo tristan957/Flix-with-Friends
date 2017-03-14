@@ -16,9 +16,6 @@ class InfoBox(Gtk.Box):
 
         self.movie = self.db.find_movie(movie_name)
 
-        if self.movie is None:
-            self.movie = self.db.movies[0]
-
         imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20, margin = 20)
         imageBox.set_size_request(400, -1)
         # imageBox.get_style_context().add_class("frame")
@@ -45,7 +42,7 @@ class InfoBox(Gtk.Box):
 
         ratingTitle = Gtk.Label(label = "<b>Rating</b>", use_markup = True)
         self.rating = Gtk.Label(label = self.movie.vote + "/10", wrap = True)
-        self.level = Gtk.LevelBar(value = float(self.movie.vote)).new_for_interval(0, 10)
+        self.level = Gtk.LevelBar(value = 5).new_for_interval(0, 10)
         self.level.set_size_request(100, -1)
         ratingFrame = Gtk.Frame(label_widget = ratingTitle, label_xalign = .1)
         ratingBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3, spacing = 5)

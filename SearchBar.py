@@ -23,11 +23,11 @@ class SearchBar(Gtk.Revealer):
 
 		random.seed()
 
-		self.imdbBox = InfoBox(None)
+		self.imdbBox = InfoBox("Lights Out")
 		self.searchResults = SearchResults(self) # puts the search results in a Gtk.Box
 		searchPage = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4) # creates the page that holds the scrolled window and the info box
 		searchPage.pack_start(self.searchResults, False, False, 0)
-		searchPage.pack_end(self.imdbBox, False, False, 0)
+		searchPage.pack_end(self.imdbBox, True, True, 0)
 
 		searchCriteria = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL) # box for the 5 search criteria
 		self.parent.stack.add_named(searchPage, "search-results")
