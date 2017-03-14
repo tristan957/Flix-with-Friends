@@ -69,6 +69,7 @@ class Database:
 		self.movies.sort(key = lambda x: x.title)
 		self.listGenres = sorted(self.listGenres)
 		self.friends = sorted(self.friends)
+
 		if len(self.troubled_list) > 0 and self.id == 1:
 			print('Troubled Movies:')
 			for m in self.troubled_list:

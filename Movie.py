@@ -23,14 +23,14 @@ class Movie:
 		self.runtime = dictionary['Runtime']
 		self.genres = dictionary['Genres'].split(', ')
 		self.release_date = dictionary['ReleaseDate']
-		self.vote = dictionary['Vote']
+		self.vote = str(dictionary['Vote'])
 		self.overview = dictionary['Overview']
 		self.poster_path = dictionary['Poster']
 		if len(dictionary) > 9:
 			self.excelRow = dictionary['excelPosition']
 
 	def get_image(self):
-		if (self.poster_path != 'N/A'):
+		if (str(self.poster_path) != 'N/A') and str(self.poster_path) != 'None':
 			# Create imagePosters directory if not present
 			os.makedirs("./imagePosters", exist_ok = True)
 			baseURL = 'https://image.tmdb.org/t/p/'

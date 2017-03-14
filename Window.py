@@ -83,7 +83,7 @@ class Window(Gtk.Window):
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 		if fileChooser.run() is 0: # 0 stands for file being chosen
 			# Database.location = fileChooser.get_filename()
-			Database.location = 'local.xlsx' # TEMP
+			Database.location = 'local2.xlsx' # TEMP
 			self.addMainStack(Database.location)
 			self.stack.set_visible_child_name("main")
 		fileChooser.destroy()
@@ -91,7 +91,7 @@ class Window(Gtk.Window):
 	def doubleClickEnter_cb(self, fileChooser):
 		"""enable double click functionality in the file chooser"""
 		# Database.location = fileChooser.get_filename()
-		Database.location = 'local.xlsx' # TEMP
+		Database.location = 'local2.xlsx' # TEMP
 		fileChooser.destroy()
 		self.addMainStack(Database.location)
 		self.stack.set_visible_child_name("main")
