@@ -14,6 +14,7 @@ class Movie:
 		self.vote = vO
 		self.overview = oV
 		self.viewers = vI
+		self.excelRow = 0
 
 	def __init__(self, dictionary):
 		self.title = dictionary['Title']
@@ -25,6 +26,8 @@ class Movie:
 		self.vote = dictionary['Vote']
 		self.overview = dictionary['Overview']
 		self.poster_path = dictionary['Poster']
+		if len(dictionary) > 9:
+			self.excelRow = dictionary['excelPosition']
 
 	def get_image(self):
 		if (self.poster_path != 'N/A'):

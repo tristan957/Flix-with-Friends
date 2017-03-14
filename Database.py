@@ -83,6 +83,7 @@ class Database:
 			elm = {}
 			for col in range(worksheet.ncols):
 				elm[first_row[col]] = worksheet.cell_value(row, col)
+			elm['excelPosition'] = row
 			self.dictionary.append(elm)
 
 	def updateMovieInfo(self, movie, row):
@@ -239,29 +240,39 @@ class Database:
 		# Add values to the Excel sheet
 		book = xlwt.Workbook(encoding = "utf-8")
 		sheet1 = book.add_sheet("Sheet 1")
+		updateNum = len(values)
 		if not values:
 			print('No data found.')
 		else:
 			i = 0
 			for row in values:
-				sheet1.write(i, 0, row[0])
-				if len(row) is 9:
-					for j in range(1,9):
-						sheet1.write(i, j, row[j])
+				if row[0] == 'UpdateBelow':
+					updateNum = i
 				else:
-					sheet1.write(i, 2, '0') #runtime
-					sheet1.write(i, 3, self.MISSING_DATA) # genres
-					sheet1.write(i, 4, self.MISSING_DATA) # release date
-					sheet1.write(i, 5, '0') # vote count
-					sheet1.write(i, 6, self.MISSING_DATA) # overview
-					sheet1.write(i, 7, '0') # TMDB ID number
-					sheet1.write(i, 8, self.MISSING_DATA) # poster path
-				i += 1
+					sheet1.write(i, 0, row[0])
+					if len(row) is 9:
+						for j in range(1,9):
+							sheet1.write(i, j, row[j])
+					else:
+						sheet1.write(i, 2, '0') #runtime
+						sheet1.write(i, 3, self.MISSING_DATA) # genres
+						sheet1.write(i, 4, self.MISSING_DATA) # release date
+						sheet1.write(i, 5, '0') # vote count
+						sheet1.write(i, 6, self.MISSING_DATA) # overview
+						sheet1.write(i, 7, '0') # TMDB ID number
+						sheet1.write(i, 8, self.MISSING_DATA) # poster path
+					i += 1
 
 		book.save(LOCAL_EXCEL_FILE)
 		self.fileName = Database.location = LOCAL_EXCEL_FILE
-		self.loadDB()
 
+
+		if updateNum != len(values):
+			for i,row in enumerate(values[updateNum+1:]):
+				self.updateMovieInfo(row[0],i + updateNum)
+
+
+		self.loadDB()
 
 	def upload_google_doc(self):
 		# Run Google OAuth2
@@ -299,10 +310,10 @@ if __name__ == "__main__":
 	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 	db.get_google_doc(doc_id)
 	# db.update()
-	rb = xlrd.open_workbook(db.fileName)  # Open the excel file
-	wb = copy(rb)  # make a writeable copy of the open excel file
-	w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
-
-	wb.save(db.fileName)  # Save DB edits
+	# rb = xlrd.open_workbook(db.fileName)  # Open the excel file
+	# wb = copy(rb)  # make a writeable copy of the open excel file
+	# w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
+	#
+	# wb.save(db.fileName)  # Save DB edits
 
 	db.upload_google_doc()
