@@ -16,9 +16,6 @@ class InfoBox(Gtk.Box):
 
         self.movie = self.db.find_movie(movie_name)
 
-        if self.movie is None:
-            self.movie = self.db.movies[0]
-
         imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20, margin = 20)
         imageBox.set_size_request(400, -1)
         # imageBox.get_style_context().add_class("frame")
