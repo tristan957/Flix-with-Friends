@@ -38,15 +38,14 @@ class Movie:
 
 			for p in posters:
 				imagePage = baseURL + p + self.poster_path
-				print(p, 'poster image:', imagePage)
 				filename = self.title.replace(" ", "") + '_' + p + '.jpg'
 				fullfilename = os.path.join('./imagePosters', filename)
 
 				# if not already existent, download
 				if not(os.path.isfile(fullfilename)):
-					# COMMENT ME OUT TO NOT DOWNLOAD EVERYTHING
 					urllib.request.urlretrieve(imagePage, fullfilename)
-			print('')
+					print(p, 'poster image:', imagePage)
+					print('')
 
 	def genres_string(self):
 		return ', '.join(self.genres).rstrip(',')

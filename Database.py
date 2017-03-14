@@ -241,6 +241,7 @@ class Database:
 		book = xlwt.Workbook(encoding = "utf-8")
 		sheet1 = book.add_sheet("Sheet 1")
 		updateNum = len(values)
+
 		if not values:
 			print('No data found.')
 		else:
@@ -266,11 +267,10 @@ class Database:
 		book.save(LOCAL_EXCEL_FILE)
 		self.fileName = Database.location = LOCAL_EXCEL_FILE
 
-
+		# If UpdateBelow was Present, Update Movies Below that Point
 		if updateNum != len(values):
 			for i,row in enumerate(values[updateNum+1:]):
-				self.updateMovieInfo(row[0],i + updateNum)
-
+				self.updateMovieInfo(row[0], i + updateNum)
 
 		self.loadDB()
 
@@ -295,6 +295,9 @@ class Database:
 				elm.append(worksheet.cell_value(row, col))
 			values.append(elm)
 
+		# Make Sure Last Element is Blank
+		values.append(9 * [''])
+
 		# Upload values to the Google Sheet
 		body = {
 			'values': values
@@ -309,11 +312,4 @@ if __name__ == "__main__":
 	db = Database()
 	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 	db.get_google_doc(doc_id)
-	# db.update()
-	# rb = xlrd.open_workbook(db.fileName)  # Open the excel file
-	# wb = copy(rb)  # make a writeable copy of the open excel file
-	# w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
-	#
-	# wb.save(db.fileName)  # Save DB edits
-
 	db.upload_google_doc()
