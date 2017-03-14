@@ -72,6 +72,10 @@ class Window(Gtk.Window):
 	def local_cb(self, local):
 		"""ask the user for an excel file"""
 		fileChooser = Gtk.FileChooserDialog(self, title = "Choose a Spreadsheet")
+		fileFilter = Gtk.FileFilter()
+		fileFilter.add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+		fileFilter.add_mime_type("application/vnd.ms-excel")
+		fileChooser.add_filter(fileFilter)
 		fileChooser.add_button("Open", Gtk.FileChooserAction.OPEN)
 		fileChooser.add_button("Cancel", Gtk.ResponseType.CANCEL)
 		fileChooser.set_transient_for(self)
