@@ -4,7 +4,6 @@ from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
 
-    # Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
 class InfoBox(Gtk.Box):
 
     def __init__(self, movie_name):
@@ -13,75 +12,82 @@ class InfoBox(Gtk.Box):
         # movie = db.movies[MOVIE_INDEX]
 
         Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
+        self.get_style_context().add_class("linked")
 
         self.movie = self.db.find_movie(movie_name)
 
         if self.movie is None:
             self.movie = self.db.movies[0]
 
-        imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
-        infoBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
+        imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20, margin = 20)
+        imageBox.set_size_request(400, -1)
+        # imageBox.get_style_context().add_class("frame")
+        info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
+        info.set_size_request(300, -1)
+        info.get_style_context().add_class("inline-toolbar")
 
-        self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
+        self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
         self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
-        self.viewedLabel = Gtk.Label(label = "<b>Viewed By:</b> " + ', '.join(self.movie.viewers).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
-        self.viewedLabel.set_xalign(0)
-        self.genreLabel = Gtk.Label(label = "<b>Genres:</b> " + ', '.join(self.movie.genres).rstrip(','), justify = Gtk.Justification.LEFT, use_markup = True)
-        self.genreLabel.set_xalign(0)
-        self.ratingLabel = Gtk.Label(label = "<b>Rating:</b> " + str(self.movie.vote) + "/10", justify = Gtk.Justification.LEFT, use_markup = True)
-        self.ratingLabel.set_xalign(0)
-        self.runtimeLabel = Gtk.Label(label = "<b>Runtime:</b> " + str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes", justify = Gtk.Justification.LEFT, use_markup = True)
-        self.runtimeLabel.set_xalign(0)
 
-        self.description = Gtk.Label(label = "<b>Description:</b> " + self.generateDescription(self.movie.overview), justify = Gtk.Justification.LEFT, use_markup = True)
-        self.description.set_xalign(0)
+        viewedByTitle = Gtk.Label(label = "<b>Viewed By</b>", use_markup = True)
+        self.viewers = Gtk.Label(label = ', '.join(self.movie.viewers).rstrip(','), wrap = True)
+        viewedByFrame = Gtk.Frame(label_widget = viewedByTitle, label_xalign = .1)
+        viewedByBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+        viewedByBox.add(self.viewers)
+        viewedByFrame.add(viewedByBox)
+
+        genreTitle = Gtk.Label(label = "<b>Genres</b>", use_markup = True)
+        self.genres = Gtk.Label(label = ', '.join(self.movie.genres).rstrip(','), wrap = True)
+        genreFrame = Gtk.Frame(label_widget = genreTitle, label_xalign = .1)
+        genreBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+        genreBox.add(self.genres)
+        genreFrame.add(genreBox)
+
+        ratingTitle = Gtk.Label(label = "<b>Rating</b>", use_markup = True)
+        self.rating = Gtk.Label(label = str(self.movie.vote) + "/10", wrap = True)
+        ratingFrame = Gtk.Frame(label_widget = ratingTitle, label_xalign = .1)
+        ratingBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+        ratingBox.add(self.rating)
+        ratingFrame.add(ratingBox)
+
+        runtimeTitle = Gtk.Label(label = "<b>Runtime</b>", use_markup = True)
+        self.runtime = Gtk.Label(label = str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes", wrap = True)
+        runtimeFrame = Gtk.Frame(label_widget = runtimeTitle, label_xalign = .1)
+        runtimeBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+        runtimeBox.add(self.runtime)
+        runtimeFrame.add(runtimeBox)
+
+        descriptionTitle = Gtk.Label(label = "<b>Description</b>", justify = Gtk.Justification.LEFT, use_markup = True)
+        self.description = Gtk.Label(label = self.movie.overview, wrap = True)
+        descriptionFrame = Gtk.Frame(label_widget = descriptionTitle, label_xalign = .1)
+        descriptionBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+        descriptionBox.add(self.description)
+        descriptionFrame.add(descriptionBox)
 
         imageBox.add(self.titleLabel)
         imageBox.add(self.poster)
 
-        infoBox.add(self.viewedLabel)
-        infoBox.add(self.genreLabel)
-        infoBox.add(self.ratingLabel)
-        infoBox.add(self.runtimeLabel)
-        infoBox.add(self.description)
+        info.add(viewedByFrame)
+        info.add(genreFrame)
+        info.add(ratingFrame)
+        info.add(runtimeFrame)
+        info.add(descriptionFrame)
 
-        # infoBox.get_style_context().add_class("list")
+        # info.get_style_context().add_class("list")
         # Try using a gtk.frame and a class style context of inline-toolbar for every subsection and we'll see how it goes (toolbar, frame, rubberband)
         # self.get_style_context().add_class("inline-toolbar")
 
-        self.add(imageBox)
-        self.add(infoBox)
+        self.pack_start(imageBox, True, True, 0)
+        self.pack_end(info, True, True, 0)
 
     def update(self, movie_name):
         """Update the box to show new information"""
         self.movie = self.db.find_movie(movie_name)
-        self.titleLabel.set_label("<big><b>" + self.movie.title + "</b></big>")
-        self.viewedLabel.set_label("<b>Viewed By:</b> " + ', '.join(self.movie.viewers).rstrip(','))
-        self.genreLabel.set_label("<b>Genres:</b> " + ', '.join(self.movie.genres).rstrip(','))
-        self.ratingLabel.set_label("<b>Rating:</b> " + str(self.movie.vote) + "/10")
-        self.runtimeLabel.set_label("<b>Runtime:</b> " + str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes" )
-        self.description.set_label("<b>Description:</b> " + self.generateDescription(self.movie.overview))
+        self.titleLabel.set_label("<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>")
+        self.viewers.set_label(', '.join(self.movie.viewers).rstrip(','))
+        self.genres.set_label(', '.join(self.movie.genres).rstrip(','))
+        self.rating.set_label(str(self.movie.vote) + "/10")
+        self.runtime.set_label(str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes" )
+        self.description.set_label(self.movie.overview)
         self.poster.set_from_file("./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
-        self.show_all()
-
-    def generateDescription(self, descriptionText):
-        CHARACTERS_IN_LINE = 50  # Numbers of chars before inserting \n
-        TAB = 18 * ' '
-        i = len(TAB)
-        FLAG = True
-        while i < len(descriptionText):
-            i += 1
-            if (i % CHARACTERS_IN_LINE) == 0:
-                if FLAG:
-                    i -= len(TAB)
-                    FLAG = False
-                while descriptionText[i] != ' ':
-                    if i < len(descriptionText) - 1:
-                        i += 1
-                    else:
-                        break
-                descriptionText = descriptionText[:i] + '\n' + TAB + descriptionText[i:]
-                i += len(TAB)
-                FLAG = True
-
-        return descriptionText
+        self.queue_draw()

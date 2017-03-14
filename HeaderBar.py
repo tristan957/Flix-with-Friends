@@ -19,12 +19,12 @@ class HeaderBar(Gtk.HeaderBar):
 		dataImage = Gtk.Image.new_from_gicon(dataIcon, Gtk.IconSize.BUTTON)
 
 		newSource = Gtk.ModelButton(label = "Change Source")
-		dataSeparator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+		sep1 = Gtk.SeparatorMenuItem()
 		addMovieButton = Gtk.ModelButton(text = "Add a Movie")
 		addMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Add")
 		deleteMovieButton = Gtk.ModelButton(text = "Delete a Movie")
 		deleteMovieButton.connect("clicked", self.manipulateMovieButton_cb, "Delete")
-		dataSeparator = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+		sep2 = Gtk.SeparatorMenuItem()
 		addFriendButton = Gtk.ModelButton(text = "Add a Friend")
 		addFriendButton.connect("clicked", self.manipulateFriend_cb, "Add")
 		deleteFriendButton = Gtk.ModelButton(text = "Delete a Friend")
@@ -32,9 +32,10 @@ class HeaderBar(Gtk.HeaderBar):
 		dataBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
 		dataBox.add(newSource)
+		dataBox.add(sep1)
 		dataBox.add(addMovieButton)
 		dataBox.add(deleteMovieButton)
-		dataBox.add(dataSeparator)
+		dataBox.add(sep2)
 		dataBox.add(addFriendButton)
 		dataBox.add(deleteFriendButton)
 
