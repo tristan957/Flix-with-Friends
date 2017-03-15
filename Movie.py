@@ -26,13 +26,14 @@ class Movie:
 		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
 	def get_image(self):
+
+		baseURL = 'https://image.tmdb.org/t/p/'
 		# Poster
 		if (str(self.poster_path) != 'N/A') and str(self.poster_path) != 'None' and str(self.poster_path) != '':
 			# Create imagePosters directory if not present
 			os.makedirs("./images", exist_ok = True)
 			os.makedirs("./images/movies", exist_ok = True)
 			os.makedirs(self.poster, exist_ok = True)
-			baseURL = 'https://image.tmdb.org/t/p/'
 			# posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2', 'w342', 'w500', 'w780'] #'original']
 			posters = ['w92', 'w342', 'w500']
 
@@ -49,7 +50,7 @@ class Movie:
 		# Actors images
 		os.makedirs("./images/people", exist_ok = True)
 		for i, actor in enumerate(self.actorImg):
-			if actor != 'None':
+			if actor != 'None' and actor != '':
 				actorName = self.actorNames[i]
 
 				imagePage = baseURL + 'w92' + actor

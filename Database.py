@@ -186,6 +186,10 @@ class Database:
 				string = string + ', '
 		return string
 
+	def get_images(self):
+		for m in self.movies:
+			m.get_image()
+
 	def tmdb_search(self, keyword, num=5):
 		# This function is used to run a keyword and return the results as
 		# a list of movies
@@ -391,6 +395,4 @@ if __name__ == "__main__":
 	# db.get_google_doc(doc_id)
 	# db.upload_google_doc()
 	db = Database('local2.xlsx')
-
-	for m in db.movies:
-		m.get_image()
+	db.get_images()
