@@ -179,8 +179,9 @@ class Database:
 		search = tmdb.Search() # Setup search to run API query
 		response = search.movie(query = keyword)  # Search for movie
 		results = []
-		i = 0
+		count = 0
 		for s in search.results:
+			print('Here i am', count)
 			titleID = s['id']
 			movieTMDB = tmdb.Movies(titleID)
 			response = movieTMDB.info()
@@ -237,8 +238,8 @@ class Database:
 				'DirectorImg': directorImg
 				}
 			results.append(Movie(dictionary))
-			i += 1
-			if i == num:
+			count = count + 1
+			if count == num:
 				return results
 
 	# The following are functions accesing and pushing from a Google Sheet
