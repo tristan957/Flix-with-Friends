@@ -27,8 +27,8 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Flix with Friends'
 tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
-# LOCAL_EXCEL_FILE = 'local2.xlsx'
-LOCAL_EXCEL_FILE = 'testing.xlsx'
+LOCAL_EXCEL_FILE = 'local2.xlsx'
+# LOCAL_EXCEL_FILE = 'testing.xlsx'
 
 
 class Database:
@@ -373,7 +373,7 @@ class Database:
 			values.append(elm)
 
 		# Make Sure Last Element is Blank
-		values.append(9 * [''])
+		values.append(16 * [''])
 
 		# Upload values to the Google Sheet
 		body = {
@@ -389,6 +389,6 @@ if __name__ == "__main__":
 	db = Database()
 	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 	db.get_google_doc(doc_id)
-	# db.upload_google_doc()
+	db.upload_google_doc()
 	# db = Database('testing.xlsx')
 	# db.update()
