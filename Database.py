@@ -90,7 +90,6 @@ class Database:
 			elm = {}
 			for col in range(worksheet.ncols):
 				elm[first_row[col]] = worksheet.cell_value(row, col)
-			elm['excelPosition'] = row
 			self.dictionary.append(elm)
 
 	def updateMovieInfo(self, movie, row):
@@ -165,6 +164,14 @@ class Database:
 			if movie.title == title:
 				return movie
 
+	def stringify(self, array):
+		string = ''
+		for i, item in enumerate(array):
+			string = string + str(item)
+			if i < len(array) - 1:
+				string = string + ', '
+		return string
+
 	def tmdb_search(self, keyword, num=5):
 		# This function is used to run a keyword and return the results as
 		# a list of movies
@@ -175,8 +182,33 @@ class Database:
 		i = 0
 		for s in search.results:
 			titleID = s['id']
-			daMovie = tmdb.Movies(titleID)
-			response = daMovie.info()
+			movieTMDB = tmdb.Movies(titleID)
+			response = movieTMDB.info()
+			videoResponse = movieTMDB.videos() # Trailers
+			creditsResponse = movieTMDB.credits() # Cast/Crew
+			# Can add critic reviews and similar movies as well
+
+			# Trailer URL
+			if len(videoResponse['results']):
+				trailer = 'https://www.youtube.com/watch?v=' + videoResponse['results'][0]['key']
+
+			# Top 3 Actors
+			actorsName = []
+			actorsChar = []
+			actorsImg = []
+			for key in creditsResponse['cast'][:3]:
+				actorsName.append(str(key['name']))
+				actorsChar.append(str(key['character']))
+				actorsImg.append(str(key['profile_path']))
+
+			# Director
+			directorName = ''
+			directorImg = ''
+			for key in creditsResponse['crew']:
+				if key['job'] == 'Director':
+					directorName = key['name']
+					directorImg = key['profile_path']
+
 			# Get Genres into one line
 			genreResult = response['genres']
 			gen = ''
@@ -194,13 +226,20 @@ class Database:
 				'Vote': response['vote_average'],
 				'Overview': response['overview'],
 				'ViewedBy': '',
-				'Poster': response['poster_path']
+				'Poster': response['poster_path'],
+				# new to add below
+				'Backdrop': response['backdrop_path'],
+				'Trailer': trailer,
+				'ActorsName': self.stringify(actorsName),
+				'ActorsChar': self.stringify(actorsChar),
+				'ActorsImg': self.stringify(actorsImg),
+				'DirectorName': directorName,
+				'DirectorImg': directorImg
 				}
 			results.append(Movie(dictionary))
 			i += 1
 			if i == num:
-				break
-		return results
+				return results
 
 	# The following are functions accesing and pushing from a Google Sheet
 	def get_credentials(self):

@@ -8,7 +8,7 @@ if __name__ == "__main__":
 	tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 	youtubeURL = 'https://www.youtube.com/watch?v='
 	imgPath = 'https://image.tmdb.org/t/p/w780'
-	id = 263115
+	id = 13
 	movie = tmdb.Movies(id)
 	genMovie = tmdb.Movies()
 
@@ -23,45 +23,45 @@ if __name__ == "__main__":
 	response = movie.videos()
 	print(response['results'][0]['site'] + ' Trailer: ' + youtubeURL + response['results'][0]['key'])
 	print('')
-
-	# Credits KEYS: cast, id, crew
-	response1 = movie.credits()
-
-	# Get top 5 Actors
-	print('Top 5 Actors and Director:')
-	# Director
-	for key in response1['crew']:
-		if key['job'] == 'Director':
-			print(key['name'] + ' -- ' + key['job'] + ' -- ' + imgPath + key['profile_path'])
-
-	for key in response1['cast'][:5]:
-		print(str(key['name']) + ' -- ' + str(key['character']) + ' -- ' + imgPath + str(key['profile_path']))
-	print('')
-
-	# Images KEYS: backdrops, posters, id
-	response2 = movie.images()
-	# for key in response2['posters']:
-	# 	if key['iso_639_1'] == 'en':
-	# 		print(str(key['width']) + ' x ' + str(key['height']) + ' -- '  'imgPath' + key['file_path'])
-	print('Backdrops:')
-	for key in response2['backdrops']:
-		print(str(key['width']) + ' x ' + str(key['height']) + ' -- ' + imgPath + key['file_path'])
-	# print(response2)
-	print('')
-
-	# Movie Reviews
-	response3 = movie.reviews()
-	# print(response3)
-
-	# Similiar Movies
-	response4 = movie.similar_movies()
-	print('Similiar Movies:')
-	for key in response4['results'][:5]:
-		print(key['title'])
-	print('')
-
-	# Movies People Are Currently Watching
-	response5 = genMovie.now_playing()
-	print('Movies People Currently Watching:')
-	for key in response5['results']:
-		print(key['title'])
+	#
+	# # Credits KEYS: cast, id, crew
+	# response1 = movie.credits()
+	#
+	# # Get top 5 Actors
+	# print('Top 5 Actors and Director:')
+	# # Director
+	# for key in response1['crew']:
+	# 	if key['job'] == 'Director':
+	# 		print(key['name'] + ' -- ' + key['job'] + ' -- ' + imgPath + key['profile_path'])
+	#
+	# for key in response1['cast'][:5]:
+	# 	print(str(key['name']) + ' -- ' + str(key['character']) + ' -- ' + imgPath + str(key['profile_path']))
+	# print('')
+	#
+	# # Images KEYS: backdrops, posters, id
+	# response2 = movie.images()
+	# # for key in response2['posters']:
+	# # 	if key['iso_639_1'] == 'en':
+	# # 		print(str(key['width']) + ' x ' + str(key['height']) + ' -- '  'imgPath' + key['file_path'])
+	# print('Backdrops:')
+	# for key in response2['backdrops']:
+	# 	print(str(key['width']) + ' x ' + str(key['height']) + ' -- ' + imgPath + key['file_path'])
+	# # print(response2)
+	# print('')
+	#
+	# # Movie Reviews
+	# response3 = movie.reviews()
+	# # print(response3)
+	#
+	# # Similiar Movies
+	# response4 = movie.similar_movies()
+	# print('Similiar Movies:')
+	# for key in response4['results'][:5]:
+	# 	print(key['title'])
+	# print('')
+	#
+	# # Movies People Are Currently Watching
+	# response5 = genMovie.now_playing()
+	# print('Movies People Currently Watching:')
+	# for key in response5['results']:
+	# 	print(key['title'])
