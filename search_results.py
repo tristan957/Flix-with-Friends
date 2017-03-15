@@ -146,7 +146,7 @@ class SearchResults(Gtk.Box):
 			desc = GLib.markup_escape_text(desc)
 			text = "<b>%s</b>\n%s" % (movie.title.replace('&', '&amp;'), desc)
 
-			poster = "./imagePosters/" + movie.title.replace(" ", "") + "_w92.jpg"
+			poster = movie.poster + "w92.jpg"
 			if os.path.isfile(poster) is True:
 				image = GdkPixbuf.Pixbuf.new_from_file(poster)
 			else:

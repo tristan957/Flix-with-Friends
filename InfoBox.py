@@ -90,5 +90,6 @@ class InfoBox(Gtk.Box):
 		self.level.set_value(float(self.movie.vote))
 		self.runtime.set_label(str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes" )
 		self.description.set_label(self.movie.overview)
-		self.poster.set_from_file("./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
+		# self.poster.set_from_file("./images/movies/" + self.movie.title.replace(" ", "") + "_w342.jpg")
+		self.poster.set_from_file(self.movie.poster + "w342.jpg")
 		self.queue_draw()

@@ -23,18 +23,23 @@ class Movie:
 		self.directorImg = dictionary['DirectorImg']
 		self.trailer = dictionary['Trailer']
 		self.backdrop = dictionary['Backdrop']
+		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
 	def get_image(self):
-		if (str(self.poster_path) != 'N/A') and str(self.poster_path) != 'None':
+		if (str(self.poster_path) != 'N/A') and str(self.poster_path) != 'None' and str(self.poster_path) != '':
 			# Create imagePosters directory if not present
-			os.makedirs("./imagePosters", exist_ok = True)
+			os.makedirs("./images", exist_ok = True)
+			os.makedirs("./images/movies", exist_ok = True)
+			os.makedirs(self.poster, exist_ok = True)
+			os.makedirs("./images/people", exist_ok = True)
 			baseURL = 'https://image.tmdb.org/t/p/'
-			posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2', 'w342', 'w500', 'w780'] #'original']
+			# posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2', 'w342', 'w500', 'w780'] #'original']
+			posters = ['w92', 'w342', 'w500']
 
 			for p in posters:
 				imagePage = baseURL + p + self.poster_path
 				filename = self.title.replace(" ", "") + '_' + p + '.jpg'
-				fullfilename = os.path.join('./imagePosters', filename)
+				fullfilename = os.path.join('./images/movies/' + self.title.replace(" ", ""), filename)
 
 				# if not already existent, download
 				if not(os.path.isfile(fullfilename)):
