@@ -45,33 +45,32 @@ class Movie:
 				if not(os.path.isfile(fullfilename)):
 					urllib.request.urlretrieve(imagePage, fullfilename)
 					print(p, 'poster image:', imagePage)
-			print('')
 
-			# Actors images
-			os.makedirs("./images/people", exist_ok = True)
-			for i, actor in enumerate(self.actorImg):
-				if actor != 'None':
-					actorName = self.actorNames[i]
+		# Actors images
+		os.makedirs("./images/people", exist_ok = True)
+		for i, actor in enumerate(self.actorImg):
+			if actor != 'None':
+				actorName = self.actorNames[i]
 
-					imagePage = baseURL + 'w92' + actor
-					filename = actorName.replace(" ", "") + '_' + 'w92.jpg'
-					fullfilename = os.path.join('./images/people/', filename)
-
-					# if not already existent, download
-					if not(os.path.isfile(fullfilename)):
-						urllib.request.urlretrieve(imagePage, fullfilename)
-						print(actorName, 'image:', imagePage)
-
-			# Director Image
-			if str(self.directorImg) != 'None' and str(self.directorImg) != '':
-				imagePage = baseURL + 'w92' + self.directorImg
-				filename = self.directorName.replace(" ", "") + '_' + 'w92.jpg'
+				imagePage = baseURL + 'w92' + actor
+				filename = actorName.replace(" ", "") + '_' + 'w92.jpg'
 				fullfilename = os.path.join('./images/people/', filename)
 
 				# if not already existent, download
 				if not(os.path.isfile(fullfilename)):
 					urllib.request.urlretrieve(imagePage, fullfilename)
-					print(self.directorName, 'image:', imagePage)
+					print(actorName, 'image:', imagePage)
+
+		# Director Image
+		if str(self.directorImg) != 'None' and str(self.directorImg) != '':
+			imagePage = baseURL + 'w92' + self.directorImg
+			filename = self.directorName.replace(" ", "") + '_' + 'w92.jpg'
+			fullfilename = os.path.join('./images/people/', filename)
+
+			# if not already existent, download
+			if not(os.path.isfile(fullfilename)):
+				urllib.request.urlretrieve(imagePage, fullfilename)
+				print(self.directorName, 'image:', imagePage)
 
 
 	def genres_string(self):
