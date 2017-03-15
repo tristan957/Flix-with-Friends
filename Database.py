@@ -108,6 +108,13 @@ class Database:
 			w_sheet.write(row, 6, self.MISSING_DATA) # overview
 			w_sheet.write(row, 7, '1') # TMDB ID number
 			w_sheet.write(row, 8, self.MISSING_DATA) # poster path
+			w_sheet.write(row, 9, self.MISSING_DATA) # ActorsName
+			w_sheet.write(row, 10, self.MISSING_DATA) # ActorsImg
+			w_sheet.write(row, 11, self.MISSING_DATA) # ActorsChar
+			w_sheet.write(row, 12, self.MISSING_DATA) # DirectorsName
+			w_sheet.write(row, 13, self.MISSING_DATA) # DirectorsImg
+			w_sheet.write(row, 14, self.MISSING_DATA) # Trailer
+			w_sheet.write(row, 15, self.MISSING_DATA) # Backdrop
 		else:
 			movie = results[0]
 			w_sheet.write(row, 0, movie.title)
@@ -118,6 +125,13 @@ class Database:
 			w_sheet.write(row, 6, movie.overview)
 			w_sheet.write(row, 7, movie.ID)
 			w_sheet.write(row, 8, movie.poster_path)
+			w_sheet.write(row, 9, self.stringify(movie.actorNames)) # ActorsName
+			w_sheet.write(row, 10, self.stringify(movie.actorImg)) # ActorsImg
+			w_sheet.write(row, 11, self.stringify(movie.actorChars)) # ActorsChar
+			w_sheet.write(row, 12, movie.directorName) # DirectorsName
+			w_sheet.write(row, 13, movie.directorImg) # DirectorsImg
+			w_sheet.write(row, 14, movie.trailer) # Trailer
+			w_sheet.write(row, 15, movie.backdrop) # Backdrop
 			movie.get_image()
 
 		wb.save(self.fileName)  # Save DB edits
@@ -181,7 +195,6 @@ class Database:
 		results = []
 		count = 0
 		for s in search.results:
-			print('Here i am', count)
 			titleID = s['id']
 			movieTMDB = tmdb.Movies(titleID)
 			response = movieTMDB.info()
@@ -190,6 +203,7 @@ class Database:
 			# Can add critic reviews and similar movies as well
 
 			# Trailer URL
+			trailer = ''
 			if len(videoResponse['results']):
 				trailer = 'https://www.youtube.com/watch?v=' + videoResponse['results'][0]['key']
 
@@ -365,7 +379,9 @@ class Database:
 
 
 if __name__ == "__main__":
-	db = Database()
-	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-	db.get_google_doc(doc_id)
-	db.upload_google_doc()
+	# db = Database()
+	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	# db.get_google_doc(doc_id)
+	# db.upload_google_doc()
+	db = Database('testing.xlsx')
+	db.update()

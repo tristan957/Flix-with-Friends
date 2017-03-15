@@ -21,7 +21,8 @@ class Movie:
 		self.actorImg = dictionary['ActorsImg'].split(', ')
 		self.directorName = dictionary['DirectorName']
 		self.directorImg = dictionary['DirectorImg']
-
+		self.trailer = dictionary['Trailer']
+		self.backdrop = dictionary['Backdrop']
 
 	def get_image(self):
 		if (str(self.poster_path) != 'N/A') and str(self.poster_path) != 'None':
