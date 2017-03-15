@@ -35,7 +35,7 @@ class Movie:
 				if not(os.path.isfile(fullfilename)):
 					urllib.request.urlretrieve(imagePage, fullfilename)
 					print(p, 'poster image:', imagePage)
-					print('')
+			print('')
 
 	def genres_string(self):
 		return ', '.join(self.genres).rstrip(',')

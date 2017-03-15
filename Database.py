@@ -278,7 +278,7 @@ class Database:
 			for i,row in enumerate(values[updateNum+1:]):
 				self.updateMovieInfo(row[0], i + updateNum)
 				# Check if there were viewers
-				if len(row[1]):
+				if len(row) > 1:
 					rb = xlrd.open_workbook(self.fileName)  # Open the excel file
 					wb = copy(rb)  # make a writeable copy of the open excel file
 					w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
