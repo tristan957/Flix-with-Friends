@@ -99,7 +99,7 @@ class Database:
 		w_sheet = wb.get_sheet(0)  # read the frist sheet to write to
 
 		results = self.tmdb_search(movie,1)
-		if len(results) == 0:
+		if not results:
 			print(movie, self.MISSING_DATA)  # Print to console
 			w_sheet.write(row, 2, '1') #runtime
 			w_sheet.write(row, 3, self.MISSING_DATA) # genres
@@ -293,7 +293,7 @@ class Database:
 
 		# Pull data from the Google Sheet
 		docID = self.spreadsheetID = sheetID
-		rangeName = 'Sheet1!A:I'
+		rangeName = 'Sheet1!A:P'
 		result = service.spreadsheets().values().get(
 			spreadsheetId = self.spreadsheetID, range = rangeName).execute()
 		values = result.get('values', [])
@@ -312,8 +312,8 @@ class Database:
 					updateNum = i
 				else:
 					sheet1.write(i, 0, row[0])
-					if len(row) is 9:
-						for j in range(1,9):
+					if len(row) > 8:
+						for j in range(1,len(row)):
 							sheet1.write(i, j, row[j])
 					else:
 						sheet1.write(i, 2, '0') #runtime
@@ -323,6 +323,13 @@ class Database:
 						sheet1.write(i, 6, self.MISSING_DATA) # overview
 						sheet1.write(i, 7, '0') # TMDB ID number
 						sheet1.write(i, 8, self.MISSING_DATA) # poster path
+						sheet1.write(i, 9, self.MISSING_DATA) # ActorsName
+						sheet1.write(i, 10, self.MISSING_DATA) # ActorsImg
+						sheet1.write(i, 11, self.MISSING_DATA) # ActorsChar
+						sheet1.write(i, 12, self.MISSING_DATA) # DirectorsName
+						sheet1.write(i, 13, self.MISSING_DATA) # DirectorsImg
+						sheet1.write(i, 14, self.MISSING_DATA) # Trailer
+						sheet1.write(i, 15, self.MISSING_DATA) # Backdrop
 					i += 1
 
 		book.save(LOCAL_EXCEL_FILE)
@@ -379,9 +386,9 @@ class Database:
 
 
 if __name__ == "__main__":
-	# db = Database()
-	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-	# db.get_google_doc(doc_id)
+	db = Database()
+	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	db.get_google_doc(doc_id)
 	# db.upload_google_doc()
-	db = Database('testing.xlsx')
-	db.update()
+	# db = Database('testing.xlsx')
+	# db.update()
