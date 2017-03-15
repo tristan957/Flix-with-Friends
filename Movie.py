@@ -16,8 +16,13 @@ class Movie:
 		self.vote = str(dictionary['Vote'])
 		self.overview = dictionary['Overview']
 		self.poster_path = dictionary['Poster']
-		if len(dictionary) > 9:
-			self.excelRow = dictionary['excelPosition']
+		self.actorNames = dictionary['ActorsName'].split(', ')
+		self.actorChars = dictionary['ActorsChar'].split(', ')
+		self.actorImg = dictionary['ActorsImg'].split(', ')
+		self.directorName = dictionary['DirectorName']
+		self.directorImg = dictionary['DirectorImg']
+		self.trailer = dictionary['Trailer']
+		self.backdrop = dictionary['Backdrop']
 
 	def get_image(self):
 		if (str(self.poster_path) != 'N/A') and str(self.poster_path) != 'None':

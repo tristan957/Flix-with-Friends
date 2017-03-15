@@ -90,7 +90,6 @@ class Database:
 			elm = {}
 			for col in range(worksheet.ncols):
 				elm[first_row[col]] = worksheet.cell_value(row, col)
-			elm['excelPosition'] = row
 			self.dictionary.append(elm)
 
 	def updateMovieInfo(self, movie, row):
@@ -109,6 +108,13 @@ class Database:
 			w_sheet.write(row, 6, self.MISSING_DATA) # overview
 			w_sheet.write(row, 7, '1') # TMDB ID number
 			w_sheet.write(row, 8, self.MISSING_DATA) # poster path
+			w_sheet.write(row, 9, self.MISSING_DATA) # ActorsName
+			w_sheet.write(row, 10, self.MISSING_DATA) # ActorsImg
+			w_sheet.write(row, 11, self.MISSING_DATA) # ActorsChar
+			w_sheet.write(row, 12, self.MISSING_DATA) # DirectorsName
+			w_sheet.write(row, 13, self.MISSING_DATA) # DirectorsImg
+			w_sheet.write(row, 14, self.MISSING_DATA) # Trailer
+			w_sheet.write(row, 15, self.MISSING_DATA) # Backdrop
 		else:
 			movie = results[0]
 			w_sheet.write(row, 0, movie.title)
@@ -119,6 +125,13 @@ class Database:
 			w_sheet.write(row, 6, movie.overview)
 			w_sheet.write(row, 7, movie.ID)
 			w_sheet.write(row, 8, movie.poster_path)
+			w_sheet.write(row, 9, self.stringify(movie.actorNames)) # ActorsName
+			w_sheet.write(row, 10, self.stringify(movie.actorImg)) # ActorsImg
+			w_sheet.write(row, 11, self.stringify(movie.actorChars)) # ActorsChar
+			w_sheet.write(row, 12, movie.directorName) # DirectorsName
+			w_sheet.write(row, 13, movie.directorImg) # DirectorsImg
+			w_sheet.write(row, 14, movie.trailer) # Trailer
+			w_sheet.write(row, 15, movie.backdrop) # Backdrop
 			movie.get_image()
 
 		wb.save(self.fileName)  # Save DB edits
@@ -165,6 +178,14 @@ class Database:
 			if movie.title == title:
 				return movie
 
+	def stringify(self, array):
+		string = ''
+		for i, item in enumerate(array):
+			string = string + str(item)
+			if i < len(array) - 1:
+				string = string + ', '
+		return string
+
 	def tmdb_search(self, keyword, num=5):
 		# This function is used to run a keyword and return the results as
 		# a list of movies
@@ -172,11 +193,37 @@ class Database:
 		search = tmdb.Search() # Setup search to run API query
 		response = search.movie(query = keyword)  # Search for movie
 		results = []
-		i = 0
+		count = 0
 		for s in search.results:
 			titleID = s['id']
-			daMovie = tmdb.Movies(titleID)
-			response = daMovie.info()
+			movieTMDB = tmdb.Movies(titleID)
+			response = movieTMDB.info()
+			videoResponse = movieTMDB.videos() # Trailers
+			creditsResponse = movieTMDB.credits() # Cast/Crew
+			# Can add critic reviews and similar movies as well
+
+			# Trailer URL
+			trailer = ''
+			if len(videoResponse['results']):
+				trailer = 'https://www.youtube.com/watch?v=' + videoResponse['results'][0]['key']
+
+			# Top 3 Actors
+			actorsName = []
+			actorsChar = []
+			actorsImg = []
+			for key in creditsResponse['cast'][:3]:
+				actorsName.append(str(key['name']))
+				actorsChar.append(str(key['character']))
+				actorsImg.append(str(key['profile_path']))
+
+			# Director
+			directorName = ''
+			directorImg = ''
+			for key in creditsResponse['crew']:
+				if key['job'] == 'Director':
+					directorName = key['name']
+					directorImg = key['profile_path']
+
 			# Get Genres into one line
 			genreResult = response['genres']
 			gen = ''
@@ -194,13 +241,20 @@ class Database:
 				'Vote': response['vote_average'],
 				'Overview': response['overview'],
 				'ViewedBy': '',
-				'Poster': response['poster_path']
+				'Poster': response['poster_path'],
+				# new to add below
+				'Backdrop': response['backdrop_path'],
+				'Trailer': trailer,
+				'ActorsName': self.stringify(actorsName),
+				'ActorsChar': self.stringify(actorsChar),
+				'ActorsImg': self.stringify(actorsImg),
+				'DirectorName': directorName,
+				'DirectorImg': directorImg
 				}
 			results.append(Movie(dictionary))
-			i += 1
-			if i == num:
-				break
-		return results
+			count = count + 1
+			if count == num:
+				return results
 
 	# The following are functions accesing and pushing from a Google Sheet
 	def get_credentials(self):
@@ -325,7 +379,9 @@ class Database:
 
 
 if __name__ == "__main__":
-	db = Database()
-	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-	db.get_google_doc(doc_id)
-	db.upload_google_doc()
+	# db = Database()
+	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	# db.get_google_doc(doc_id)
+	# db.upload_google_doc()
+	db = Database('testing.xlsx')
+	db.update()
