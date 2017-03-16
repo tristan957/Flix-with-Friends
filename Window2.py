@@ -97,16 +97,17 @@ class LocationChooser(Gtk.Box):
 
 class Window(Gtk.Window):
 	"""Window where all the magic happens"""
-	def __init__(self):
+	def __init__(self, app):
 		Gtk.Window.__init__(self)
 
+		self.app = app
 		self.db = None
 		self.windowStack = None
 		self.headerBar = None
 		self.searchBar = None
 
 		self.windowStack = Gtk.Stack(interpolate_size = True,
-									transition_type = Gtk.StackTransitionType.OVER_LEFT)
+									transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT)
 		self.add(self.windowStack)
 
 		self.createInitWin()
@@ -121,7 +122,8 @@ class Window(Gtk.Window):
 		self.windowStack.add_named(locationChooser, "location-chooser")
 
 	def updateWin(self, locationChooser, location):
-		Database.location = location
+		# Database.location = location
+		Database.location = 'local2.xlsx'
 		self.db = Database(Database.location)
 
 		self.headerBar = HeaderBar(self)
