@@ -1,6 +1,7 @@
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GObject
+
 from Database import Database
 from HeaderBar2 import HeaderBar
 
