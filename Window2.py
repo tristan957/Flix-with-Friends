@@ -100,9 +100,14 @@ class Window(Gtk.Window):
 	def __init__(self):
 		Gtk.Window.__init__(self)
 
+		self.db = None
 		self.windowStack = None
 		self.headerBar = None
 		self.searchBar = None
+
+		self.windowStack = Gtk.Stack(interpolate_size = True,
+									transition_type = Gtk.StackTransitionType.OVER_LEFT)
+		self.add(self.windowStack)
 
 		self.createInitWin()
 
@@ -112,10 +117,13 @@ class Window(Gtk.Window):
 
 		locationChooser = LocationChooser(self)
 		locationChooser.connect("location-chosen", self.updateWin)
-		self.add(locationChooser)
+
+		self.windowStack.add_named(locationChooser, "location-chooser")
 
 	def updateWin(self, locationChooser, location):
 		Database.location = location
+		self.db = Database(Database.location)
+
 		self.headerBar = HeaderBar(self)
 		self.set_titlebar(self.headerBar)
 
