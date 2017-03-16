@@ -115,6 +115,7 @@ class Database:
 			w_sheet.write(row, 13, self.MISSING_DATA) # DirectorsImg
 			w_sheet.write(row, 14, self.MISSING_DATA) # Trailer
 			w_sheet.write(row, 15, self.MISSING_DATA) # Backdrop
+			w_sheet.write(row, 16, self.MISSING_DATA) # Keywords
 		else:
 			movie = results[0]
 			w_sheet.write(row, 0, movie.title)
@@ -132,6 +133,7 @@ class Database:
 			w_sheet.write(row, 13, movie.directorImg) # DirectorsImg
 			w_sheet.write(row, 14, movie.trailer) # Trailer
 			w_sheet.write(row, 15, movie.backdrop) # Backdrop
+			w_sheet.write(row, 16, self.stringify(movie.keywords)) # Keywords
 			movie.get_image()
 
 		wb.save(self.fileName)  # Save DB edits
@@ -204,7 +206,13 @@ class Database:
 			response = movieTMDB.info()
 			videoResponse = movieTMDB.videos() # Trailers
 			creditsResponse = movieTMDB.credits() # Cast/Crew
+			keywordResponse = movieTMDB.keywords()
 			# Can add critic reviews and similar movies as well
+
+			# Keywords
+			keywords = []
+			for key in keywordResponse['keywords']:
+				keywords.append(key['name'])
 
 			# Trailer URL
 			trailer = ''
@@ -253,7 +261,8 @@ class Database:
 				'ActorsChar': self.stringify(actorsChar),
 				'ActorsImg': self.stringify(actorsImg),
 				'DirectorName': directorName,
-				'DirectorImg': directorImg
+				'DirectorImg': directorImg,
+				'Keywords': self.stringify(keywords)
 				}
 			results.append(Movie(dictionary))
 			count = count + 1
@@ -297,7 +306,7 @@ class Database:
 
 		# Pull data from the Google Sheet
 		docID = self.spreadsheetID = sheetID
-		rangeName = 'Sheet1!A:P'
+		rangeName = 'Sheet1!A:Q'
 		result = service.spreadsheets().values().get(
 			spreadsheetId = self.spreadsheetID, range = rangeName).execute()
 		values = result.get('values', [])
@@ -334,6 +343,7 @@ class Database:
 						sheet1.write(i, 13, self.MISSING_DATA) # DirectorsImg
 						sheet1.write(i, 14, self.MISSING_DATA) # Trailer
 						sheet1.write(i, 15, self.MISSING_DATA) # Backdrop
+						sheet1.write(i, 16, self.MISSING_DATA) # Keywords
 					i += 1
 
 		book.save(LOCAL_EXCEL_FILE)
@@ -390,9 +400,10 @@ class Database:
 
 
 if __name__ == "__main__":
-	# db = Database()
-	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-	# db.get_google_doc(doc_id)
+	db = Database()
+	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	db.get_google_doc(doc_id)
+	print(db.movies[0].keywords)
 	# db.upload_google_doc()
-	db = Database('local2.xlsx')
-	db.get_images()
+	# db = Database('local2.xlsx')
+	# db.update()

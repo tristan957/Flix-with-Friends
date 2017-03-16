@@ -19,10 +19,17 @@ if __name__ == "__main__":
 	print('Movie: ' + response0['title'])
 	print('')
 
+	# keywords
+	keywordsResponse = movie.keywords()
+
+	for key in keywordsResponse['keywords']:
+		print(key['name'])
+
+
 	# Trailer KEYS: results
-	response = movie.videos()
-	print(response['results'][0]['site'] + ' Trailer: ' + youtubeURL + response['results'][0]['key'])
-	print('')
+	# response = movie.videos()
+	# print(response['results'][0]['site'] + ' Trailer: ' + youtubeURL + response['results'][0]['key'])
+	# print('')
 	#
 	# # Credits KEYS: cast, id, crew
 	# response1 = movie.credits()

@@ -24,7 +24,7 @@ class InfoBox(Gtk.Box):
 		info.get_style_context().add_class("inline-toolbar")
 
 		self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
-		self.poster = Gtk.Image(file = "./imagePosters/" + self.movie.title.replace(" ", "") + "_w342.jpg")
+		self.poster = Gtk.Image(file = self.movie.poster + "w342.jpg")
 
 		viewedByTitle = Gtk.Label(label = "<b>Viewed By</b>", use_markup = True)
 		self.viewers = Gtk.Label(label = ', '.join(self.movie.viewers).rstrip(','), wrap = True)

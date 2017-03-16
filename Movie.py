@@ -23,6 +23,7 @@ class Movie:
 		self.directorImg = dictionary['DirectorImg']
 		self.trailer = dictionary['Trailer']
 		self.backdrop = dictionary['Backdrop']
+		self.keywords = dictionary['Keywords'].split(', ')
 		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
 	def get_image(self):
