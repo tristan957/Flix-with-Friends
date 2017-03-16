@@ -2,6 +2,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GObject
 from Database import Database
+from HeaderBar2 import HeaderBar
 
 class LocationChooser(Gtk.Box):
 	"""Box to choose the location of information for the database"""
@@ -10,12 +11,11 @@ class LocationChooser(Gtk.Box):
 		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # the hell does this comma do
 	}
 
-
-	def __init__(self, parent):
+	def __init__(self, win):
 		Gtk.Box.__init__(self, margin = 100,
 						orientation = Gtk.Orientation.VERTICAL, spacing = 100)
 
-		self.parent = parent
+		self.win = win
 		self.google = None
 		self.spreadsheet = None
 		self.server = None
@@ -73,14 +73,14 @@ class LocationChooser(Gtk.Box):
 
 	def spreadsheet_cb(self, button):
 		"""ask the user for a spreadsheet file, more specifically a .xls/.xlsx file"""
-		fileChooser = Gtk.FileChooserDialog(self.parent, title = "Choose a spreadsheet")
+		fileChooser = Gtk.FileChooserDialog(self.win, title = "Choose a spreadsheet")
 		fileFilter = Gtk.FileFilter()
 		fileFilter.add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 		fileFilter.add_mime_type("application/vnd.ms-excel")
 		fileChooser.add_filter(fileFilter)
 		fileChooser.add_button("Open", Gtk.FileChooserAction.OPEN)
 		fileChooser.add_button("Cancel", Gtk.ResponseType.CANCEL)
-		fileChooser.set_transient_for(self.parent)
+		fileChooser.set_transient_for(self.win)
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 
 		if fileChooser.run() == 0: # 0 stands for file being chosen
@@ -100,6 +100,8 @@ class Window(Gtk.Window):
 		Gtk.Window.__init__(self)
 
 		self.windowStack = None
+		self.headerBar = None
+		self.searchBar = None
 
 		self.createInitWin()
 
@@ -113,3 +115,7 @@ class Window(Gtk.Window):
 
 	def updateWin(self, locationChooser, location):
 		Database.location = location
+		self.headerBar = HeaderBar(self)
+		self.set_titlebar(self.headerBar)
+
+		self.show_all()
