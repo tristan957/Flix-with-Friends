@@ -74,9 +74,25 @@ class Movie:
 				urllib.request.urlretrieve(imagePage, fullfilename)
 				print(self.directorName, 'image:', imagePage)
 
+	def get_markup_title(self):
+		return "<big><b>" + self.title.replace('&', '&amp;') + "</b></big>"
 
-	def genres_string(self):
-		return ', '.join(self.genres).rstrip(',')
+	def get_markup_overview(self):
+		return self.overview.replace('&', '&amp;')
+
+	def get_genres_string(self):
+		return self.stringify(self.genres)
+
+	def get_viewers_string(self):
+		return self.stringify(self.viewers)
+
+	def stringify(self, array):
+		string = ''
+		for i, item in enumerate(array):
+			string = string + str(item)
+			if i < len(array) - 1:
+				string = string + ', '
+		return string
 
 	def bad_movie(self):
 		bad_title = (self.title == 'N/A')# or (len(self.title) == 0)
@@ -86,3 +102,13 @@ class Movie:
 		bad_poster = self.poster_path == 'N/A'
 
 		return bad_ID or bad_overview or bad_runtime or bad_title or bad_poster
+
+	def get_small_image(self):
+		# Returns w92 image
+		filename = self.title.replace(" ", "") + '_w92.jpg'
+		return os.path.join('./images/movies/' + self.title.replace(" ", ""), filename)
+
+	def get_large_image(self):
+		# Returns w342 image
+		filename = self.title.replace(" ", "") + '_w342.jpg'
+		return os.path.join('./images/movies/' + self.title.replace(" ", ""), filename)

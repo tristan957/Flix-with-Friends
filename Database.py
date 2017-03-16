@@ -120,7 +120,7 @@ class Database:
 			movie = results[0]
 			w_sheet.write(row, 0, movie.title)
 			w_sheet.write(row, 2, movie.runtime)
-			w_sheet.write(row, 3, movie.genres_string())
+			w_sheet.write(row, 3, movie.get_genres_string())
 			w_sheet.write(row, 4, movie.release_date)
 			w_sheet.write(row, 5, movie.vote)
 			w_sheet.write(row, 6, movie.overview)

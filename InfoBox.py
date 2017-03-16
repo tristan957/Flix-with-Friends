@@ -23,18 +23,18 @@ class InfoBox(Gtk.Box):
 		info.set_size_request(300, -1)
 		info.get_style_context().add_class("inline-toolbar")
 
-		self.titleLabel = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER, use_markup = True)
-		self.poster = Gtk.Image(file = self.movie.poster + "w342.jpg")
+		self.titleLabel = Gtk.Label(label = self.movie.get_markup_title(), justify = Gtk.Justification.CENTER, use_markup = True)
+		self.poster = Gtk.Image(file = self.movie.get_large_image())
 
 		viewedByTitle = Gtk.Label(label = "<b>Viewed By</b>", use_markup = True)
-		self.viewers = Gtk.Label(label = ', '.join(self.movie.viewers).rstrip(','), wrap = True)
+		self.viewers = Gtk.Label(label = self.movie.get_viewers_string(), wrap = True)
 		viewedByFrame = Gtk.Frame(label_widget = viewedByTitle, label_xalign = .1)
 		viewedByBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
 		viewedByBox.add(self.viewers)
 		viewedByFrame.add(viewedByBox)
 
 		genreTitle = Gtk.Label(label = "<b>Genres</b>", use_markup = True)
-		self.genres = Gtk.Label(label = ', '.join(self.movie.genres).rstrip(','), wrap = True)
+		self.genres = Gtk.Label(label = self.movie.get_genres_string(), wrap = True)
 		genreFrame = Gtk.Frame(label_widget = genreTitle, label_xalign = .1)
 		genreBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
 		genreBox.add(self.genres)
