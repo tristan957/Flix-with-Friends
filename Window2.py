@@ -52,7 +52,7 @@ class LocationChooser(Gtk.Box):
 		spreadsheetIcon = Gio.ThemedIcon(name = "x-office-spreadsheet")
 		spreadsheetImage = Gtk.Image.new_from_gicon(spreadsheetIcon, Gtk.IconSize.BUTTON)
 		self.spreadsheet = Gtk.Button(label = "Spreadsheet", image = spreadsheetImage,
-								image_position = Gtk.PositionType.TOP, always_show_image = True)
+									image_position = Gtk.PositionType.TOP, always_show_image = True)
 		self.spreadsheet.connect("clicked", self.spreadsheet_cb)
 
 		buttons.pack_start(self.google, True, True, 0)
@@ -83,7 +83,7 @@ class LocationChooser(Gtk.Box):
 		fileChooser.set_transient_for(self.parent)
 		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
 
-		if fileChooser.run() == 0:
+		if fileChooser.run() == 0: # 0 stands for file being chosen
 			location = fileChooser.get_filename()
 			self.emit("location-chosen", location)
 		fileChooser.destroy()
