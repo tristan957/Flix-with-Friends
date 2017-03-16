@@ -112,4 +112,4 @@ class Window(Gtk.Window):
 		self.add(locationChooser)
 
 	def updateWin(self, locationChooser, location):
-		print(location)
+		Database.location = location
