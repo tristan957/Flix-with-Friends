@@ -2,7 +2,8 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from Window2 import Window
+from Database import Database
+from Window2 import InitWindow, MainWindow
 
 
 FLIX_APP_ID = "com.return0software.Flix-with-Friends"
@@ -12,15 +13,28 @@ class FlixApplication(Gtk.Application):
 		Gtk.Application.__init__(self, application_id = FLIX_APP_ID)
 
 		self.appWindow = None
+		self.db = None
 
 		self.connect("activate", self.activate_cb)
 
 	def windowCheck(self):
 		if self.appWindow == None:
-			self.appWindow = Window(self)
+			self.appWindow = InitWindow()
+			self.appWindow.connect("location-chosen", self.createMainWin)
 			self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
-			self.appWindow.show_all()	 # display the window and all widgets
 
 	def activate_cb(self, app):
 		self.windowCheck()
 		self.appWindow.present()
+		self.appWindow.show_all()	 # display the window and all widgets
+
+	def createMainWin(self, win, location):
+		Database.location = location
+		self.db = Database(Database.location)
+
+		self.remove_window(self.appWindow)
+		self.appWindow.destroy()
+		self.appWindow = MainWindow(self.db)
+		self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
+		self.appWindow.present()
+		self.appWindow.show_all()

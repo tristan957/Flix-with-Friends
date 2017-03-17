@@ -95,38 +95,48 @@ class LocationChooser(Gtk.Box):
 		fileChooser.destroy()
 
 
-class Window(Gtk.Window): # window is currently acting too much like an application. use windows as windows, not as managers
-	"""Window where all the magic happens"""
-	def __init__(self, app):
+class InitWindow(Gtk.Window):
+	"""Gets the initial location information"""
+
+	__gsignals__ = {
+		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # the hell does this comma do
+	}
+
+	def __init__(self):
 		Gtk.Window.__init__(self)
 
-		self.app = app
-		self.db = None
-		self.windowStack = None
-		self.headerBar = None
-		self.searchBar = None
-
-		self.windowStack = Gtk.Stack(interpolate_size = True,
-									transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT)
-		self.add(self.windowStack)
-
-		self.createInitWin()
-
-	def createInitWin(self):
 		header = Gtk.HeaderBar(title = "Flix with Friends", show_close_button = True)
 		self.set_titlebar(header)
 
 		locationChooser = LocationChooser(self)
-		locationChooser.connect("location-chosen", self.updateWin)
+		locationChooser.connect("location-chosen", self.locationChosen_cb)
 
-		self.windowStack.add_named(locationChooser, "location-chooser")
+		self.add(locationChooser)
 
-	def updateWin(self, locationChooser, location):
-		# Database.location = location
-		Database.location = 'local2.xlsx'
-		self.db = Database(Database.location)
+	def locationChosen_cb(self, box, location):
+		self.emit("location-chosen", location)
+
+class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much like an application. use windows as windows, not as managers
+	"""Window where all the magic happens"""
+	def __init__(self, db):
+		Gtk.Window.__init__(self)
+
+		self.db = db
+		self.windowStack = None
+		self.headerBar = None
+		self.searchBar = None
 
 		self.headerBar = HeaderBar(self)
 		self.set_titlebar(self.headerBar)
+		self.windowStack = Gtk.Stack(interpolate_size = True,
+									transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT)
+		self.add(self.windowStack)
 
+		locationChooser = LocationChooser(self)
+		# locationChooser.connect("location-chosen", self.updateWin)
+
+		self.windowStack.add_named(locationChooser, "location-chooser")
+
+	def updateSource(self, locationChooser, location):
+		# Database.location = location
 		self.show_all()
