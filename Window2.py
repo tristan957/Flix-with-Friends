@@ -9,7 +9,7 @@ class LocationChooser(Gtk.Box):
 	"""Box to choose the location of information for the database"""
 
 	__gsignals__ = {
-		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # the hell does this comma do
+		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
 	}
 
 	def __init__(self, win):
@@ -75,9 +75,9 @@ class LocationChooser(Gtk.Box):
 	def spreadsheet_cb(self, button):
 		"""ask the user for a spreadsheet file, more specifically a .xls/.xlsx file"""
 		fileChooser = Gtk.FileChooserDialog(self.win, title = "Choose a spreadsheet")
-		fileFilter = Gtk.FileFilter()
-		fileFilter.add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-		fileFilter.add_mime_type("application/vnd.ms-excel")
+		fileFilter = Gtk.FileFilter() # filters the file chooser
+		fileFilter.add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") # .xlsx
+		fileFilter.add_mime_type("application/vnd.ms-excel") # .xls
 		fileChooser.add_filter(fileFilter)
 		fileChooser.add_button("Open", Gtk.FileChooserAction.OPEN)
 		fileChooser.add_button("Cancel", Gtk.ResponseType.CANCEL)
@@ -90,6 +90,7 @@ class LocationChooser(Gtk.Box):
 		fileChooser.destroy()
 
 	def doubleClickEnter_cb(self, fileChooser):
+		"""runs if the user hits enter or double clicks an item"""
 		location = fileChooser.get_filename()
 		self.emit("location-chosen", location)
 		fileChooser.destroy()
@@ -99,7 +100,7 @@ class InitWindow(Gtk.Window):
 	"""Gets the initial location information"""
 
 	__gsignals__ = {
-		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # the hell does this comma do
+		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
 	}
 
 	def __init__(self):
