@@ -9,6 +9,7 @@ from Window2 import InitWindow, MainWindow
 FLIX_APP_ID = "com.return0software.Flix-with-Friends"
 
 class FlixApplication(Gtk.Application):
+	"""acts a program manager"""
 	def __init__(self):
 		Gtk.Application.__init__(self, application_id = FLIX_APP_ID)
 
@@ -18,23 +19,26 @@ class FlixApplication(Gtk.Application):
 		self.connect("activate", self.activate_cb)
 
 	def windowCheck(self):
+		"""checks if a window is already in use"""
 		if self.appWindow == None:
-			self.appWindow = InitWindow()
+			self.appWindow = InitWindow() # create the initial window to get a location
 			self.appWindow.connect("location-chosen", self.createMainWin)
 			self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
 
 	def activate_cb(self, app):
+		"""starts the program"""
 		self.windowCheck()
 		self.appWindow.present()
-		self.appWindow.show_all()	 # display the window and all widgets
+		self.appWindow.show_all() # display the window and all widgets
 
 	def createMainWin(self, win, location):
+		"""creates the main window"""
 		Database.location = location
-		self.db = Database(Database.location)
+		self.db = Database(Database.location) # create the database of the given location
 
 		self.remove_window(self.appWindow)
 		self.appWindow.destroy()
-		self.appWindow = MainWindow(self.db)
+		self.appWindow = MainWindow(self.db) # create the main window now that we have an initial location
 		self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
 		self.appWindow.present()
 		self.appWindow.show_all()
