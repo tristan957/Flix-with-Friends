@@ -8,6 +8,12 @@ from MovieDialog import MovieDialog
 
 class DataButton(Gtk.MenuButton):
 	"""Create a button for manipulating database data"""
+
+	__gsignals__ = {
+		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
+		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
+	}
+
 	def __init__(self, win):
 		Gtk.Button.__init__(self)
 
@@ -68,6 +74,13 @@ class DataButton(Gtk.MenuButton):
 
 class HeaderBar(Gtk.HeaderBar):
 	"""Creates a header bar for the window"""
+
+	__gsignals__ = {
+		"random-clicked": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with random movie button to facilitate a search
+		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
+		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
+	}
+
 	def __init__(self, win):
 		Gtk.HeaderBar.__init__(self, title = "Flix with Friends", show_close_button = True)
 
