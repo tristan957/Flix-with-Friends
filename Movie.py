@@ -81,7 +81,7 @@ class Movie:
 		return self.overview.replace('&', '&amp;')
 
 	def get_genres_string(self):
-		return self.stringify(self.genres)
+		return ', '.join(self.genres).rstrip(', ')
 
 	def get_viewers_string(self):
 		return self.stringify(self.viewers)
