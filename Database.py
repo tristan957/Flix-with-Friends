@@ -403,6 +403,6 @@ if __name__ == "__main__":
 	db = Database()
 	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
 	db.get_google_doc(doc_id)
-	db.update()
+	# db.update()
 	db.upload_google_doc()
 	# db = Database('local2.xlsx')
