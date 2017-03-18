@@ -24,12 +24,11 @@ class FlixApplication(Gtk.Application):
 			self.appWindow = InitWindow() # create the initial window to get a location
 			self.appWindow.connect("location-chosen", self.createMainWin)
 			self.add_window(self.appWindow)
-			# self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
+			self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
 
 	def activate_cb(self, app):
 		"""starts the program"""
 		self.windowCheck()
-		self.appWindow.present()
 		self.appWindow.show_all() # display the window and all widgets
 
 	def createMainWin(self, win, location):
@@ -41,5 +40,5 @@ class FlixApplication(Gtk.Application):
 		self.appWindow.destroy()
 		self.appWindow = MainWindow(self.db) # create the main window now that we have an initial location
 		self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
-		self.appWindow.present()
+		self.add_window(self.appWindow)
 		self.appWindow.show_all()
