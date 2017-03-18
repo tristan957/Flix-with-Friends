@@ -1,6 +1,6 @@
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, GObject
 
 from FriendDialog import FriendDialog
 from MovieDialog import MovieDialog
