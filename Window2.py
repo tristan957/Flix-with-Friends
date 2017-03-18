@@ -116,6 +116,7 @@ class InitWindow(Gtk.Window):
 
 	def locationChosen_cb(self, box, location):
 		self.emit("location-chosen", location)
+		
 
 class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much like an application. use windows as windows, not as managers
 	"""Window where all the magic happens"""
