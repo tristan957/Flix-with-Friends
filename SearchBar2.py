@@ -151,6 +151,9 @@ class SearchBar(Gtk.Revealer):
 		self.entry = None
 
 		self.genres = []
+		self.rating = 0
+		self.switchState = False
+		self.searchYear = db.oldest_year
 		self.friends = []
 
 		criteria = Gtk.Box(margin = 5)
