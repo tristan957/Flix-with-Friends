@@ -83,7 +83,7 @@ class SearchBar(Gtk.Revealer):
 		while x >= self.db.oldest_year:
 			self.dateCombo.append_text(str(x))
 			x -= 1
-		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year);
+		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year)
 		dateBox.add(self.dateCombo)
 		dateBox.add(switchBox)
 		datePopover.add(dateBox)
