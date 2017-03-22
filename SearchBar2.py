@@ -164,3 +164,73 @@ class SearchBar(Gtk.Revealer):
 		self.entry.set_size_request(250, -1)
 		self.entry.connect("activate", self.search_cb)
 		self.entry.connect("change", self.search_cb)
+
+		genrePop = GenrePop(db)
+		ratingPop = RatingPop()
+		datePop = DatePop(db)
+		viewedByPop = ViewedByPop(db)
+
+		genrePop.connect("genres-updated", self.genresUpdate_cb)
+		ratingPop.connect("rating-updated", self.ratingUpdate_cb)
+		datePop.connect("switch-updated", self.switchUpdate_cb)
+		datePop.connect("year-updated", self.yearUpdate_cb)
+		viewedByPop.connect("friends-updated", self.friendsUpdate_cb)
+
+		# creating the menu buttons
+		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True,
+											popover = genrePop)
+		self.genreButton.set_size_request(100, -1)
+		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True,
+											popover = ratingPop)
+		self.ratingButton.set_size_request(100, -1)
+		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True,
+											popover = datePop)
+		self.dateButton.set_size_request(100, -1)
+		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True,
+											popover = viewedByPop)
+		self.viewedByButton.set_size_request(100, -1)
+
+		filters.pack_start(self.genreButton, True, True, 0)
+		filters.pack_start(self.ratingButton, True, True, 0)
+		filters.pack_start(self.dateButton, True, True, 0)
+		filters.pack_end(self.viewedByButton, True, True, 0)
+
+		# connect the buttons to their callbacks
+		self.genreButton.connect("toggled", self.showPopover_cb, genrePop)
+		self.dateButton.connect("toggled", self.showPopover_cb, datePop)
+		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPop)
+		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPop)
+
+		criteria.pack_start(filters, True, False, 0)
+		criteria.get_style_context().add_class("inline-toolbar")
+
+		self.set_property("child", criteria)
+
+	def entryUpdate_cb(self, entry):
+		self.run_search()
+
+	def genresUpdate_cb(self, pop, genres):
+		self.genres = genres
+		self.run_search()
+
+	def ratingUpdate_cb(self, pop, rating):
+		self.rating = rating
+		self.run_search()
+
+	def switchUpdate_cb(self, pop, state):
+		self.switchState = state
+		self.run_search()
+
+	def yearUpdate_cb(self, pop, year):
+		self.searchYear = year
+		self.run_search()
+
+	def friendsUpdate_cb(self, pop, friends):
+		self.friends = friends
+		self.run_search()
+
+	def showPopover_cb(self, button, pop):
+		pop.show()
+
+	def run_search(self):
+		print("Hello World")
