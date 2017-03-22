@@ -76,7 +76,8 @@ class HeaderBar(Gtk.HeaderBar):
 	"""Creates a header bar for the window"""
 
 	__gsignals__ = {
-		"random-clicked": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with random movie button to facilitate a search
+		"random-clicked": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()), # in conjunction with random movie button to facilitate a search
+		"revealer-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)),
 		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
 		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
 	}
@@ -108,10 +109,7 @@ class HeaderBar(Gtk.HeaderBar):
 		data.get_pop().show_all()
 
 	def randMovie_cb(self, button):
-		print("This is a dummy callback for the random movie button.")
+		self.emit("random-clicked")
 
-	def search_cb(self, search):
-		if search.get_active() is True:
-			print("This is True.")
-		else:
-			print("This is False.")
+	def search_cb(self, button):
+		self.emit("revealer-change", button.get_active())

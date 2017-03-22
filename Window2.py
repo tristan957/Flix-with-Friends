@@ -4,6 +4,7 @@ from gi.repository import Gtk, Gio, GObject
 
 from Database import Database
 from HeaderBar2 import HeaderBar
+from SearchBar2 import SearchBar
 
 class LocationChooser(Gtk.Box):
 	"""Box to choose the location of information for the database"""
@@ -116,7 +117,7 @@ class InitWindow(Gtk.Window):
 
 	def locationChosen_cb(self, box, location):
 		self.emit("location-chosen", location)
-		
+
 
 class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much like an application. use windows as windows, not as managers
 	"""Window where all the magic happens"""
@@ -128,11 +129,20 @@ class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much l
 		self.headerBar = None
 		self.searchBar = None
 
-		self.headerBar = HeaderBar(self)
-		self.set_titlebar(self.headerBar)
+		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+
 		self.windowStack = Gtk.Stack(interpolate_size = True,
 									transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT)
-		self.add(self.windowStack)
+		self.header = HeaderBar(self)
+		self.header.connect("random-clicked", self.random_cb)
+		self.header.connect("revealer-change", self.reveal_cb)
+		self.set_titlebar(self.header)
+		self.searchBar = SearchBar(db)
+
+		box.add(self.searchBar)
+		box.add(self.windowStack)
+
+		self.add(box)
 
 		locationChooser = LocationChooser(self)
 		# locationChooser.connect("location-chosen", self.updateWin)
@@ -142,3 +152,17 @@ class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much l
 	def updateSource(self, locationChooser, location):
 		# Database.location = location
 		self.show_all()
+
+	def random_cb(self, header):
+		self.searchBar.run_search()
+
+	def reveal_cb(self, header, toggled):
+		if toggled == True:
+			self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+			self.searchBar.set_reveal_child(True)
+			if self.searchBar.entry.has_focus() == False:
+				self.searchBar.entry.grab_focus()
+		else:
+			self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
+			self.searchBar.set_reveal_child(False)
+			# self.grab_focus()

@@ -59,7 +59,7 @@ class RatingPop(Gtk.Popover):
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
 		label = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
 
-		box.add(ratingLabel)
+		box.add(label)
 		box.add(self.scale)
 
 		self.add(box)
@@ -89,7 +89,7 @@ class DatePop(Gtk.Popover):
 		while x >= db.oldest_year:
 			self.combo.append_text(str(x))
 			x -= 1
-		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year)
+		self.combo.set_active(datetime.datetime.now().year - db.oldest_year)
 
 		label = Gtk.Label(label = "Search for movies produced\nonly in the year above",
 						justify = Gtk.Justification.CENTER)
@@ -132,9 +132,9 @@ class ViewedByPop(Gtk.Popover):
 	def friend_cb(self, button):
 		button.set_property("active", not button.get_property("active"))
 		if button.get_property("active") is True:
-			self.genres.append(button.get_property("text"))
+			self.friends.append(button.get_property("text"))
 		else:
-			self.genres.remove(button.get_property("text"))
+			self.friends.remove(button.get_property("text"))
 		self.emit("friends-updated", self.friends)
 
 
@@ -156,14 +156,20 @@ class SearchBar(Gtk.Revealer):
 		self.searchYear = db.oldest_year
 		self.friends = []
 
+		filters = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5) # box for the 4 search filters
+		filters.get_style_context().add_class("linked")
 		criteria = Gtk.Box(margin = 5)
-		filters = Gtk.ButtonBox(layout_style = Gtk.ButtonBoxStyle.EXPAND)
+		criteria.pack_start(filters, True, False, 0)
+		criteria.get_style_context().add_class("inline-toolbar")
+
+		self.set_property("child", criteria)
 
 		self.entry = Gtk.SearchEntry()
 		self.entry.set_can_focus(True)
 		self.entry.set_size_request(250, -1)
-		self.entry.connect("activate", self.search_cb)
-		self.entry.connect("change", self.search_cb)
+		self.entry.connect("activate", self.entryUpdate_cb)
+		self.entry.connect("changed", self.entryUpdate_cb)
+		filters.pack_start(self.entry, True, True, 0)
 
 		genrePop = GenrePop(db)
 		ratingPop = RatingPop()
@@ -190,21 +196,16 @@ class SearchBar(Gtk.Revealer):
 											popover = viewedByPop)
 		self.viewedByButton.set_size_request(100, -1)
 
-		filters.pack_start(self.genreButton, True, True, 0)
-		filters.pack_start(self.ratingButton, True, True, 0)
-		filters.pack_start(self.dateButton, True, True, 0)
-		filters.pack_end(self.viewedByButton, True, True, 0)
-
 		# connect the buttons to their callbacks
 		self.genreButton.connect("toggled", self.showPopover_cb, genrePop)
 		self.dateButton.connect("toggled", self.showPopover_cb, datePop)
 		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPop)
 		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPop)
 
-		criteria.pack_start(filters, True, False, 0)
-		criteria.get_style_context().add_class("inline-toolbar")
-
-		self.set_property("child", criteria)
+		filters.pack_start(self.genreButton, True, True, 0)
+		filters.pack_start(self.ratingButton, True, True, 0)
+		filters.pack_start(self.dateButton, True, True, 0)
+		filters.pack_end(self.viewedByButton, True, True, 0)
 
 	def entryUpdate_cb(self, entry):
 		self.run_search()
@@ -230,7 +231,7 @@ class SearchBar(Gtk.Revealer):
 		self.run_search()
 
 	def showPopover_cb(self, button, pop):
-		pop.show()
+		pop.show_all()
 
 	def run_search(self):
 		print("Hello World")
