@@ -132,6 +132,8 @@ class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much l
 		self.searchBar = None
 		self.imdbBox = None
 
+		self.connect("key-press-event", self.key_pressed_cb)
+
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
 		self.windowStack = Gtk.Stack(interpolate_size = True,
@@ -155,6 +157,13 @@ class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much l
 		self.imdbBox.set_size_request(700, -1)
 		self.windowStack.add_named(self.imdbBox, "main")
 		self.windowStack.set_visible_child_name("main")
+
+	def key_pressed_cb(self, win, event):
+		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+		self.searchBar.set_reveal_child(True)
+		if self.searchBar.entry.has_focus() == False:
+			self.searchBar.entry.grab_focus()
+		return self.searchBar.entry.handle_event(event)
 
 	def updateSource(self, locationChooser, location):
 		# Database.location = location
