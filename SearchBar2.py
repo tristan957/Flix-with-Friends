@@ -158,7 +158,7 @@ class SearchBar(Gtk.Revealer):
 
 		filters = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5) # box for the 4 search filters
 		filters.get_style_context().add_class("linked")
-		criteria = Gtk.Box(margin = 5)
+		criteria = Gtk.Box()
 		criteria.pack_start(filters, True, False, 0)
 		criteria.get_style_context().add_class("inline-toolbar")
 

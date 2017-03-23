@@ -5,6 +5,7 @@ from gi.repository import Gtk, Gio, GObject
 from Database import Database
 from HeaderBar2 import HeaderBar
 from SearchBar2 import SearchBar
+from InfoBox2 import InfoBox
 
 class LocationChooser(Gtk.Box):
 	"""Box to choose the location of information for the database"""
@@ -128,6 +129,7 @@ class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much l
 		self.windowStack = None
 		self.headerBar = None
 		self.searchBar = None
+		self.imdbBox = None
 
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
@@ -146,8 +148,12 @@ class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much l
 
 		locationChooser = LocationChooser(self)
 		# locationChooser.connect("location-chosen", self.updateWin)
-
 		self.windowStack.add_named(locationChooser, "location-chooser")
+
+		self.imdbBox = InfoBox(db, "Shrek")
+		self.imdbBox.set_size_request(700, -1)
+		self.windowStack.add_named(self.imdbBox, "main")
+		self.windowStack.set_visible_child_name("main")
 
 	def updateSource(self, locationChooser, location):
 		# Database.location = location
