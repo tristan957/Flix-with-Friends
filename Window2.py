@@ -122,6 +122,7 @@ class InitWindow(Gtk.Window):
 
 class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much like an application. use windows as windows, not as managers
 	"""Window where all the magic happens"""
+
 	def __init__(self, db):
 		Gtk.Window.__init__(self)
 
