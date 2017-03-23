@@ -99,7 +99,7 @@ class DescriptionFrame(Gtk.Frame):
 		title = Gtk.Label(label = "<b>Description</b>", justify = Gtk.Justification.LEFT,
 							use_markup = True)
 		self.set_label_widget(title)
-		self.description = Gtk.Label(label = movie.overview, wrap = True)
+		self.description = Gtk.Label(label = movie.overview, wrap = True) # , max_width_chars = 50 (temp fix if needed)
 
 		box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
 		box.add(self.description)
