@@ -1,6 +1,6 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, GLib
+from gi.repository import Gtk, Gio, GLib, Pango
 
 from Database import Database
 
@@ -11,15 +11,17 @@ class ViewedByFrame(Gtk.Frame):
 	def __init__(self, movie):
 		Gtk.Frame.__init__(self, label_xalign = .1)
 
-		self.viewers = Gtk.Label(label = movie.get_viewers_string(), wrap = True)
-
 		title = Gtk.Label(label = "<b>Viewed By</b>", use_markup = True)
 		self.set_label_widget(title)
 
-		box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		box.add(self.viewers)
+		self.viewers = Gtk.Label(label = movie.get_viewers_string(), wrap = True,
+								margin_bottom = 5, margin_left = 5, margin_right = 5,
+								halign = Gtk.Align.START, valign = Gtk.Align.CENTER)
 
-		self.add(box)
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.viewers)
+
+		self.add(self.viewers)
 
 	def update(self, movie):
 		self.viewers.set_label(movie.get_viewers_string())
@@ -34,12 +36,14 @@ class GenreFrame(Gtk.Frame):
 		title = Gtk.Label(label = "<b>Genres</b>", use_markup = True)
 		self.set_label_widget(title)
 
-		self.genres = Gtk.Label(label = movie.get_genres_string(), wrap = True)
+		self.genres = Gtk.Label(label = movie.get_genres_string(), wrap = True,
+								margin_bottom = 5, margin_left = 5, margin_right = 5,
+								halign = Gtk.Align.START, valign = Gtk.Align.CENTER)
 
-		box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		box.add(self.genres)
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.genres)
 
-		self.add(box)
+		self.add(self.genres)
 
 	def update(self, movie):
 		self.genres.set_label(movie.get_genres_string())
@@ -59,7 +63,7 @@ class RatingFrame(Gtk.Frame):
 		self.level.set_value(float(movie.vote))
 		self.level.set_size_request(100, -1)
 
-		box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3, spacing = 5)
+		box = Gtk.Box(margin_bottom = 5, margin_left = 5, margin_right = 5, spacing = 5)
 		box.add(self.level)
 		box.add(self.rating)
 
@@ -79,11 +83,13 @@ class RuntimeFrame(Gtk.Frame):
 		title = Gtk.Label(label = "<b>Runtime</b>", use_markup = True)
 		self.set_label_widget(title)
 		self.runtime = Gtk.Label(label = str(int(movie.runtime) // 60) + " Hours " +
-									str(int(movie.runtime) % 60) + " Minutes", wrap = True)
+									str(int(movie.runtime) % 60) + " Minutes", wrap = True,
+									margin_bottom = 5, margin_left = 5, margin_right = 5,
+									halign = Gtk.Align.START, valign = Gtk.Align.CENTER)
 
-		box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		box.add(self.runtime)
-		self.add(box)
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.runtime)
+		self.add(self.runtime)
 
 	def update(self, movie):
 		self.runtime.set_label(str(int(movie.runtime) // 60) + " Hours " +
@@ -96,15 +102,16 @@ class DescriptionFrame(Gtk.Frame):
 	def __init__(self, movie):
 		Gtk.Frame.__init__(self, label_xalign = .1)
 
-		title = Gtk.Label(label = "<b>Description</b>", justify = Gtk.Justification.LEFT,
-							use_markup = True)
+		title = Gtk.Label(label = "<b>Description</b>", use_markup = True)
 		self.set_label_widget(title)
-		self.description = Gtk.Label(label = movie.overview, wrap = True)#, max_width_chars = 70) # (temp fix if needed)
+		self.description = Gtk.Label(label = movie.overview, wrap = True, max_width_chars = 80,
+									margin_bottom = 5, margin_left = 5, margin_right = 5,
+									halign = Gtk.Align.START, valign = Gtk.Align.CENTER) # (temp fix if needed)
 
-		box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		box.pack_start(self.description, False, False, 0)
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.description)
 
-		self.add(box)
+		self.add(self.description)
 
 	def update(self, movie):
 		self.description.set_label(movie.get_viewers_string())
@@ -147,7 +154,8 @@ class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is 
 
 		imageBox = ImageBox(self.movie)
 		# imageBox.get_style_context().add_class("frame")
-		info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
+		info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10,
+						hexpand = False, vexpand = True)
 		info.get_style_context().add_class("inline-toolbar")
 
 		self.viewFrame = ViewedByFrame(self.movie)
