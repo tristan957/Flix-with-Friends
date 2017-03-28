@@ -22,6 +22,7 @@ As of right now you can clone the repository and run `python3 flix-with-friends`
 Flix with Friends is leveraging the latest Python and GTK+ versions available on Solus. We, the developers will keep it up to date to the best of our ability with
 
 In no particular order:
+- [ ] Better File Organization
 - [ ] Create Server with RasberryPi
 - [ ] Solid State Drive for Storage
 - [ ] Implement a Load from Server Button
