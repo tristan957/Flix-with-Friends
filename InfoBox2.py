@@ -99,10 +99,10 @@ class DescriptionFrame(Gtk.Frame):
 		title = Gtk.Label(label = "<b>Description</b>", justify = Gtk.Justification.LEFT,
 							use_markup = True)
 		self.set_label_widget(title)
-		self.description = Gtk.Label(label = movie.overview, wrap = True) # , max_width_chars = 50 (temp fix if needed)
+		self.description = Gtk.Label(label = movie.overview, wrap = True)#, max_width_chars = 70) # (temp fix if needed)
 
 		box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		box.add(self.description)
+		box.pack_start(self.description, False, False, 0)
 
 		self.add(box)
 
@@ -128,7 +128,7 @@ class ImageBox(Gtk.Box):
 		self.poster.set_from_file(self.movie.get_large_image())
 
 
-class InfoBox(Gtk.Box):
+class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is selected/random is clicked, then proceed to update
 	"""Create a box to display relevant movie information"""
 
 	def __init__(self, db, movieName):
@@ -146,22 +146,15 @@ class InfoBox(Gtk.Box):
 		self.movie = db.find_movie(movieName)
 
 		imageBox = ImageBox(self.movie)
-		imageBox.set_size_request(400, -1)
 		# imageBox.get_style_context().add_class("frame")
 		info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
-		info.set_size_request(300, -1)
 		info.get_style_context().add_class("inline-toolbar")
 
 		self.viewFrame = ViewedByFrame(self.movie)
-		self.viewFrame.set_size_request(300, -1)
 		self.genFrame = GenreFrame(self.movie)
-		self.genFrame.set_size_request(300, -1)
 		self.ratFrame = RatingFrame(self.movie)
-		self.ratFrame.set_size_request(300, -1)
 		self.runFrame = RuntimeFrame(self.movie)
-		self.runFrame.set_size_request(300, -1)
 		self.descFrame = DescriptionFrame(self.movie)
-		self.descFrame.set_size_request(300, -1)
 
 		info.pack_start(self.viewFrame, False, False, 0)
 		info.pack_start(self.genFrame, False, False, 0)

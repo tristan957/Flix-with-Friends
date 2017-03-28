@@ -120,7 +120,7 @@ class InitWindow(Gtk.Window):
 		self.emit("location-chosen", location)
 
 
-class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much like an application. use windows as windows, not as managers
+class MainWindow(Gtk.ApplicationWindow):
 	"""Window where all the magic happens"""
 
 	def __init__(self, db):
@@ -154,7 +154,6 @@ class MainWindow(Gtk.ApplicationWindow): # window is currently acting too much l
 		self.windowStack.add_named(locationChooser, "location-chooser")
 
 		self.imdbBox = InfoBox(db, "Shrek")
-		self.imdbBox.set_size_request(700, -1)
 		self.windowStack.add_named(self.imdbBox, "main")
 		self.windowStack.set_visible_child_name("main")
 
