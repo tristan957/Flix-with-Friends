@@ -98,7 +98,7 @@ class LocationChooser(Gtk.Box):
 		fileChooser.destroy()
 
 
-class InitWindow(Gtk.Window):
+class InitWindow(Gtk.ApplicationWindow):
 	"""Gets the initial location information"""
 
 	__gsignals__ = {
@@ -128,6 +128,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
 		self.db = db
 		self.windowStack = None
+		self.revealer = None
 		self.headerBar = None
 		self.searchBar = None
 		self.imdbBox = None
@@ -142,7 +143,9 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.header.connect("random-clicked", self.random_cb)
 		self.header.connect("revealer-change", self.reveal_cb)
 		self.set_titlebar(self.header)
+
 		self.searchBar = SearchBar(db)
+		self.searchBar.connect("search-ran", self.searchRan_cb)
 
 		box.add(self.searchBar)
 		box.add(self.windowStack)
@@ -154,8 +157,8 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.windowStack.add_named(locationChooser, "location-chooser")
 
 		self.imdbBox = InfoBox(db, "Shrek")
-		self.windowStack.add_named(self.imdbBox, "main")
-		self.windowStack.set_visible_child_name("main")
+		self.windowStack.add_named(self.imdbBox, "imdb")
+		self.windowStack.set_visible_child_name("imdb")
 
 	def key_pressed_cb(self, win, event):
 		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
@@ -181,3 +184,6 @@ class MainWindow(Gtk.ApplicationWindow):
 			self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
 			self.searchBar.set_reveal_child(False)
 			# self.grab_focus()
+
+	def searchRan_cb(self, searchBar, results):
+		self.windowStack.set_visible_child_name("search-results")
