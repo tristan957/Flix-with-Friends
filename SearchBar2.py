@@ -150,6 +150,7 @@ class SearchBar(Gtk.Revealer):
 
 		self.entry = None
 
+		self.db = db
 		self.genres = []
 		self.rating = 0
 		self.switchState = False
@@ -233,5 +234,75 @@ class SearchBar(Gtk.Revealer):
 	def showPopover_cb(self, button, pop):
 		pop.show_all()
 
-	def run_search(self):
+	def run_search(self): # put main windowStack on a revealer. if random movie is clicked set reveal to false. update imdbBox on Window regardless
+	# -----------------
+	# | search |	  |
+	# | stack  | imdb |
+	# -----------------
+		"""runs the search to get a list of relevant movies"""
 		print("Hello World")
+		searchWord = self.entry.get_text()  # retrieve the content of the widget
+		results = []
+
+		for movie in self.db.movies:
+			# Check if search word passes regex check for either Movie title or description
+			searchTitle = bool((re.search(searchWord, movie.title, re.M | re.I))) or (searchWord == '')
+			searchDescription = bool((re.search(searchWord, movie.overview, re.M | re.I)))
+
+			genreSearchCheck = 0
+			searchGenre = 0
+			searchRating = 0
+			friendSearchCheck = 0
+			searchFriend = 0
+
+			# Check how many matches for self genre are in Movie Genre
+			for g in self.genres:
+				for c in movie.genres:
+					if g == c:
+						genreSearchCheck += 1
+
+			# Make sure Number of genres in Movie match number of self genres
+			if genreSearchCheck == len(self.genres):
+				searchGenre = True
+
+			# Check to see if date search criteria match
+			# if self.dateCombo.get_active() != -1:
+			if str(self.searchYear) <= movie.release_date[:4]:
+				if self.switchState:
+					if str(self.searchYear) == movie.release_date[:4]:
+						searchDate = True
+					else:
+						searchDate = False
+				else:
+					searchDate = True
+			else:
+				searchDate = False
+			# else:
+			# 	searchDate = True
+
+			# Check Rating
+			if float(movie.vote) >= self.rating:
+				searchRating = True
+
+			# Check friends
+			# Check how many matches for self genre are in Movie Genre
+			for f in self.friends:
+				for c in movie.viewers:
+					if f == c:
+						friendSearchCheck += 1
+
+			# Make sure Number of genres in Movie match number of self genres
+			if friendSearchCheck == len(self.friends):
+				searchFriend = True
+
+
+			# If passes checks, then print Movie info
+			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
+				results.append(movie)
+
+		# if update_search_view:
+		# 	self.searchResults.set_search_view(results)
+		# 	self.parent.stack.set_visible_child_name("search-results")
+		# else:
+		# 	self.parent.stack.set_visible_child_name("search-results")
+		# 	return results
