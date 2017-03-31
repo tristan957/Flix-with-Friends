@@ -234,7 +234,7 @@ class SearchBar(Gtk.Revealer):
 	def showPopover_cb(self, button, pop):
 		pop.show_all()
 
-	def run_search(self): # put main windowStack on a revealer. if random movie is clicked set reveal to false. update imdbBox on Window regardless
+	def run_search(self, show = True): # put main windowStack on a revealer. if random movie is clicked set reveal to false. update imdbBox on Window regardless
 	# -----------------
 	# | search |	  |
 	# | stack  | imdb |
@@ -306,4 +306,7 @@ class SearchBar(Gtk.Revealer):
 		# else:
 		# 	self.parent.stack.set_visible_child_name("search-results")
 		# 	return results
-		self.emit("search-ran", results)
+		if show == True:
+			self.emit("search-ran", results)
+		else:
+			return results

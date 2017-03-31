@@ -2,6 +2,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GObject
 
+import random
 from Database import Database
 from HeaderBar2 import HeaderBar
 from SearchBar2 import SearchBar
@@ -187,6 +188,9 @@ class MainWindow(Gtk.ApplicationWindow):
 
 	def random_cb(self, header):
 		self.windowStack.set_visible_child_name("imdb")
+		movieResults = self.searchBar.run_search(False)
+		movie_position = random.randint(0, len(movieResults) - 1)
+		self.imdbBox.update(movieResults[movie_position].title)
 		# self.searchBar.run_search()
 
 	def reveal_cb(self, header, toggled):
