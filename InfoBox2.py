@@ -121,7 +121,7 @@ class ImageBox(Gtk.Box):
 	"""Create a box to display an image and movie title"""
 
 	def __init__(self, movie):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, spacing = 20, margin = 20)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, spacing = 40, margin = 40)
 
 		self.title = Gtk.Label(label = movie.get_markup_title(), justify = Gtk.Justification.CENTER,
 							use_markup = True)

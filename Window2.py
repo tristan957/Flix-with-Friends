@@ -138,12 +138,10 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.connect("key-press-event", self.key_pressed_cb)
 
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		stackBox = Gtk.Box()
 
 		self.windowStack = Gtk.Stack(interpolate_size = True,
 									transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT)
-		self.searchResults = SearchResults()
-		self.searchResults.connect("row-activated", self.updateIMDB_cb)
-		self.windowStack.add_named(self.searchResults, "search-results")
 
 		self.header = HeaderBar(self)
 		self.header.connect("random-clicked", self.random_cb)
@@ -153,18 +151,27 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.searchBar = SearchBar(db)
 		self.searchBar.connect("search-ran", self.searchRan_cb)
 
-		box.add(self.searchBar)
-		box.add(self.windowStack)
+		self.searchResults = SearchResults()
+		self.searchResults.connect("row-activated", self.updateIMDB_cb)
+		# self.windowStack.add_named(self.searchResults, "search-results")
 
-		self.add(box)
+		self.imdbBox = InfoBox(db, "Shrek")
+
+		stackBox.pack_end(self.imdbBox, False, False, 0)
+		stackBox.pack_start(self.searchResults, False, True, 0)
+		# self.windowStack.add_named(self.imdbBox, "imdb")
+
+		self.windowStack.add_named(stackBox, "imdb")
+		self.windowStack.set_visible_child_name("imdb")
 
 		locationChooser = LocationChooser(self)
 		# locationChooser.connect("location-chosen", self.updateWin)
 		self.windowStack.add_named(locationChooser, "location-chooser")
 
-		self.imdbBox = InfoBox(db, "Shrek")
-		self.windowStack.add_named(self.imdbBox, "imdb")
-		self.windowStack.set_visible_child_name("imdb")
+		box.add(self.searchBar)
+		box.add(self.windowStack)
+
+		self.add(box)
 
 	def key_pressed_cb(self, win, event):
 		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
@@ -195,7 +202,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
 	def searchRan_cb(self, searchBar, results):
 		self.searchResults.set_search_view(results)
-		self.windowStack.set_visible_child_name("search-results")
+		self.windowStack.set_visible_child_name("imdb")
 
 	def updateIMDB_cb(self, searchResults, movieName):
 		self.imdbBox.update(movieName)
