@@ -2,10 +2,12 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, GObject
 
+import random
 from Database import Database
 from HeaderBar2 import HeaderBar
 from SearchBar2 import SearchBar
 from InfoBox2 import InfoBox
+from search_results import SearchResults
 
 class LocationChooser(Gtk.Box):
 	"""Box to choose the location of information for the database"""
@@ -132,13 +134,17 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.headerBar = None
 		self.searchBar = None
 		self.imdbBox = None
+		self.searchResults = None
 
 		self.connect("key-press-event", self.key_pressed_cb)
 
-		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+		self.box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
 		self.windowStack = Gtk.Stack(interpolate_size = True,
 									transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT)
+		self.revealer = Gtk.Revealer(transition_duration = 300)
+		self.revealer.set_property("child", self.windowStack)
+
 		self.header = HeaderBar(self)
 		self.header.connect("random-clicked", self.random_cb)
 		self.header.connect("revealer-change", self.reveal_cb)
@@ -147,10 +153,14 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.searchBar = SearchBar(db)
 		self.searchBar.connect("search-ran", self.searchRan_cb)
 
-		box.add(self.searchBar)
-		box.add(self.windowStack)
+		self.searchResults = SearchResults()
+		self.searchResults.connect("row-activated", self.updateIMDB_cb)
+		self.windowStack.add_named(self.searchResults, "search-results")
 
-		self.add(box)
+		self.box.add(self.searchBar)
+		self.box.add(self.revealer)
+
+		self.add(self.box)
 
 		locationChooser = LocationChooser(self)
 		# locationChooser.connect("location-chosen", self.updateWin)
@@ -172,7 +182,10 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.show_all()
 
 	def random_cb(self, header):
-		self.searchBar.run_search()
+		movieResults = self.searchBar.run_search(show = False)
+		movie_position = random.randint(0, len(movieResults) - 1)
+		self.updateIMDB_cb(self.searchResults, movieResults[movie_position].title)
+		# self.imdbBox.update(movieResults[movie_position].title)
 
 	def reveal_cb(self, header, toggled):
 		if toggled == True:
@@ -186,4 +199,17 @@ class MainWindow(Gtk.ApplicationWindow):
 			# self.grab_focus()
 
 	def searchRan_cb(self, searchBar, results):
-		self.windowStack.set_visible_child_name("search-results")
+		print("Hello")
+		self.searchResults.set_search_view(results)
+		if self.windowStack.get_visible_child_name() == False:
+			self.windowStack.set_visible_child_name("search-results")
+		if self.revealer.get_reveal_child() == False:
+			self.revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_RIGHT)
+			self.revealer.set_reveal_child(True)
+		else:
+			self.revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_LEFT)
+			self.revealer.set_reveal_child(False)
+
+	def updateIMDB_cb(self, searchResults, movie_name):
+		self.imdbBox.update(movie_name)
+		self.windowStack.set_visible_child_name("imdb")
