@@ -2,6 +2,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GObject
 
+import random
 import re
 import datetime
 
@@ -233,12 +234,13 @@ class SearchBar(Gtk.Revealer):
 	def showPopover_cb(self, button, pop):
 		pop.show_all()
 
-	def run_search(self, show = True): # put main windowStack on a revealer. if random movie is clicked set reveal to false. update imdbBox on Window regardless
+	def run_search(self): # put main windowStack on a revealer. if random movie is clicked set reveal to false. update imdbBox on Window regardless
 	# -----------------
 	# | search |	  |
 	# | stack  | imdb |
 	# -----------------
 		"""runs the search to get a list of relevant movies"""
+		print("Hello World")
 		searchWord = self.entry.get_text()  # retrieve the content of the widget
 		results = []
 
@@ -293,11 +295,14 @@ class SearchBar(Gtk.Revealer):
 			if friendSearchCheck == len(self.friends):
 				searchFriend = True
 
+
 			# If passes checks, then print Movie info
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
 				results.append(movie)
 
-		if show == True:
-			self.emit("search-ran", results)
-		else:
-			return results
+		# if update_search_view:
+		# 	self.searchResults.set_search_view(results)
+		# 	self.parent.stack.set_visible_child_name("search-results")
+		# else:
+		# 	self.parent.stack.set_visible_child_name("search-results")
+		# 	return results
