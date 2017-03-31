@@ -64,6 +64,10 @@ class BlankPage(Gtk.Box):
 
 class SearchResults(Gtk.Box):
 
+	__gsignals__ = {
+		"row-activated": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+	}
+
 	def __init__(self): # , search_page):
 		Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
 		# self.search_page = search_page
