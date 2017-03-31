@@ -306,3 +306,4 @@ class SearchBar(Gtk.Revealer):
 		# else:
 		# 	self.parent.stack.set_visible_child_name("search-results")
 		# 	return results
+		self.emit("search-ran", results)

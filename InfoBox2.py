@@ -114,7 +114,7 @@ class DescriptionFrame(Gtk.Frame):
 		self.add(self.description)
 
 	def update(self, movie):
-		self.description.set_label(movie.get_viewers_string())
+		self.description.set_label(movie.overview)
 
 
 class ImageBox(Gtk.Box):
@@ -132,7 +132,7 @@ class ImageBox(Gtk.Box):
 
 	def update(self, movie):
 		self.title.set_label("<big><b>" + movie.title.replace('&', '&amp;') + "</b></big>")
-		self.poster.set_from_file(self.movie.get_large_image())
+		self.poster.set_from_file(movie.get_large_image())
 
 
 class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is selected/random is clicked, then proceed to update
@@ -152,7 +152,7 @@ class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is 
 
 		self.movie = db.find_movie(movieName)
 
-		imageBox = ImageBox(self.movie)
+		self.imageBox = ImageBox(self.movie)
 		# imageBox.get_style_context().add_class("frame")
 		info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10,
 						hexpand = False, vexpand = True)
@@ -170,7 +170,7 @@ class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is 
 		info.pack_start(self.runFrame, False, False, 0)
 		info.pack_start(self.descFrame, False, False, 0)
 
-		self.pack_start(imageBox, True, True, 0)
+		self.pack_start(self.imageBox, True, True, 0)
 		self.pack_end(info, False, False, 0)
 
 		self.show_all()
@@ -178,6 +178,7 @@ class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is 
 	def update(self, movieName):
 		self.movie = self.db.find_movie(movieName)
 
+		self.imageBox.update(self.movie)
 		self.viewFrame.update(self.movie)
 		self.genFrame.update(self.movie)
 		self.ratFrame.update(self.movie)
