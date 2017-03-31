@@ -176,7 +176,7 @@ class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is 
 		self.show_all()
 
 	def update(self, movieName):
-		self.movie = db.find_movie(movieName)
+		self.movie = self.db.find_movie(movieName)
 
 		self.viewFrame.update(self.movie)
 		self.genFrame.update(self.movie)
