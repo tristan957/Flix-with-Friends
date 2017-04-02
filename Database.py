@@ -54,6 +54,7 @@ class Database:
 
 		if FN is not None:
 			self.loadDB()
+			self.get_images()
 
 	def loadDB(self):
 		# Get data from Excel and load it into the Database object
