@@ -29,6 +29,7 @@ class Movie:
 	def get_image(self):
 
 		baseURL = 'https://image.tmdb.org/t/p/'
+		updated = False # Used to check if a download was needed
 		# Poster
 		if (str(self.poster_path) != 'N/A') and str(self.poster_path) != 'None' and str(self.poster_path) != '':
 			# Create imagePosters directory if not present
@@ -45,6 +46,9 @@ class Movie:
 
 				# if not already existent, download
 				if not(os.path.isfile(fullfilename)):
+					if not updated:
+						print(self.title)
+						updated = True
 					urllib.request.urlretrieve(imagePage, fullfilename)
 					print(p, 'poster image:', imagePage)
 
@@ -60,6 +64,9 @@ class Movie:
 
 				# if not already existent, download
 				if not(os.path.isfile(fullfilename)):
+					if not updated:
+						print(self.title)
+						updated = True
 					urllib.request.urlretrieve(imagePage, fullfilename)
 					print(actorName, 'image:', imagePage)
 
@@ -71,6 +78,9 @@ class Movie:
 
 			# if not already existent, download
 			if not(os.path.isfile(fullfilename)):
+				if not updated:
+					print(self.title)
+					updated = True
 				urllib.request.urlretrieve(imagePage, fullfilename)
 				print(self.directorName, 'image:', imagePage)
 
