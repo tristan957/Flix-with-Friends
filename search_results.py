@@ -1,8 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, GdkPixbuf, GLib
-import SearchBar
-from InfoBox import InfoBox
+from gi.repository import Gtk, Gio, GdkPixbuf, GLib, GObject
+
 import os.path
 
 
@@ -65,7 +64,11 @@ class BlankPage(Gtk.Box):
 
 class SearchResults(Gtk.Box):
 
-	def __init__(self, searchBar): # , search_page):
+	__gsignals__ = {
+		"row-activated": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+	}
+
+	def __init__(self): # , search_page):
 		Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
 		# self.search_page = search_page
 
@@ -88,7 +91,7 @@ class SearchResults(Gtk.Box):
 
 		self.tview = Gtk.TreeView(activate_on_single_click = True, enable_grid_lines = False, headers_visible = False)
 		self.tview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
-		self.tview.connect_after('row-activated', self.on_row_activated, searchBar)
+		self.tview.connect_after('row-activated', self.on_row_activated)
 		self.scroll.add(self.tview)
 
 		ren = Gtk.CellRendererPixbuf()
@@ -111,13 +114,13 @@ class SearchResults(Gtk.Box):
 
 		self.stack.set_visible_child_name("empty")
 
-	def on_row_activated(self, tview, path, column, searchBar):
+	def on_row_activated(self, tview, path, column):
 		model = tview.get_model()
 		row = model[path]
 
 		movie_name = row[INDEX_FIELD_NAME]
 
-		searchBar.imdbBox.update(movie_name)
+		self.emit("row-activated", movie_name)
 
 		# line 178 solus-sc/search-results...what's it do
 

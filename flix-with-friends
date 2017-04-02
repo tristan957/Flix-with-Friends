@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import sys
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from Window import Window
+
+from Application import FlixApplication
 
 if __name__ == "__main__":
-	win = Window()	 # create the GUI
-	win.connect("delete-event", Gtk.main_quit)	 # when delete-event signal is received, calls Gtk.main_quit
-	win.show_all()	 # display the window and all widgets
-	Gtk.main()	 # continuous function for running GTK applications
+	app = FlixApplication()	 # create the GUI
+	app.run(sys.argv)
+	# Gtk.main()	 # continuous function for running GTK applications

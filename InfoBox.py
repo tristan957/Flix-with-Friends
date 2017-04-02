@@ -1,95 +1,188 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, GLib
+from gi.repository import Gtk, Gio, GLib, Pango
+
 from Database import Database
 
 
-class InfoBox(Gtk.Box):
+class ViewedByFrame(Gtk.Frame):
+	"""Frame for displaying who has seen the movie"""
 
-	def __init__(self, movie_name):
-		"""Create a box to display relevant movie information"""
-		self.db = Database(Database.location)
-		# movie = db.movies[MOVIE_INDEX]
+	def __init__(self, movie):
+		Gtk.Frame.__init__(self, label_xalign = .1)
 
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL)
+		title = Gtk.Label(label = "<b>Viewed By</b>", use_markup = True)
+		self.set_label_widget(title)
+
+		self.viewers = Gtk.Label(label = movie.get_viewers_string(), wrap = True,
+								margin_bottom = 5, margin_left = 5, margin_right = 5,
+								halign = Gtk.Align.START, valign = Gtk.Align.CENTER)
+
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.viewers)
+
+		self.add(self.viewers)
+
+	def update(self, movie):
+		self.viewers.set_label(movie.get_viewers_string())
+
+
+class GenreFrame(Gtk.Frame):
+	"""Frame for the genres of the movies"""
+
+	def __init__(self, movie):
+		Gtk.Frame.__init__(self, label_xalign = .1)
+
+		title = Gtk.Label(label = "<b>Genres</b>", use_markup = True)
+		self.set_label_widget(title)
+
+		self.genres = Gtk.Label(label = movie.get_genres_string(), wrap = True,
+								margin_bottom = 5, margin_left = 5, margin_right = 5,
+								halign = Gtk.Align.START, valign = Gtk.Align.CENTER)
+
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.genres)
+
+		self.add(self.genres)
+
+	def update(self, movie):
+		self.genres.set_label(movie.get_genres_string())
+
+
+class RatingFrame(Gtk.Frame):
+	"""Frame for displaying the rating of the movie"""
+
+	def __init__(self, movie):
+		Gtk.Frame.__init__(self, label_xalign = .1)
+
+		title = Gtk.Label(label = "<b>Rating</b>", use_markup = True)
+		self.set_label_widget(title)
+
+		self.rating = Gtk.Label(label = movie.vote + "/10", wrap = True)
+		self.level = Gtk.LevelBar.new_for_interval(0, 10)
+		self.level.set_value(float(movie.vote))
+		self.level.set_size_request(100, -1)
+
+		box = Gtk.Box(margin_bottom = 5, margin_left = 5, margin_right = 5, spacing = 5)
+		box.add(self.level)
+		box.add(self.rating)
+
+		self.add(box)
+
+	def update(self, movie):
+		self.rating.set_label(movie.vote)
+		self.level.set_value(float(movie.vote))
+
+
+class RuntimeFrame(Gtk.Frame):
+	"""Frame for displaying the runtime of the movie"""
+
+	def __init__(self, movie):
+		Gtk.Frame.__init__(self, label_xalign = .1)
+
+		title = Gtk.Label(label = "<b>Runtime</b>", use_markup = True)
+		self.set_label_widget(title)
+		self.runtime = Gtk.Label(label = str(int(movie.runtime) // 60) + " Hours " +
+									str(int(movie.runtime) % 60) + " Minutes", wrap = True,
+									margin_bottom = 5, margin_left = 5, margin_right = 5,
+									halign = Gtk.Align.START, valign = Gtk.Align.CENTER)
+
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.runtime)
+		self.add(self.runtime)
+
+	def update(self, movie):
+		self.runtime.set_label(str(int(movie.runtime) // 60) + " Hours " +
+								str(int(movie.runtime) % 60) + " Minutes")
+
+
+class DescriptionFrame(Gtk.Frame):
+	"""Frame for displaying who has seen the movie"""
+
+	def __init__(self, movie):
+		Gtk.Frame.__init__(self, label_xalign = .1)
+
+		title = Gtk.Label(label = "<b>Description</b>", use_markup = True)
+		self.set_label_widget(title)
+		self.description = Gtk.Label(label = movie.overview, wrap = True, max_width_chars = 80,
+									margin_bottom = 5, margin_left = 5, margin_right = 5,
+									halign = Gtk.Align.START, valign = Gtk.Align.CENTER) # (temp fix if needed)
+
+		# box = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
+		# box.add(self.description)
+
+		self.add(self.description)
+
+	def update(self, movie):
+		self.description.set_label(movie.overview)
+
+
+class ImageBox(Gtk.Box):
+	"""Create a box to display an image and movie title"""
+
+	def __init__(self, movie):
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, spacing = 40, margin = 40)
+
+		self.title = Gtk.Label(label = movie.get_markup_title(), justify = Gtk.Justification.CENTER,
+							use_markup = True)
+		self.poster = Gtk.Image(file = movie.get_large_image())
+
+		self.add(self.title)
+		self.add(self.poster)
+
+	def update(self, movie):
+		self.title.set_label("<big><b>" + movie.title.replace('&', '&amp;') + "</b></big>")
+		self.poster.set_from_file(movie.get_large_image())
+
+
+class InfoBox(Gtk.Box): # implement as stack and create imdbBox when a movie is selected/random is clicked, then proceed to update
+	"""Create a box to display relevant movie information"""
+
+	def __init__(self, db, movieName):
+		Gtk.Box.__init__(self)
+
+		self.db = db
+		self.viewFrame = None
+		self.genFrame = None
+		self.ratFrame = None
+		self.runFrame = None
+		self.descFrame = None
+
 		self.get_style_context().add_class("linked")
 
-		self.movie = self.db.find_movie(movie_name)
+		self.movie = db.find_movie(movieName)
 
-		imageBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20, margin = 20)
-		imageBox.set_size_request(400, -1)
+		self.imageBox = ImageBox(self.movie)
 		# imageBox.get_style_context().add_class("frame")
-		info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
-		info.set_size_request(300, -1)
+		info = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10,
+						hexpand = False, vexpand = True)
 		info.get_style_context().add_class("inline-toolbar")
 
-		self.titleLabel = Gtk.Label(label = self.movie.get_markup_title(), justify = Gtk.Justification.CENTER, use_markup = True)
-		self.poster = Gtk.Image(file = self.movie.get_large_image())
+		self.viewFrame = ViewedByFrame(self.movie)
+		self.genFrame = GenreFrame(self.movie)
+		self.ratFrame = RatingFrame(self.movie)
+		self.runFrame = RuntimeFrame(self.movie)
+		self.descFrame = DescriptionFrame(self.movie)
 
-		viewedByTitle = Gtk.Label(label = "<b>Viewed By</b>", use_markup = True)
-		self.viewers = Gtk.Label(label = self.movie.get_viewers_string(), wrap = True)
-		viewedByFrame = Gtk.Frame(label_widget = viewedByTitle, label_xalign = .1)
-		viewedByBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		viewedByBox.add(self.viewers)
-		viewedByFrame.add(viewedByBox)
+		info.pack_start(self.viewFrame, False, False, 0)
+		info.pack_start(self.genFrame, False, False, 0)
+		info.pack_start(self.ratFrame, False, False, 0)
+		info.pack_start(self.runFrame, False, False, 0)
+		info.pack_start(self.descFrame, False, False, 0)
 
-		genreTitle = Gtk.Label(label = "<b>Genres</b>", use_markup = True)
-		self.genres = Gtk.Label(label = self.movie.get_genres_string(), wrap = True)
-		genreFrame = Gtk.Frame(label_widget = genreTitle, label_xalign = .1)
-		genreBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		genreBox.add(self.genres)
-		genreFrame.add(genreBox)
+		self.pack_start(self.imageBox, True, True, 0)
+		self.pack_end(info, False, False, 0)
 
-		ratingTitle = Gtk.Label(label = "<b>Rating</b>", use_markup = True)
-		self.rating = Gtk.Label(label = self.movie.vote + "/10", wrap = True)
-		self.level = Gtk.LevelBar(value = float(self.movie.vote)).new_for_interval(0, 10)
-		self.level.set_size_request(100, -1)
-		ratingFrame = Gtk.Frame(label_widget = ratingTitle, label_xalign = .1)
-		ratingBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3, spacing = 5)
-		ratingBox.add(self.level)
-		ratingBox.add(self.rating)
-		ratingFrame.add(ratingBox)
+		self.show_all()
 
-		runtimeTitle = Gtk.Label(label = "<b>Runtime</b>", use_markup = True)
-		self.runtime = Gtk.Label(label = str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes", wrap = True)
-		runtimeFrame = Gtk.Frame(label_widget = runtimeTitle, label_xalign = .1)
-		runtimeBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		runtimeBox.add(self.runtime)
-		runtimeFrame.add(runtimeBox)
+	def update(self, movieName):
+		self.movie = self.db.find_movie(movieName)
 
-		descriptionTitle = Gtk.Label(label = "<b>Description</b>", justify = Gtk.Justification.LEFT, use_markup = True)
-		self.description = Gtk.Label(label = self.movie.overview, wrap = True)
-		descriptionFrame = Gtk.Frame(label_widget = descriptionTitle, label_xalign = .1)
-		descriptionBox = Gtk.Box(margin_bottom = 5, margin_left = 3, margin_right = 3)
-		descriptionBox.add(self.description)
-		descriptionFrame.add(descriptionBox)
+		self.imageBox.update(self.movie)
+		self.viewFrame.update(self.movie)
+		self.genFrame.update(self.movie)
+		self.ratFrame.update(self.movie)
+		self.runFrame.update(self.movie)
+		self.descFrame.update(self.movie)
 
-		imageBox.add(self.titleLabel)
-		imageBox.add(self.poster)
-
-		info.add(viewedByFrame)
-		info.add(genreFrame)
-		info.add(ratingFrame)
-		info.add(runtimeFrame)
-		info.add(descriptionFrame)
-
-		# info.get_style_context().add_class("list")
-		# Try using a gtk.frame and a class style context of inline-toolbar for every subsection and we'll see how it goes (toolbar, frame, rubberband)
-		# self.get_style_context().add_class("inline-toolbar")
-
-		self.pack_start(imageBox, True, True, 0)
-		self.pack_end(info, True, True, 0)
-
-	def update(self, movie_name):
-		"""Update the box to show new information"""
-		self.movie = self.db.find_movie(movie_name)
-		self.titleLabel.set_label("<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>")
-		self.viewers.set_label(', '.join(self.movie.viewers).rstrip(','))
-		self.genres.set_label(', '.join(self.movie.genres).rstrip(','))
-		self.rating.set_label(self.movie.vote + "/10")
-		self.level.set_value(float(self.movie.vote))
-		self.runtime.set_label(str(int(self.movie.runtime) // 60) + " Hours " + str(int(self.movie.runtime) % 60) + " Minutes" )
-		self.description.set_label(self.movie.overview)
-		# self.poster.set_from_file("./images/movies/" + self.movie.title.replace(" ", "") + "_w342.jpg")
-		self.poster.set_from_file(self.movie.poster + "w342.jpg")
 		self.queue_draw()

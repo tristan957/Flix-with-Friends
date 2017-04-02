@@ -1,166 +1,246 @@
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, GObject
+
 import random
 import re
 import datetime
-from gi.repository import Gtk, Pango
-from Database import Database
-from search_results import SearchResults
-from InfoBox import InfoBox
+
+
+class GenrePop(Gtk.Popover):
+	"""Creates a popover to filter by genre"""
+
+	__gsignals__ = {
+		"genres-updated": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+	}
+
+	def __init__(self, db):
+		Gtk.Popover.__init__(self)
+
+		self.genres = []
+
+		box = Gtk.ButtonBox(orientation = Gtk.Orientation.VERTICAL)
+		for genre in db.listGenres:
+			button = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK,
+									centered = False)
+			box.add(button)
+			button.connect("clicked", self.genre_cb)
+		self.add(box)
+
+	def genre_cb(self, button):
+		button.set_property("active", not button.get_property("active"))
+		if button.get_property("active") is True:
+			self.genres.append(button.get_property("text"))
+		else:
+			self.genres.remove(button.get_property("text"))
+		self.emit("genres-updated", self.genres)
+
+
+class RatingPop(Gtk.Popover):
+	"""Creates a popover to filter by minimum rating"""
+
+	__gsignals__ = {
+		"rating-updated": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+	}
+
+	def __init__(self):
+		Gtk.Popover.__init__(self)
+
+		self.scale = Gtk.Scale(draw_value = True, has_origin = True,
+								value_pos = 0).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
+		self.scale.connect("value-changed", self.scale_cb)
+
+		i = 1
+		while i <= 10:
+			self.scale.add_mark(i, Gtk.PositionType.TOP)
+			i += 1
+		self.scale.set_size_request(150, 40)
+
+		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
+		label = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
+
+		box.add(label)
+		box.add(self.scale)
+
+		self.add(box)
+
+	def scale_cb(self, scale):
+		self.emit("rating-updated", scale.get_value())
+
+
+class DatePop(Gtk.Popover):
+	"""Creates a popover to filter by release date"""
+
+	__gsignals__ = {
+		"switch-updated": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)),
+		"year-updated": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+	}
+
+	def __init__(self, db):
+		Gtk.Popover.__init__(self)
+
+		self.switch = Gtk.Switch(active = False, state = False)
+		self.switch.connect("state-set", self.switch_cb)
+
+		self.combo = Gtk.ComboBoxText(wrap_width = 4)
+		self.combo.connect("changed", self.combo_cb)
+
+		x = datetime.datetime.now().year
+		while x >= db.oldest_year:
+			self.combo.append_text(str(x))
+			x -= 1
+		self.combo.set_active(datetime.datetime.now().year - db.oldest_year)
+
+		label = Gtk.Label(label = "Search for movies produced\nonly in the year above",
+						justify = Gtk.Justification.CENTER)
+		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
+		switchBox.add(label)
+		switchBox.add(self.switch)
+
+		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 5)
+		dateBox.add(self.combo)
+		dateBox.add(switchBox)
+
+		self.add(dateBox)
+
+	def switch_cb(self, switch, state):
+		self.emit("switch-updated", state)
+
+	def combo_cb(self, combo):
+		self.emit("year-updated", combo.get_active_text())
+
+class ViewedByPop(Gtk.Popover):
+	"""Creates a popover to filter by who has seen the movie"""
+
+	__gsignals__ = {
+		"friends-updated": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+	}
+
+	def __init__(self, db):
+		Gtk.Popover.__init__(self)
+
+		self.friends = []
+
+		box = Gtk.ButtonBox(orientation = Gtk.Orientation.VERTICAL)
+		for genre in db.friends:
+			button = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK,
+									centered = False)
+			box.add(button)
+			button.connect("clicked", self.friend_cb)
+		self.add(box)
+
+	def friend_cb(self, button):
+		button.set_property("active", not button.get_property("active"))
+		if button.get_property("active") is True:
+			self.friends.append(button.get_property("text"))
+		else:
+			self.friends.remove(button.get_property("text"))
+		self.emit("friends-updated", self.friends)
 
 
 class SearchBar(Gtk.Revealer):
+	"""Creates a search bar with an entry and filters"""
 
-	def __init__(self, location, parent):
-		"""Creates a search bar with an entry and filters"""
-		Gtk.Box.__init__(self, transition_duration = 300)
+	__gsignals__ = {
+		"search-ran": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+	}
 
-		self.parent = parent
+	def __init__(self, db):
+		Gtk.Revealer.__init__(self, transition_duration = 300)
+
+		self.entry = None
+
+		self.db = db
 		self.genres = []
+		self.rating = 0
+		self.switchState = False
+		self.searchYear = db.oldest_year
 		self.friends = []
-		self.db = Database(location)
-		Database.fileName = location # FIXME move this to the parent class
-
-		random.seed()
-
-		self.imdbBox = InfoBox("Lights Out")
-		self.searchResults = SearchResults(self) # puts the search results in a Gtk.Box
-		searchPage = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 4) # creates the page that holds the scrolled window and the info box
-		searchPage.pack_start(self.searchResults, False, False, 0)
-		searchPage.pack_end(self.imdbBox, True, True, 0)
-
-		searchCriteria = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL) # box for the 5 search criteria
-		self.parent.stack.add_named(searchPage, "search-results")
 
 		filters = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, margin = 5) # box for the 4 search filters
 		filters.get_style_context().add_class("linked")
+		criteria = Gtk.Box()
+		criteria.pack_start(filters, True, False, 0)
+		criteria.get_style_context().add_class("inline-toolbar")
 
-		# search entry related functions
-		self.searchEntry = Gtk.SearchEntry()
-		self.searchEntry.set_can_focus(True)
-		self.searchEntry.set_size_request(250, -1)
-		filters.pack_start(self.searchEntry, True, True, 0)
-		# Callback for when enter key is pressed
-		self.searchEntry.connect("activate", self.search_cb)
-		self.searchEntry.connect("changed", self.search_cb)
+		self.set_property("child", criteria)
 
-		# genre related functions
-		genrePopover = Gtk.Popover()
-		genreBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		for genre in self.db.listGenres:
-			butt = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK, centered = False)
-			genreBox.add(butt)
-			butt.connect("clicked", self.genresList_cb)
-		genrePopover.add(genreBox)
+		self.entry = Gtk.SearchEntry()
+		self.entry.set_can_focus(True)
+		self.entry.set_size_request(250, -1)
+		self.entry.connect("activate", self.entryUpdate_cb)
+		self.entry.connect("changed", self.entryUpdate_cb)
+		filters.pack_start(self.entry, True, True, 0)
 
-		# rating related functions
-		ratingPopover = Gtk.Popover()
-		ratingBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5, margin = 5)
-		ratingLabel = Gtk.Label(label = "Choose a\nminimum rating:", justify = Gtk.Justification.CENTER)
-		self.scale = Gtk.Scale(draw_value = True, has_origin = True, value_pos = 0).new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 1)
-		self.scale.connect("value-changed", self.search_cb)
-		i = 1
-		while i <= 10:
-			self.scale.add_mark(i, Gtk.PositionType.TOP) # add marks to the top of the scale
-			i = i + 1
-		self.scale.set_size_request(150, 40)
-		ratingBox.add(ratingLabel)
-		ratingBox.add(self.scale)
-		ratingPopover.add(ratingBox)
+		genrePop = GenrePop(db)
+		ratingPop = RatingPop()
+		datePop = DatePop(db)
+		viewedByPop = ViewedByPop(db)
 
-		# date related fucntions
-		datePopover = Gtk.Popover()
-		dateBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 5)
-		dateLabel = Gtk.Label(label = "Search for movies produced\nonly in the year above", justify = Gtk.Justification.CENTER)
-		self.dateAfter = Gtk.Switch(active = False, state = False) # if the user only wants to view movies fromt that year
-		self.dateAfter.connect("state-set", self.switch_cb)
-		switchBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 10)
-		switchBox.add(dateLabel)
-		switchBox.add(self.dateAfter)
-		self.dateCombo = Gtk.ComboBoxText(wrap_width = 4)
-		self.dateCombo.connect("changed", self.search_cb)
-		x = datetime.datetime.now().year
-		while x >= self.db.oldest_year:
-			self.dateCombo.append_text(str(x))
-			x -= 1
-		self.dateCombo.set_active(datetime.datetime.now().year - self.db.oldest_year);
-		dateBox.add(self.dateCombo)
-		dateBox.add(switchBox)
-		datePopover.add(dateBox)
-
-		# viewed by related functions
-		viewedByPopover = Gtk.Popover()
-		viewedByBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		for friend in self.db.friends:
-			butt = Gtk.ModelButton(text = friend, role = Gtk.ButtonRole.CHECK, centered = False)
-			viewedByBox.add(butt)
-			butt.connect("clicked", self.friendsList_cb)
-		viewedByPopover.add(viewedByBox)
+		genrePop.connect("genres-updated", self.genresUpdate_cb)
+		ratingPop.connect("rating-updated", self.ratingUpdate_cb)
+		datePop.connect("switch-updated", self.switchUpdate_cb)
+		datePop.connect("year-updated", self.yearUpdate_cb)
+		viewedByPop.connect("friends-updated", self.friendsUpdate_cb)
 
 		# creating the menu buttons
-		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True, popover = genrePopover)
+		self.genreButton = Gtk.MenuButton(label = "Genre", use_popover = True,
+											popover = genrePop)
 		self.genreButton.set_size_request(100, -1)
-		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True, popover = ratingPopover)
+		self.ratingButton = Gtk.MenuButton(label = "Rating", use_popover = True,
+											popover = ratingPop)
 		self.ratingButton.set_size_request(100, -1)
-		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True, popover = datePopover)
+		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True,
+											popover = datePop)
 		self.dateButton.set_size_request(100, -1)
-		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True, popover = viewedByPopover)
+		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True,
+											popover = viewedByPop)
 		self.viewedByButton.set_size_request(100, -1)
+
+		# connect the buttons to their callbacks
+		self.genreButton.connect("toggled", self.showPopover_cb, genrePop)
+		self.dateButton.connect("toggled", self.showPopover_cb, datePop)
+		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPop)
+		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPop)
 
 		filters.pack_start(self.genreButton, True, True, 0)
 		filters.pack_start(self.ratingButton, True, True, 0)
 		filters.pack_start(self.dateButton, True, True, 0)
 		filters.pack_end(self.viewedByButton, True, True, 0)
 
-		# connect the buttons to their callbacks
-		self.genreButton.connect("toggled", self.showPopover_cb, genrePopover)
-		self.dateButton.connect("toggled", self.showPopover_cb, datePopover)
-		self.ratingButton.connect("toggled", self.showPopover_cb, ratingPopover)
-		self.viewedByButton.connect("toggled", self.showPopover_cb, viewedByPopover)
-
-		searchCriteria.pack_start(filters, True, False, 0)
-		searchCriteria.get_style_context().add_class("inline-toolbar")
-
-		self.set_property("child", searchCriteria)
-
-	def genresList_cb(self, genreButton):
-		"""adds selected genres to self.genres"""
-		genreButton.set_property("active", not genreButton.get_property("active"))
-		if genreButton.get_property("active") is True:
-			self.genres.append(genreButton.get_property("text"))
-		else:
-			self.genres.remove(genreButton.get_property("text"))
+	def entryUpdate_cb(self, entry):
 		self.run_search()
 
-	def friendsList_cb(self, friendButton):
-		"""adds selected friends to self.friends """
-		friendButton.set_property("active", not friendButton.get_property("active"))
-		if friendButton.get_property("active") is True:
-			self.friends.append(friendButton.get_property("text"))
-		else:
-			self.friends.remove(friendButton.get_property("text"))
+	def genresUpdate_cb(self, pop, genres):
+		self.genres = genres
 		self.run_search()
 
-	def randomMovieButton_cb(self, randomMovieButton, parent):
-		"""finds a random movie and displays it"""
-		movieResults = self.run_search(False)
-		movie_position = random.randint(0, len(movieResults) - 1)
-		self.imdbBox.update(movieResults[movie_position].title)
-
-	def search_cb(self, widget):
-		"""generic function to run the sarch"""
+	def ratingUpdate_cb(self, pop, rating):
+		self.rating = rating
 		self.run_search()
 
-	def switch_cb(self, switch, state):
-		"""run search function for the dateAfter switch"""
+	def switchUpdate_cb(self, pop, state):
+		self.switchState = state
 		self.run_search()
 
-	def showPopover_cb(self, btn, func):
-		func.show_all()
+	def yearUpdate_cb(self, pop, year):
+		self.searchYear = year
+		self.run_search()
 
-	def run_search(self, update_search_view = True):
+	def friendsUpdate_cb(self, pop, friends):
+		self.friends = friends
+		self.run_search()
+
+	def showPopover_cb(self, button, pop):
+		pop.show_all()
+
+	def run_search(self, show = True): # put main windowStack on a revealer. if random movie is clicked set reveal to false. update imdbBox on Window regardless
+	# -----------------
+	# | search |	  |
+	# | stack  | imdb |
+	# -----------------
 		"""runs the search to get a list of relevant movies"""
-		searchWord = self.searchEntry.get_text()  # retrieve the content of the widget
+		searchWord = self.entry.get_text()  # retrieve the content of the widget
 		results = []
 
 		for movie in self.db.movies:
@@ -174,7 +254,6 @@ class SearchBar(Gtk.Revealer):
 			friendSearchCheck = 0
 			searchFriend = 0
 
-
 			# Check how many matches for self genre are in Movie Genre
 			for g in self.genres:
 				for c in movie.genres:
@@ -186,22 +265,22 @@ class SearchBar(Gtk.Revealer):
 				searchGenre = True
 
 			# Check to see if date search criteria match
-			if self.dateCombo.get_active() != -1:
-				if self.dateCombo.get_active_text() <= movie.release_date[:4]:
-					if self.dateAfter.get_active():
-						if self.dateCombo.get_active_text() == movie.release_date[:4]:
-							searchDate = True
-						else:
-							searchDate = False
-					else:
+			# if self.dateCombo.get_active() != -1:
+			if str(self.searchYear) <= movie.release_date[:4]:
+				if self.switchState:
+					if str(self.searchYear) == movie.release_date[:4]:
 						searchDate = True
+					else:
+						searchDate = False
 				else:
-					searchDate = False
+					searchDate = True
 			else:
-				searchDate = True
+				searchDate = False
+			# else:
+			# 	searchDate = True
 
 			# Check Rating
-			if float(movie.vote) >= self.scale.get_value():
+			if float(movie.vote) >= self.rating:
 				searchRating = True
 
 			# Check friends
@@ -220,9 +299,13 @@ class SearchBar(Gtk.Revealer):
 			if ((searchTitle or searchDescription) and searchGenre and searchDate and searchRating and searchFriend):
 				results.append(movie)
 
-		if update_search_view:
-			self.searchResults.set_search_view(results)
-			self.parent.stack.set_visible_child_name("search-results")
+		# if update_search_view:
+		# 	self.searchResults.set_search_view(results)
+		# 	self.parent.stack.set_visible_child_name("search-results")
+		# else:
+		# 	self.parent.stack.set_visible_child_name("search-results")
+		# 	return results
+		if show == True:
+			self.emit("search-ran", results)
 		else:
-			self.parent.stack.set_visible_child_name("search-results")
 			return results
