@@ -163,7 +163,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		stackBox.pack_start(self.searchResults, False, True, 0)
 		# self.windowStack.add_named(self.imdbBox, "imdb")
 
-		self.windowStack.add_named(stackBox, "imdb") # what if I implement the infobox on a stack that also includes a start typing page like the search results has right now and a choose a search result to dosplay detailed info page
+		self.windowStack.add_named(stackBox, "imdb") # what if I implement the infobox on a stack that also includes a start typing page like the search results has right now and a choose a search result to display detailed info page
 		self.windowStack.set_visible_child_name("imdb")
 
 		locationChooser = LocationChooser(self)
