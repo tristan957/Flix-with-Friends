@@ -8,6 +8,7 @@ from Database import Database
 from HeaderBar import HeaderBar
 from SearchBar import SearchBar
 from InfoBox import InfoBox
+from Info import InfoPage
 from search_results import SearchResults
 
 class LocationChooser(Gtk.Box):
@@ -157,7 +158,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.searchResults.connect("row-activated", self.updateIMDB_cb)
 		# self.windowStack.add_named(self.searchResults, "search-results")
 
-		self.imdbBox = InfoBox(db, "Shrek")
+		self.imdbBox = InfoPage(db, "Shrek")
 
 		stackBox.pack_end(self.imdbBox, False, False, 0)
 		stackBox.pack_start(self.searchResults, False, True, 0)
