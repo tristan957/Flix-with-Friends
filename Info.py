@@ -96,8 +96,11 @@ class DetailsGrid(Gtk.Grid):
 
 		overviewTitle = Gtk.Label(label = "<big><b>Overview</b></big>", use_markup = True,
 									halign = Gtk.Align.START)
-		self.overview = Gtk.Label(label = "<big>" + movie.overview + "</big>", use_markup = True, 
-									halign = Gtk.Align.START, wrap = True, max_width_chars = 55)
+		self.overview = Gtk.Label(label = "<big>" + movie.overview + "</big>", use_markup = True,
+									halign = Gtk.Align.START, wrap = True, margin = 10)
+		overviewScroll = Gtk.ScrolledWindow(shadow_type = Gtk.ShadowType.ETCHED_OUT, min_content_height = 200,
+											min_content_width = 300, window_placement = Gtk.CornerType.TOP_LEFT)
+		overviewScroll.add(self.overview)
 
 		self.attach(self.ratingLabel, 0, 0, 1, 1)
 		self.attach(self.ratingBar, 0, 1, 1, 3)
@@ -108,7 +111,7 @@ class DetailsGrid(Gtk.Grid):
 		self.attach(genreTitle, 1, 2, 1, 1)
 		self.attach(self.genres, 2, 2, 1, 1)
 		self.attach(overviewTitle, 1, 3, 1, 1)
-		self.attach(self.overview, 2, 3, 1, 1)
+		self.attach(overviewScroll, 2, 3, 1, 1)
 
 	def update(self, movie):
 		"""Update the information within the grid"""
