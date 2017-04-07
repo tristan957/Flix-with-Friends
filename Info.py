@@ -77,18 +77,27 @@ class DetailsGrid(Gtk.Grid):
 		self.ratingBar.set_orientation(Gtk.Orientation.VERTICAL)
 		self.ratingBar.set_value(float(movie.vote))
 
-		dateTitle = Gtk.Label(label = "<big><b>Release Date</b></big>", use_markup = True, halign = Gtk.Align.START)
+		dateTitle = Gtk.Label(label = "<big><b>Release Date</b></big>", use_markup = True,
+								halign = Gtk.Align.START)
 		self.date = Gtk.Label(label = "<big>" + movie.release_date + "</big>",
 								use_markup = True, halign = Gtk.Align.START)
 		
-		runtimeTitle = Gtk.Label(label = "<big><b>Runtime</b></big>", use_markup = True, halign = Gtk.Align.START)
+		runtimeTitle = Gtk.Label(label = "<big><b>Runtime</b></big>", use_markup = True,
+									halign = Gtk.Align.START)
 		self.runtime = Gtk.Label(label = "<big>" +  str(int(movie.runtime) // 60) + " Hours " +
 									str(int(movie.runtime) % 60) + " Minutes</big>", use_markup = True,
 									halign = Gtk.Align.START)
 		
-		genreTitle = Gtk.Label(label = "<big><b>Genres</b></big>", use_markup = True, halign = Gtk.Align.START)
+		genreTitle = Gtk.Label(label = "<big><b>Genres</b></big>", use_markup = True,
+								halign = Gtk.Align.START)
 		self.genres = Gtk.Label(label = "<big>" + movie.get_genres_string() + "</big>",
-								use_markup = True, halign = Gtk.Align.START) # add a wrap
+								use_markup = True, halign = Gtk.Align.START, wrap = True,
+								max_width_chars = 55) # add a wrap
+
+		overviewTitle = Gtk.Label(label = "<big><b>Overview</b></big>", use_markup = True,
+									halign = Gtk.Align.START)
+		self.overview = Gtk.Label(label = "<big>" + movie.overview + "</big>", use_markup = True, 
+									halign = Gtk.Align.START, wrap = True, max_width_chars = 55)
 
 		self.attach(self.ratingLabel, 0, 0, 1, 1)
 		self.attach(self.ratingBar, 0, 1, 1, 3)
@@ -98,6 +107,8 @@ class DetailsGrid(Gtk.Grid):
 		self.attach(self.runtime, 2, 1, 1, 1)
 		self.attach(genreTitle, 1, 2, 1, 1)
 		self.attach(self.genres, 2, 2, 1, 1)
+		self.attach(overviewTitle, 1, 3, 1, 1)
+		self.attach(self.overview, 2, 3, 1, 1)
 
 	def update(self, movie):
 		"""Update the information within the grid"""
@@ -107,7 +118,8 @@ class DetailsGrid(Gtk.Grid):
 		self.date.set_label("<big>" + movie.release_date + "</big>")
 		self.runtime.set_label("<big>" +  str(int(movie.runtime) // 60) + 
 								" Hours " + str(int(movie.runtime) % 60) + " Minutes</big>")
-		self.genres.set_label("<big>" + movie.get_genres_string()+ "</big>")
+		self.genres.set_label("<big>" + movie.get_genres_string() + "</big>")
+		self.overview.set_label("<big>" + movie.overview + "</big>")
 
 
 class InfoPage(Gtk.Box):
