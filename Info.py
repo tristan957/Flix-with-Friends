@@ -12,7 +12,7 @@ class ActBar(Gtk.ActionBar):
 		Gtk.ActionBar.__init__(self)
 
 		self.title = Gtk.Label(label = movie.get_markup_title(), justify = Gtk.Justification.CENTER,
-							use_markup = True, max_width_chars = 25, wrap = True)
+								use_markup = True)
 		self.set_center_widget(self.title)
 
 		# add a button to create a dialog that contains the movie info
@@ -53,6 +53,7 @@ class ActBar(Gtk.ActionBar):
 
 		self.title.set_label(movie.get_markup_title())
 
+		# remake the popover box with new labels
 		self.popBox.destroy()
 		self.popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
 		if len(movie.viewers) > 0: # movies with no viewers for some reason have 1 viewer like "Aloha"
@@ -67,16 +68,22 @@ class InfoPage(Gtk.Box):
 	"""Create a single page Notebook to display movie information"""
 
 	def __init__(self, db, movieName):
-		Gtk.Box.__init__(self)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL)
 
 		self.db = db
 
 		self.movie = db.find_movie(movieName)
 
 		self.action = ActBar(self.movie)
+
+		self.poster = Gtk.Image(file = self.movie.get_large_image())
+
 		self.pack_start(self.action, False, False, 0)
+		self.pack_end(self.poster, False, False, 0)
 
 	def update(self, movieName):
 		self.movie = self.db.find_movie(movieName)
 
 		self.action.update(self.movie)
+
+		self.poster.set_from_file(self.movie.get_large_image())

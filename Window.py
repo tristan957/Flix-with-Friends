@@ -160,8 +160,8 @@ class MainWindow(Gtk.ApplicationWindow):
 
 		self.imdbBox = InfoPage(db, "Shrek")
 
-		stackBox.pack_end(self.imdbBox, False, False, 0)
-		stackBox.pack_start(self.searchResults, False, True, 0)
+		stackBox.pack_end(self.imdbBox, True, True, 0)
+		stackBox.pack_start(self.searchResults, False, False, 0)
 		# self.windowStack.add_named(self.imdbBox, "imdb")
 
 		self.windowStack.add_named(stackBox, "imdb") # what if I implement the infobox on a stack that also includes a start typing page like the search results has right now and a choose a search result to display detailed info page
