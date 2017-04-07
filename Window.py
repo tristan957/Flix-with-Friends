@@ -127,6 +127,13 @@ class InitWindow(Gtk.ApplicationWindow):
 class MainWindow(Gtk.ApplicationWindow):
 	"""Window where all the magic happens"""
 
+	# start with the revealers hidden, then cover up getting started screen with revealers (maybe even hide the background label)
+	# ____________________________________
+	# | results | getting | info         |
+	# | on	  | started | page 		   |
+	# | revealer| screen  | on revealer  |
+	# |_________|_________|______________|
+
 	def __init__(self, db):
 		Gtk.Window.__init__(self)
 
