@@ -130,5 +130,9 @@ class Person:
 				urllib.request.urlretrieve(imagePage, fullfilename)
 				print(self.name, 'image:', imagePage)
 
+		if os.path.exists(self.img):
+			return self.img
+		return None
+
 	def need_image(self):
-		return self.imgLink != 'None' and self.imgLink != ''
+		return self.imgLink != 'None' and self.imgLink != '' and not(os.path.exists(self.img))
