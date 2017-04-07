@@ -26,6 +26,14 @@ class Movie:
 		self.keywords = dictionary['Keywords'].split(', ')
 		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
+		actors = dictionary['ActorsName'].split(', ')
+		charName = actorChars = dictionary['ActorsChar'].split(', ')
+		actorImage = dictionary['ActorsImg'].split(', ')
+		self.allActors = []
+
+		for i, actor in enumerate(actors):
+			self.allActors.append(Person('actor', actor, actorImage[i], charName[i]))
+
 	def get_image(self):
 
 		baseURL = 'https://image.tmdb.org/t/p/'
@@ -122,3 +130,11 @@ class Movie:
 		# Returns w342 image
 		filename = self.title.replace(" ", "") + '_w342.jpg'
 		return os.path.join('./images/movies/' + self.title.replace(" ", ""), filename)
+
+class Person:
+
+	def __init__(self, roleA, name, imgLink='', charName = ""):
+		self.role = roleA
+		self.name = name
+		self.imgLink = imgLink
+		self.charName = charName

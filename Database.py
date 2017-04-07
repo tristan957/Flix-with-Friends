@@ -399,10 +399,17 @@ class Database:
 
 
 if __name__ == "__main__":
-	db = Database()
-	doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
-	db.get_google_doc(doc_id)
-	# db.update()
-	db.upload_google_doc()
-	# db.update()
-	# db = Database('local2.xlsx')
+	# db = Database()
+	# doc_id = '1OPg5wtyTFglYPGNYug4hDbHGGfo_yP9HOMRVjT29Lf8'
+	# db.get_google_doc(doc_id)
+	# # db.update()
+	# db.upload_google_doc()
+	# # db.update()
+	db = Database('local2.xlsx')
+	for m in db.movies:
+		for p in m.allActors:
+			print('Name:', p.name)
+			print('Type:', p.role)
+			print('imgLink:', p.imgLink)
+			print('charName:', p.charName)
+			print()
