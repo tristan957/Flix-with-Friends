@@ -5,11 +5,54 @@ from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
 
-class MainInfoContainer(Gtk.Box):
-	"""Box to display info neatly"""
+class ActBar(Gtk.ActionBar):
+	"""Provides a titlebar with actions for movies"""
 
 	def __init__(self, movie):
-		Gtk.Box.__init__(self, margin = 20, spacing = 20)
+		Gtk.ActionBar.__init__(self)
+
+		self.title = Gtk.Label(label = movie.get_markup_title(), justify = Gtk.Justification.CENTER,
+							use_markup = True, max_width_chars = 25, wrap = True)
+		self.set_center_widget(self.title)
+
+		pageIcon = Gio.ThemedIcon(name = "view-paged-symbolic")
+		popImage = Gtk.Image.new_from_gicon(pageIcon, Gtk.IconSize.BUTTON)
+
+		popout = Gtk.Button(image = popImage)
+		# popout.connect("clicked", self.popout_cb)
+		self.pack_start(popout)
+
+		menuIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
+		menuImage = Gtk.Image.new_from_gicon(menuIcon, Gtk.IconSize.BUTTON)
+		menu = Gtk.MenuButton(image = menuImage)
+		self.pack_end(menu)
+
+		self.pop = Gtk.Popover(position = Gtk.PositionType.BOTTOM)
+		self.popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
+		if len(movie.viewers) > 0:
+			for friend in movie.viewers:
+				self.popBox.add(Gtk.Label(label = friend))
+		else:
+			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
+		self.pop.add(self.popBox)
+		viewers = Gtk.MenuButton(label = "Viewers", use_popover = True, popover = self.pop)
+		viewers.connect("toggled", self.viewers_cb)
+		self.pack_end(viewers)
+
+	def viewers_cb(self, button):
+		self.pop.show_all()
+
+	def update(self, movie):
+		self.title.set_label(movie.get_markup_title())
+
+		self.popBox.destroy()
+		self.popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
+		if len(movie.viewers) > 0: # movies with no viewers for some reason have 1 viewer like "Aloha"
+			for friend in movie.viewers:
+				self.popBox.add(Gtk.Label(label = friend))
+		else:
+			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
+		self.pop.add(self.popBox)
 
 
 class InfoPage(Gtk.Box):
@@ -22,21 +65,12 @@ class InfoPage(Gtk.Box):
 
 		self.movie = db.find_movie(movieName)
 
-		self.action = Gtk.ActionBar()
-
-		self.title = Gtk.Label(label = self.movie.get_markup_title(), justify = Gtk.Justification.CENTER,
-							use_markup = True)
-		self.action.set_center_widget(self.title)
-
-		self.popout = Gtk.Button(label = "Popout")
-		# popout.connect("clicked", self.popout_cb)
-		self.action.pack_start(self.popout)
-
+		self.action = ActBar(self.movie)
 		self.pack_start(self.action, False, False, 0)
 
 	def update(self, movieName):
 		self.movie = self.db.find_movie(movieName)
 
-		self.title.set_label(self.movie.get_markup_title())
+		self.action.update(self.movie)
 
 		# self.title.set_label(self.movie.get_markup_title())
