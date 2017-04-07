@@ -7,7 +7,6 @@ import random
 from Database import Database
 from HeaderBar import HeaderBar
 from SearchBar import SearchBar
-from InfoBox import InfoBox
 from Info import InfoPage
 from search_results import SearchResults
 
