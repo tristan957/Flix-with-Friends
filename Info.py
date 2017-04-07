@@ -63,6 +63,52 @@ class ActBar(Gtk.ActionBar):
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
 		self.pop.add(self.popBox)
 
+class DetailsGrid(Gtk.Grid):
+	"""Create a container to display information in an organized fashion"""
+
+	def __init__(self, movie):
+		Gtk.Grid.__init__(self, column_spacing = 20, row_spacing = 10)
+
+		self.ratingLabel = Gtk.Label(label = "<big>" + str(float(movie.vote) * 10) + "%</big>",
+										use_markup = True)
+
+		self.ratingBar = Gtk.LevelBar.new_for_interval(0, 10)
+		self.ratingBar.set_inverted(True)
+		self.ratingBar.set_orientation(Gtk.Orientation.VERTICAL)
+		self.ratingBar.set_value(float(movie.vote))
+
+		dateTitle = Gtk.Label(label = "<big><b>Release Date</b></big>", use_markup = True, halign = Gtk.Align.START)
+		self.date = Gtk.Label(label = "<big>" + movie.release_date + "</big>",
+								use_markup = True, halign = Gtk.Align.START)
+		
+		runtimeTitle = Gtk.Label(label = "<big><b>Runtime</b></big>", use_markup = True, halign = Gtk.Align.START)
+		self.runtime = Gtk.Label(label = "<big>" +  str(int(movie.runtime) // 60) + " Hours " +
+									str(int(movie.runtime) % 60) + " Minutes</big>", use_markup = True,
+									halign = Gtk.Align.START)
+		
+		genreTitle = Gtk.Label(label = "<big><b>Genres</b></big>", use_markup = True, halign = Gtk.Align.START)
+		self.genres = Gtk.Label(label = "<big>" + movie.get_genres_string() + "</big>",
+								use_markup = True, halign = Gtk.Align.START) # add a wrap
+
+		self.attach(self.ratingLabel, 0, 0, 1, 1)
+		self.attach(self.ratingBar, 0, 1, 1, 3)
+		self.attach(dateTitle, 1, 0, 1, 1)
+		self.attach(self.date, 2, 0, 1, 1)
+		self.attach(runtimeTitle, 1, 1, 1, 1)
+		self.attach(self.runtime, 2, 1, 1, 1)
+		self.attach(genreTitle, 1, 2, 1, 1)
+		self.attach(self.genres, 2, 2, 1, 1)
+
+	def update(self, movie):
+		"""Update the information within the grid"""
+
+		self.ratingLabel.set_label("<big>" + str(float(movie.vote) * 10) + "%</big>")
+		self.ratingBar.set_value(float(movie.vote))
+		self.date.set_label("<big>" + movie.release_date + "</big>")
+		self.runtime.set_label("<big>" +  str(int(movie.runtime) // 60) + 
+								" Hours " + str(int(movie.runtime) % 60) + " Minutes</big>")
+		self.genres.set_label("<big>" + movie.get_genres_string()+ "</big>")
+
 
 class InfoPage(Gtk.Box):
 	"""Create a single page Notebook to display movie information"""
@@ -72,18 +118,23 @@ class InfoPage(Gtk.Box):
 
 		self.db = db
 
+		top = Gtk.Box(margin = 40, spacing = 50)
+
 		self.movie = db.find_movie(movieName)
 
 		self.action = ActBar(self.movie)
-
 		self.poster = Gtk.Image(file = self.movie.get_large_image())
+		self.grid = DetailsGrid(self.movie)
+
+		top.add(self.poster)
+		top.add(self.grid)
 
 		self.pack_start(self.action, False, False, 0)
-		self.pack_end(self.poster, False, False, 0)
+		self.pack_end(top, False, False, 0)
 
 	def update(self, movieName):
 		self.movie = self.db.find_movie(movieName)
 
 		self.action.update(self.movie)
-
 		self.poster.set_from_file(self.movie.get_large_image())
+		self.grid.update(self.movie)
