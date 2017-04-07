@@ -8,6 +8,7 @@ from Database import Database
 from HeaderBar import HeaderBar
 from SearchBar import SearchBar
 from InfoBox import InfoBox
+from Info import InfoPage
 from search_results import SearchResults
 
 class LocationChooser(Gtk.Box):
@@ -157,10 +158,10 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.searchResults.connect("row-activated", self.updateIMDB_cb)
 		# self.windowStack.add_named(self.searchResults, "search-results")
 
-		self.imdbBox = InfoBox(db, "Shrek")
+		self.imdbBox = InfoPage(db, "Shrek")
 
-		stackBox.pack_end(self.imdbBox, False, False, 0)
-		stackBox.pack_start(self.searchResults, False, True, 0)
+		stackBox.pack_end(self.imdbBox, True, True, 0)
+		stackBox.pack_start(self.searchResults, False, False, 0)
 		# self.windowStack.add_named(self.imdbBox, "imdb")
 
 		self.windowStack.add_named(stackBox, "imdb") # what if I implement the infobox on a stack that also includes a start typing page like the search results has right now and a choose a search result to display detailed info page
