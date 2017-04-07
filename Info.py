@@ -80,5 +80,3 @@ class InfoPage(Gtk.Box):
 		self.movie = self.db.find_movie(movieName)
 
 		self.action.update(self.movie)
-
-		# self.title.set_label(self.movie.get_markup_title())
