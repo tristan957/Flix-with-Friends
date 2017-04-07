@@ -405,4 +405,4 @@ if __name__ == "__main__":
 	# db.update()
 	db.upload_google_doc()
 	# db.update()
-	# db = Database('local2.xlsx')
+	
