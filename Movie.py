@@ -62,36 +62,10 @@ class Movie:
 					print(p, 'poster image:', imagePage)
 
 		# Actors images
-		os.makedirs("./images/people", exist_ok = True)
-		for i, actor in enumerate(self.actorImg):
-			if actor != 'None' and actor != '':
-				actorName = self.actorNames[i]
+		for p in self.allActors:
+			p.get_image()
 
-				imagePage = baseURL + 'w92' + actor
-				filename = actorName.replace(" ", "") + '_' + 'w92.jpg'
-				fullfilename = os.path.join('./images/people/', filename)
-
-				# if not already existent, download
-				if not(os.path.isfile(fullfilename)):
-					if not updated:
-						print(self.title)
-						updated = True
-					urllib.request.urlretrieve(imagePage, fullfilename)
-					print(actorName, 'image:', imagePage)
-
-		# Director Image
-		if str(self.directorImg) != 'None' and str(self.directorImg) != '':
-			imagePage = baseURL + 'w92' + self.directorImg
-			filename = self.directorName.replace(" ", "") + '_' + 'w92.jpg'
-			fullfilename = os.path.join('./images/people/', filename)
-
-			# if not already existent, download
-			if not(os.path.isfile(fullfilename)):
-				if not updated:
-					print(self.title)
-					updated = True
-				urllib.request.urlretrieve(imagePage, fullfilename)
-				print(self.directorName, 'image:', imagePage)
+		self.director.get_image()
 
 	def get_markup_title(self):
 		return "<big><b>" + self.title.replace('&', '&amp;') + "</b></big>"
@@ -139,3 +113,22 @@ class Person:
 		self.name = name
 		self.imgLink = imgLink
 		self.charName = charName
+		self.img = ''
+
+	def get_image(self):
+		os.makedirs("./images/people", exist_ok = True)
+		baseURL = 'https://image.tmdb.org/t/p/'
+
+		if self.need_image():
+			imagePage = baseURL + 'w92' + self.imgLink
+			filename = self.name.replace(" ", "") + '_' + 'w92.jpg'
+			self.img = './images/people/' + filename
+			fullfilename = os.path.join('./images/people/', filename)
+
+			# if not already existent, download
+			if not(os.path.isfile(fullfilename)):
+				urllib.request.urlretrieve(imagePage, fullfilename)
+				print(self.name, 'image:', imagePage)
+
+	def need_image(self):
+		return self.imgLink != 'None' and self.imgLink != ''
