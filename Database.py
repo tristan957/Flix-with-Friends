@@ -407,9 +407,13 @@ if __name__ == "__main__":
 	# # db.update()
 	db = Database('local2.xlsx')
 	for m in db.movies:
-		for p in m.allActors:
-			print('Name:', p.name)
-			print('Type:', p.role)
-			print('imgLink:', p.imgLink)
-			print('charName:', p.charName)
-			print()
+		print('Name:', m.director.name)
+		print('Role:', m.director.role)
+		print('Imglink:', m.director.imgLink)
+		print()
+		# for p in m.allActors:
+		# 	print('Name:', p.name)
+		# 	print('Type:', p.role)
+		# 	print('imgLink:', p.imgLink)
+		# 	print('charName:', p.charName)
+		# 	print()

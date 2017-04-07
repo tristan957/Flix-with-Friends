@@ -30,6 +30,7 @@ class Movie:
 		charName = actorChars = dictionary['ActorsChar'].split(', ')
 		actorImage = dictionary['ActorsImg'].split(', ')
 		self.allActors = []
+		self.director = Person('director', dictionary['DirectorName'], dictionary['DirectorImg'])
 
 		for i, actor in enumerate(actors):
 			self.allActors.append(Person('actor', actor, actorImage[i], charName[i]))
