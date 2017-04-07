@@ -15,15 +15,18 @@ class ActBar(Gtk.ActionBar):
 							use_markup = True, max_width_chars = 25, wrap = True)
 		self.set_center_widget(self.title)
 
+		# add a button to create a dialog that contains the movie info
 		pageIcon = Gio.ThemedIcon(name = "view-paged-symbolic")
 		popImage = Gtk.Image.new_from_gicon(pageIcon, Gtk.IconSize.BUTTON)
 		popout = Gtk.Button(image = popImage)
 		# popout.connect("clicked", self.popout_cb)
 
+		# add a button that has actions for the movie, like view trailer, view tmdb url for movie, and maybe an edit button??
 		menuIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
 		menuImage = Gtk.Image.new_from_gicon(menuIcon, Gtk.IconSize.BUTTON)
 		menu = Gtk.MenuButton(image = menuImage)
 
+		# add a button to show a popover for who has seen the movie
 		self.pop = Gtk.Popover(position = Gtk.PositionType.BOTTOM)
 		self.popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
 		if len(movie.viewers) > 0:
@@ -35,14 +38,19 @@ class ActBar(Gtk.ActionBar):
 		viewers = Gtk.MenuButton(label = "Viewers", use_popover = True, popover = self.pop)
 		viewers.connect("toggled", self.viewers_cb)
 
+		# add widgets to the ActionBar
 		self.pack_start(popout)
 		self.pack_end(menu)
 		self.pack_end(viewers)
 
 	def viewers_cb(self, button):
+		"""Toggles the popover"""
+
 		self.pop.show_all()
 
 	def update(self, movie):
+		"""Updates the data in the action bar"""
+
 		self.title.set_label(movie.get_markup_title())
 
 		self.popBox.destroy()
