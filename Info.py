@@ -17,15 +17,12 @@ class ActBar(Gtk.ActionBar):
 
 		pageIcon = Gio.ThemedIcon(name = "view-paged-symbolic")
 		popImage = Gtk.Image.new_from_gicon(pageIcon, Gtk.IconSize.BUTTON)
-
 		popout = Gtk.Button(image = popImage)
 		# popout.connect("clicked", self.popout_cb)
-		self.pack_start(popout)
 
 		menuIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
 		menuImage = Gtk.Image.new_from_gicon(menuIcon, Gtk.IconSize.BUTTON)
 		menu = Gtk.MenuButton(image = menuImage)
-		self.pack_end(menu)
 
 		self.pop = Gtk.Popover(position = Gtk.PositionType.BOTTOM)
 		self.popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
@@ -37,6 +34,9 @@ class ActBar(Gtk.ActionBar):
 		self.pop.add(self.popBox)
 		viewers = Gtk.MenuButton(label = "Viewers", use_popover = True, popover = self.pop)
 		viewers.connect("toggled", self.viewers_cb)
+
+		self.pack_start(popout)
+		self.pack_end(menu)
 		self.pack_end(viewers)
 
 	def viewers_cb(self, button):
