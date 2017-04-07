@@ -129,7 +129,7 @@ class InfoPage(Gtk.Box):
 	"""Create a single page Notebook to display movie information"""
 
 	def __init__(self, db, movieName):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, vexpand = True)
 
 		self.db = db
 
@@ -145,7 +145,7 @@ class InfoPage(Gtk.Box):
 		top.add(self.grid)
 
 		self.pack_start(self.action, False, False, 0)
-		self.pack_end(top, False, False, 0)
+		self.pack_start(top, False, False, 0)
 
 	def update(self, movieName):
 		self.movie = self.db.find_movie(movieName)
