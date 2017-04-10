@@ -2,7 +2,7 @@
 # Flix with Friends
 
 Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957).
-Developed on [Solus](https://solus-project.com/) using [Atom](https://atom.io/).
+Developed on [Solus](https://solus-project.com/) using [Atom](https://atom.io/) and [Visual Studio Code](https://code.visualstudio.com/).
 
 Flix with Friends is a program that helps users decide what movie they should watch. It reads
 through spreadsheets or Google Sheets that have names of movies that users would like to watch.
