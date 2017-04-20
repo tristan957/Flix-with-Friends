@@ -11,6 +11,8 @@ class ActBar(Gtk.ActionBar):
 	def __init__(self, movie):
 		Gtk.ActionBar.__init__(self)
 
+		self.get_style_context().add_class("inline-toolbar")
+
 		self.title = Gtk.Label(label = movie.get_markup_title(), justify = Gtk.Justification.CENTER,
 								use_markup = True)
 		self.set_center_widget(self.title)
@@ -81,13 +83,13 @@ class DetailsGrid(Gtk.Grid):
 								halign = Gtk.Align.START)
 		self.date = Gtk.Label(label = "<big>" + movie.release_date + "</big>",
 								use_markup = True, halign = Gtk.Align.START)
-		
+
 		runtimeTitle = Gtk.Label(label = "<big><b>Runtime</b></big>", use_markup = True,
 									halign = Gtk.Align.START)
 		self.runtime = Gtk.Label(label = "<big>" +  str(int(movie.runtime) // 60) + " Hours " +
 									str(int(movie.runtime) % 60) + " Minutes</big>", use_markup = True,
 									halign = Gtk.Align.START)
-		
+
 		genreTitle = Gtk.Label(label = "<big><b>Genres</b></big>", use_markup = True,
 								halign = Gtk.Align.START)
 		self.genres = Gtk.Label(label = "<big>" + movie.get_genres_string() + "</big>",
@@ -119,7 +121,7 @@ class DetailsGrid(Gtk.Grid):
 		self.ratingLabel.set_label("<big>" + str(float(movie.vote) * 10) + "%</big>")
 		self.ratingBar.set_value(float(movie.vote))
 		self.date.set_label("<big>" + movie.release_date + "</big>")
-		self.runtime.set_label("<big>" +  str(int(movie.runtime) // 60) + 
+		self.runtime.set_label("<big>" +  str(int(movie.runtime) // 60) +
 								" Hours " + str(int(movie.runtime) % 60) + " Minutes</big>")
 		self.genres.set_label("<big>" + movie.get_genres_string() + "</big>")
 		self.overview.set_label("<big>" + movie.overview + "</big>")
