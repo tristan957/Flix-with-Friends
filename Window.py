@@ -164,7 +164,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.searchResults.connect("row-activated", self.updateIMDB_cb)
 		# self.windowStack.add_named(self.searchResults, "search-results")
 
-		self.imdbBox = InfoPage(db, "Shrek")
+		self.imdbBox = InfoPage(self, db, "Shrek")
 
 		stackBox.pack_end(self.imdbBox, True, True, 0)
 		stackBox.pack_start(self.searchResults, False, False, 0)

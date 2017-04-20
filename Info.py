@@ -5,10 +5,46 @@ from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
 
+class InfoDialog(Gtk.Dialog):
+	"""Provide a popout dialog for a movie"""
+
+	def __init__(self, parent, movie):
+		Gtk.Dialog.__init__(self, use_header_bar = True)
+
+		# Change this to a window...That means remove all the parent parameters fml
+
+		self.set_transient_for(parent)
+
+		header = self.get_header_bar()
+		header.set_title(movie.title)
+
+		self.pop = Gtk.Popover(position = Gtk.PositionType.BOTTOM)
+		popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
+		if len(movie.viewers) > 0:
+			for friend in movie.viewers:
+				popBox.add(Gtk.Label(label = friend))
+		else:
+			popBox.add(Gtk.Label(label = "No one has seen this movie."))
+		self.pop.add(popBox)
+		viewers = Gtk.MenuButton(label = "Viewers", use_popover = True, popover = self.pop)
+		viewers.connect("toggled", self.viewers_cb)
+
+		header.pack_end(viewers)
+
+		area = self.get_content_area()
+		area.add(DetailsGrid(movie))
+
+		self.show_all()
+
+	def viewers_cb(self, button):
+		"""Toggles the popover"""
+
+		self.pop.show_all()
+
 class ActBar(Gtk.ActionBar):
 	"""Provides a titlebar with actions for movies"""
 
-	def __init__(self, movie):
+	def __init__(self, parent, movie):
 		Gtk.ActionBar.__init__(self)
 
 		self.get_style_context().add_class("inline-toolbar")
@@ -21,7 +57,7 @@ class ActBar(Gtk.ActionBar):
 		pageIcon = Gio.ThemedIcon(name = "view-paged-symbolic")
 		popImage = Gtk.Image.new_from_gicon(pageIcon, Gtk.IconSize.BUTTON)
 		popout = Gtk.Button(image = popImage)
-		# popout.connect("clicked", self.popout_cb)
+		popout.connect("clicked", self.popout_cb, parent, movie)
 
 		# add a button that has actions for the movie, like view trailer, view tmdb url for movie, and maybe an edit button??
 		menuIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
@@ -45,6 +81,9 @@ class ActBar(Gtk.ActionBar):
 		self.pack_end(menu)
 		self.pack_end(viewers)
 
+	def popout_cb(self, button, parent, movie):
+		dialog = InfoDialog(parent, movie)
+
 	def viewers_cb(self, button):
 		"""Toggles the popover"""
 
@@ -65,11 +104,15 @@ class ActBar(Gtk.ActionBar):
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
 		self.pop.add(self.popBox)
 
-class DetailsGrid(Gtk.Grid):
+class DetailsGrid(Gtk.Box):
 	"""Create a container to display information in an organized fashion"""
 
 	def __init__(self, movie):
-		Gtk.Grid.__init__(self, column_spacing = 20, row_spacing = 10)
+		Gtk.Box.__init__(self, margin = 40, spacing = 50)
+
+		self.poster = Gtk.Image(file = movie.get_large_image())
+
+		grid = Gtk.Grid(column_spacing = 20, row_spacing = 10)
 
 		self.ratingLabel = Gtk.Label(label = "<big>" + str(float(movie.vote) * 10) + "%</big>",
 										use_markup = True)
@@ -104,20 +147,24 @@ class DetailsGrid(Gtk.Grid):
 											min_content_width = 300, window_placement = Gtk.CornerType.TOP_LEFT)
 		overviewScroll.add(self.overview)
 
-		self.attach(self.ratingLabel, 0, 0, 1, 1)
-		self.attach(self.ratingBar, 0, 1, 1, 3)
-		self.attach(dateTitle, 1, 0, 1, 1)
-		self.attach(self.date, 2, 0, 1, 1)
-		self.attach(runtimeTitle, 1, 1, 1, 1)
-		self.attach(self.runtime, 2, 1, 1, 1)
-		self.attach(genreTitle, 1, 2, 1, 1)
-		self.attach(self.genres, 2, 2, 1, 1)
-		self.attach(overviewTitle, 1, 3, 1, 1)
-		self.attach(overviewScroll, 2, 3, 1, 1)
+		grid.attach(self.ratingLabel, 0, 0, 1, 1)
+		grid.attach(self.ratingBar, 0, 1, 1, 3)
+		grid.attach(dateTitle, 1, 0, 1, 1)
+		grid.attach(self.date, 2, 0, 1, 1)
+		grid.attach(runtimeTitle, 1, 1, 1, 1)
+		grid.attach(self.runtime, 2, 1, 1, 1)
+		grid.attach(genreTitle, 1, 2, 1, 1)
+		grid.attach(self.genres, 2, 2, 1, 1)
+		grid.attach(overviewTitle, 1, 3, 1, 1)
+		grid.attach(overviewScroll, 2, 3, 1, 1)
+
+		self.add(self.poster)
+		self.add(grid)
 
 	def update(self, movie):
 		"""Update the information within the grid"""
 
+		self.poster.set_from_file(movie.get_large_image())
 		self.ratingLabel.set_label("<big>" + str(float(movie.vote) * 10) + "%</big>")
 		self.ratingBar.set_value(float(movie.vote))
 		self.date.set_label("<big>" + movie.release_date + "</big>")
@@ -130,28 +177,28 @@ class DetailsGrid(Gtk.Grid):
 class InfoPage(Gtk.Box):
 	"""Create a single page Notebook to display movie information"""
 
-	def __init__(self, db, movieName):
+	def __init__(self, parent, db, movieName):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, vexpand = True)
 
 		self.db = db
 
-		top = Gtk.Box(margin = 40, spacing = 50)
+		# top = Gtk.Box(margin = 40, spacing = 50)
 
 		self.movie = db.find_movie(movieName)
 
-		self.action = ActBar(self.movie)
-		self.poster = Gtk.Image(file = self.movie.get_large_image())
+		self.action = ActBar(parent, self.movie)
+		# self.poster = Gtk.Image(file = self.movie.get_large_image())
 		self.grid = DetailsGrid(self.movie)
 
-		top.add(self.poster)
-		top.add(self.grid)
+		# top.add(self.poster)
+		# top.add(self.grid)
 
 		self.pack_start(self.action, False, False, 0)
-		self.pack_start(top, False, False, 0)
+		self.pack_start(self.grid, True, True, 0)
 
 	def update(self, movieName):
 		self.movie = self.db.find_movie(movieName)
 
 		self.action.update(self.movie)
-		self.poster.set_from_file(self.movie.get_large_image())
+		# self.poster.set_from_file(self.movie.get_large_image())
 		self.grid.update(self.movie)
