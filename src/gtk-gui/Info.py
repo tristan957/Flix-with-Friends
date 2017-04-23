@@ -106,7 +106,7 @@ class ActBar(Gtk.ActionBar):
 
 		self.movie = movie
 
-		self.title.set_label(self.movie.get_markup_title())
+		self.title.set_label("<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>")
 
 		# remake the popover box with new labels
 		self.popBox.destroy()
