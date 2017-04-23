@@ -83,9 +83,12 @@ class ActBar(Gtk.ActionBar):
 		viewers = Gtk.MenuButton(label = "Viewers", use_popover = True, popover = self.pop)
 		viewers.connect("toggled", self.viewers_cb)
 
+		self.trailer = Gtk.LinkButton.new_with_label(movie.trailer, 'Trailer')
+
 		# add widgets to the ActionBar
 		self.pack_start(popout)
 		self.pack_end(menu)
+		self.pack_end(self.trailer)
 		self.pack_end(viewers)
 
 	def popout_cb(self, button):
@@ -118,6 +121,8 @@ class ActBar(Gtk.ActionBar):
 		else:
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
 		self.pop.add(self.popBox)
+
+		self.trailer.set_uri(self.movie.trailer)
 
 class GenreGrid(Gtk.Box):
 
@@ -281,14 +286,17 @@ class PeopleView(Gtk.Box):
 				image = Gtk.Image.new_from_file(peep.img)
 			else:
 				image = None
-			box.add(image)
-			box.add(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True))
-			box.add(Gtk.Label(label = role))
 
-			self.grid.attach(box, column, row, 1, 1)
+			if image != None:
+				self.grid.attach(image, column, row, 1, 1)
+			self.grid.attach(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True,
+										wrap = True, max_width_chars = 20,
+										justify = Gtk.Justification.CENTER), column, row + 1, 1, 1)
+			self.grid.attach(Gtk.Label(label = role, wrap = True, max_width_chars = 20,
+								justify = Gtk.Justification.CENTER), column, row + 2, 1, 1)
 			column+=1
 			if column % 4 == 0:
-				row+=1
+				row+=3
 				column = 0
 
 		self.add(self.grid)
@@ -307,7 +315,6 @@ class PeopleView(Gtk.Box):
 		row = 0
 		column = 0
 		for peep in peeps:
-			box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5)
 			if peep.role == 'actor':
 				role = peep.charName
 			else:
@@ -316,14 +323,17 @@ class PeopleView(Gtk.Box):
 				image = Gtk.Image.new_from_file(peep.img)
 			else:
 				image = None
-			box.add(image)
-			box.add(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True))
-			box.add(Gtk.Label(label = role))
 
-			self.grid.attach(box, column, row, 1, 1)
+			if image != None:
+				self.grid.attach(image, column, row, 1, 1)
+			self.grid.attach(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True,
+										wrap = True, max_width_chars = 20,
+										justify = Gtk.Justification.CENTER), column, row + 1, 1, 1)
+			self.grid.attach(Gtk.Label(label = role, wrap = True, max_width_chars = 20,
+								justify = Gtk.Justification.CENTER), column, row + 2, 1, 1)
 			column+=1
 			if column % 4 == 0:
-				row+=1
+				row+=3
 				column = 0
 
 		self.add(self.grid)
