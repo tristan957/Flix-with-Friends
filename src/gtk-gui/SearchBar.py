@@ -193,7 +193,7 @@ class SearchBar(Gtk.Revealer):
 		self.dateButton = Gtk.MenuButton(label = "Release Date", use_popover = True,
 											popover = datePop)
 		self.dateButton.set_size_request(100, -1)
-		self.viewedByButton = Gtk.MenuButton(label = "Viewed By", use_popover = True,
+		self.viewedByButton = Gtk.MenuButton(label = "Never Seen By", use_popover = True,
 											popover = viewedByPop)
 		self.viewedByButton.set_size_request(100, -1)
 
@@ -285,14 +285,20 @@ class SearchBar(Gtk.Revealer):
 
 			# Check friends
 			# Check how many matches for self genre are in Movie Genre
-			for f in self.friends:
-				for c in movie.viewers:
-					if f == c:
-						friendSearchCheck += 1
+			# for f in self.friends:
+			# 	for c in movie.viewers:
+			# 		if f == c:
+			# 			friendSearchCheck += 1
+			searchFriend = True
+			if len(self.friends) > 0:
+				for f in self.friends:
+					for c in movie.viewers:
+						if f == c:
+							searchFriend = False
 
 			# Make sure Number of genres in Movie match number of self genres
-			if friendSearchCheck == len(self.friends):
-				searchFriend = True
+			# if friendSearchCheck == len(self.friends):
+			# 	searchFriend = True
 
 
 			# If passes checks, then print Movie info
