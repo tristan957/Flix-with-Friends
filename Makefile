@@ -1,5 +1,5 @@
 run:
-	python3 flix-with-friends
+	python3 ./src/gtk-gui/flix-with-friends
 
 clean:
 	find . -name '*.pyc' -exec rm --force {} +

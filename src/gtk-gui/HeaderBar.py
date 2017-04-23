@@ -7,7 +7,9 @@ from MovieDialog import MovieDialog
 
 
 class DataButton(Gtk.MenuButton):
-	"""Create a button for manipulating database data"""
+	"""
+	Create a button for manipulating database data
+	"""
 
 	__gsignals__ = {
 		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
@@ -15,16 +17,14 @@ class DataButton(Gtk.MenuButton):
 	}
 
 	def __init__(self, win):
-		Gtk.Button.__init__(self)
-
-		self.win = win
-		self.pop = None
 
 		ADD = "Add"
 		DELETE = "Delete"
 
-		icon = Gio.ThemedIcon(name = "open-menu-symbolic")
-		image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
+		Gtk.Button.__init__(self)
+
+		self.win = win
+		self.pop = None
 
 		change = Gtk.ModelButton(text = "Change Source")
 		edit = Gtk.ModelButton(text = "Edit Source")
@@ -53,6 +53,9 @@ class DataButton(Gtk.MenuButton):
 		self.pop = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)
 		self.pop.add(box)
 
+		icon = Gio.ThemedIcon(name = "open-menu-symbolic")
+		image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
+
 		self.set_image(image)
 		self.set_use_popover(True)
 		self.set_popover(self.pop)
@@ -73,9 +76,12 @@ class DataButton(Gtk.MenuButton):
 		dialog = FriendDialog(self.win, action)
 
 class HeaderBar(Gtk.HeaderBar):
-	"""Creates a header bar for the window"""
+	"""
+	Creates a header bar for the window
+	"""
 
 	__gsignals__ = {
+		"go-back": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()),
 		"random-clicked": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()), # in conjunction with random movie button to facilitate a search
 		"revealer-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)),
 		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
@@ -87,6 +93,9 @@ class HeaderBar(Gtk.HeaderBar):
 
 		self.win = win
 		self.randMovie = None
+
+		back = Gtk.Button.new_from_icon_name('go-previous-symbolic', Gtk.IconSize.BUTTON)
+		back.connect('clicked', self.back_cb)
 
 		self.randMovie = Gtk.Button(label = "Random Movie")
 		self.randMovie.get_style_context().add_class("suggested-action")
@@ -101,9 +110,13 @@ class HeaderBar(Gtk.HeaderBar):
 		data.connect("clicked", self.data_cb)
 		self.search.connect("clicked", self.search_cb)
 
+		self.pack_start(back)
 		self.pack_start(self.randMovie)
 		self.pack_end(data)
 		self.pack_end(self.search)
+
+	def back_cb(self, button):
+		self.emit('go-back')
 
 	def data_cb(self, data):
 		data.get_pop().show_all()
