@@ -69,7 +69,7 @@ class SearchResults(Gtk.Box):
 	}
 
 	def __init__(self): # , search_page):
-		Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL)
+		Gtk.Box.__init__(self, Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER)
 		# self.search_page = search_page
 
 		self.stack = Gtk.Stack(transition_type = Gtk.StackTransitionType.CROSSFADE)
