@@ -10,9 +10,14 @@ class FriendDialog(Gtk.Dialog):
 	Dialog for adding and deleting friends
 	"""
 
-	__gsignals__ {
-		"friend-added": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,),
-		"friend-deleted": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)
+	# __gsignals__ = {
+	# 	"friend-added": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,),
+	# 	"friend-deleted": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)
+	# }
+
+	__gsignals__ = {
+		"friend-added": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
+		"friend-deleted": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
 	}
 
 	def __init__(self, parent, action):
