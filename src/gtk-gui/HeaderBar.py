@@ -60,8 +60,8 @@ class DataButton(Gtk.MenuButton):
 		self.set_use_popover(True)
 		self.set_popover(self.pop)
 
-	def get_pop(self):
-		return self.pop
+	# def get_pop(self): # wtf is this
+	# 	return self.pop
 
 	def change_cb(self, button):
 		print("This is a dummy callback for the Change Source button.")
