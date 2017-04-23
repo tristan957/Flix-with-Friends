@@ -9,7 +9,7 @@ tmdb.API_KEY = 'b299f0e8dce095f8ebcbae6ab789005c'
 
 class Database:
 
-	def __init__(self):
+	def __init__(self, cred_dict):
 		# self.client = pymongo.MongoClient(DB_INFO['link'])
 		self.client = pymongo.MongoClient('mongodb://test:test@ds133418.mlab.com:33418/flix_with_friends')
 		self.db = self.client.flix_with_friends
