@@ -83,7 +83,10 @@ class ActBar(Gtk.ActionBar):
 		viewers = Gtk.MenuButton(label = "Viewers", use_popover = True, popover = self.pop)
 		viewers.connect("toggled", self.viewers_cb)
 
-		self.trailer = Gtk.LinkButton.new_with_label(movie.trailer, 'Trailer')
+		self.trailer = Gtk.Button(label = 'Trailer')
+		if movie.trailer == None:
+			self.trailer.set_sensitive(False)
+		self.trailer.connect('clicked', self.trailer_cb)
 
 		# add widgets to the ActionBar
 		self.pack_start(popout)
@@ -93,6 +96,10 @@ class ActBar(Gtk.ActionBar):
 
 	def popout_cb(self, button):
 		popout = InfoWindow(self.movie)
+
+	def trailer_cb(self, button):
+		if self.movie.trailer != None:
+			os.system('google-chrome-stable ' + self.movie.trailer)
 
 	def viewers_cb(self, button):
 
@@ -122,7 +129,8 @@ class ActBar(Gtk.ActionBar):
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
 		self.pop.add(self.popBox)
 
-		self.trailer.set_uri(self.movie.trailer)
+		if self.movie.trailer == None:
+			self.trailer.set_sensitive(False)
 
 class GenreGrid(Gtk.Box):
 
