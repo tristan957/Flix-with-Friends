@@ -11,7 +11,10 @@ from Info import InfoPage
 from search_results import SearchResults
 
 class LocationChooser(Gtk.Box):
-	"""Box to choose the location of information for the database"""
+
+	"""
+	Box to choose the location of information for the database
+	"""
 
 	__gsignals__ = {
 		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
@@ -102,7 +105,10 @@ class LocationChooser(Gtk.Box):
 
 
 class InitWindow(Gtk.ApplicationWindow):
-	"""Gets the initial location information"""
+
+	"""
+	Gets the initial location information
+	"""
 
 	__gsignals__ = {
 		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
@@ -124,7 +130,10 @@ class InitWindow(Gtk.ApplicationWindow):
 
 
 class MainWindow(Gtk.ApplicationWindow):
-	"""Window where all the magic happens"""
+
+	"""
+	Window where all the magic happens
+	"""
 
 	# start with the revealers hidden, then cover up getting started screen with revealers (maybe even hide the background label)
 	# ____________________________________
