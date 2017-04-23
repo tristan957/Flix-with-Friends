@@ -5,18 +5,17 @@ from gi.repository import Gtk, Gio, GLib
 from Database import Database
 
 
-class InfoDialog(Gtk.Dialog):
-	"""Provide a popout dialog for a movie"""
+class InfoWindow(Gtk.Window):
 
-	def __init__(self, parent, movie):
-		Gtk.Dialog.__init__(self, use_header_bar = True)
+	"""
+	Provide a popout window for a movie
+	"""
 
-		# Change this to a window...That means remove all the parent parameters fml
+	def __init__(self, movie):
+		Gtk.Window.__init__(self)
 
-		self.set_transient_for(parent)
-
-		header = self.get_header_bar()
-		header.set_title(movie.title)
+		header = Gtk.HeaderBar(show_close_button = True, title = movie.title)
+		self.set_titlebar(header)
 
 		self.pop = Gtk.Popover(position = Gtk.PositionType.BOTTOM)
 		popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
@@ -31,20 +30,25 @@ class InfoDialog(Gtk.Dialog):
 
 		header.pack_end(viewers)
 
-		area = self.get_content_area()
-		area.add(DetailsGrid(movie))
+		self.add(DetailsGrid(movie))
 
 		self.show_all()
 
 	def viewers_cb(self, button):
-		"""Toggles the popover"""
+
+		"""
+		Toggles the popover
+		"""
 
 		self.pop.show_all()
 
 class ActBar(Gtk.ActionBar):
-	"""Provides a titlebar with actions for movies"""
 
-	def __init__(self, parent, movie):
+	"""
+	Provides a titlebar with actions for movies
+	"""
+
+	def __init__(self, movie):
 		Gtk.ActionBar.__init__(self)
 
 		self.get_style_context().add_class("inline-toolbar")
@@ -82,15 +86,21 @@ class ActBar(Gtk.ActionBar):
 		self.pack_end(viewers)
 
 	def popout_cb(self, button, parent, movie):
-		dialog = InfoDialog(parent, movie)
+		dialog = InfoWindow(movie)
 
 	def viewers_cb(self, button):
-		"""Toggles the popover"""
+
+		"""
+		Toggles the popover
+		"""
 
 		self.pop.show_all()
 
 	def update(self, movie):
-		"""Updates the data in the action bar"""
+
+		"""
+		Updates the data in the action bar
+		"""
 
 		self.title.set_label(movie.get_markup_title())
 
@@ -105,7 +115,10 @@ class ActBar(Gtk.ActionBar):
 		self.pop.add(self.popBox)
 
 class DetailsGrid(Gtk.Box):
-	"""Create a container to display information in an organized fashion"""
+
+	"""
+	Create a container to display information in an organized fashion
+	"""
 
 	def __init__(self, movie):
 		Gtk.Box.__init__(self, margin = 40, spacing = 50)
@@ -175,9 +188,12 @@ class DetailsGrid(Gtk.Box):
 
 
 class InfoPage(Gtk.Box):
-	"""Create a single page Notebook to display movie information"""
 
-	def __init__(self, parent, db, movieName):
+	"""
+	Create a single page Notebook to display movie information
+	"""
+
+	def __init__(self, db, movieName):
 		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, vexpand = True)
 
 		self.db = db
@@ -186,7 +202,7 @@ class InfoPage(Gtk.Box):
 
 		self.movie = db.find_movie(movieName)
 
-		self.action = ActBar(parent, self.movie)
+		self.action = ActBar(self.movie)
 		# self.poster = Gtk.Image(file = self.movie.get_large_image())
 		self.grid = DetailsGrid(self.movie)
 
