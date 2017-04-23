@@ -29,7 +29,7 @@ class Movie:
 		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
 		self.allActors = []
-		self.director = Person('director', dictionary['director_name'], dictionary['director_img'])
+		self.director = Person('Director', dictionary['director_name'], dictionary['director_img'])
 
 		for i, actor in enumerate(self.actorNames):
 			self.allActors.append(Person('actor', self.actorNames[i], self.actorImg[i], self.actorChars[i]))
