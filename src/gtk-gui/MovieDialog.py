@@ -44,7 +44,7 @@ class MovieDialog(Gtk.Dialog):
 		self.show_all()
 		# if the action is deleting, create an autocompletion tree
 
-	def enterButton_cb(self, enterButton):
+	def enterButton_cb(self, enterButton, db):
 		"""
 		Reads the text entry and searches for a new movie to add
 		"""
