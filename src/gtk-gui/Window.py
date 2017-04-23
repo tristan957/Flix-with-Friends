@@ -181,7 +181,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.windowStack = Gtk.Stack(interpolate_size = True,
 									transition_type = Gtk.StackTransitionType.CROSSFADE)
 
-		self.header = HeaderBar(self)
+		self.header = HeaderBar(self, self.db)
 		self.header.connect('go-back', self.goBack_cb)
 		self.header.connect("random-clicked", self.random_cb)
 		self.header.connect("revealer-change", self.reveal_cb)

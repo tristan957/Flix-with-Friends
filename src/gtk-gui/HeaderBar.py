@@ -88,7 +88,7 @@ class HeaderBar(Gtk.HeaderBar):
 		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()) # in conjunction with edit source button to bring up an edit screen
 	}
 
-	def __init__(self, win):
+	def __init__(self, win, db):
 		Gtk.HeaderBar.__init__(self, title = "Flix with Friends", show_close_button = True)
 
 		self.win = win
@@ -100,7 +100,7 @@ class HeaderBar(Gtk.HeaderBar):
 		self.randMovie = Gtk.Button(label = "Random Movie")
 		self.randMovie.get_style_context().add_class("suggested-action")
 
-		data = DataButton(win)
+		data = DataButton(win, db)
 		data.connect("clicked", self.data_cb)
 		data.connect('source-change', self.sourceChange_cb)
 		data.connect('source-edit', self.sourceEdit_cb)
