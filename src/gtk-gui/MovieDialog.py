@@ -60,7 +60,10 @@ class MovieDialog(Gtk.Dialog):
 				print('Title:', movie.title)
 				print('Overview:', movie.overview)
 				print()
-				db.add_movie_db(movie.ID)
+				if movie.title not in db.movieTitles:
+					db.add_movie_db(movie.ID)
+			db.movies = []
+			db.movieTitles = []
 			db.get_from_db_movies(db.movie_collection)
 			db.get_images()
 			db.movies.sort(key = lambda x: x.title)

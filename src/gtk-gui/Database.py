@@ -26,18 +26,24 @@ class Database:
 
 		self.get_from_db_movies(self.movie_collection)
 		self.get_images()
-		self.movies.sort(key = lambda x: x.title)
 
 
-		double_val = self.remove_duplicates()
+		duplicate_movies = self.remove_duplicates()
+		is_bad = False
 
-		while(double_val != -1):
-			print(self.movies[double_val].title)
-			id = self.movies[double_val].db_id
+		for num in duplicate_movies:
+			is_bad = True
+			print(self.movies[num].title)
+			id = self.movies[num].db_id
 			self.movie_collection.remove({"_id": id})
 
+		if is_bad:
+			self.movies = []
+			self.movieTitles = []
 			self.get_from_db_movies(self.movie_collection)
-			double_val = self.remove_duplicates()
+
+		self.movies.sort(key = lambda x: x.title)
+
 
 	def get_from_db_movies(self, DB_COLLECTION):
 		# need all movies as movie class
@@ -92,12 +98,14 @@ class Database:
 
 	def remove_duplicates(self):
 		seen = set()
+		duplicate_movies = []
 		i = 0
 		for x in self.movies:
-			if x.title in seen: return i
+			if x.title in seen:
+				duplicate_movies.append(i)
 			seen.add(x.title)
 			i += 1
-		return -1
+		return duplicate_movies
 
 	def get_movie_info(self, MOVIE):
 		# Get Movie info as json object
@@ -140,14 +148,14 @@ class Database:
 		for key in keywords_api['keywords']:
 			keywords.append(key['name'])
 
-		movie['keywords'] = keywords
-		movie['genres'] = genres
-		movie['director_name'] = director_name
-		movie['director_img'] = director_img
-		movie['actor_name'] = actor_name
-		movie['actor_char'] = actor_char
-		movie['actor_img'] = actor_img
-		movie['trailer'] = self.get_trailer(MOVIE)
+		if 'keywords' in movie: movie['keywords'] = keywords
+		if 'genres' in movie: movie['genres'] = genres
+		if 'director_name' in movie: movie['director_name'] = director_name
+		if 'director_img' in movie: movie['director_img'] = director_img
+		if 'actor_name' in movie: movie['actor_name'] = actor_name
+		if 'actor_char' in movie: movie['actor_char'] = actor_char
+		if 'actor_img' in movie: movie['actor_img'] = actor_img
+		if 'trailer' in movie: movie['trailer'] = self.get_trailer(MOVIE)
 		return movie
 
 	def add_movie_db(self, MOVIE_ID):
