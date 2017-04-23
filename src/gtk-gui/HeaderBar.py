@@ -12,8 +12,8 @@ class DataButton(Gtk.MenuButton):
 	"""
 
 	__gsignals__ = {
-		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
-		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
+		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()), # in conjunction with change source button to change the database source
+		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()) # in conjunction with edit source button to bring up an edit screen
 	}
 
 	def __init__(self, win):
@@ -64,10 +64,10 @@ class DataButton(Gtk.MenuButton):
 	# 	return self.pop
 
 	def change_cb(self, button):
-		print("This is a dummy callback for the Change Source button.")
+		self.emit('source-change')
 
 	def edit_cb(self, button):
-		print("This is a dummy callback for the Edit Source button.")
+		self.emit('source-edit')
 
 	def manipulateMovies_cb(self, movieButton, action):
 		dialog = MovieDialog(self.win, action)
@@ -84,8 +84,8 @@ class HeaderBar(Gtk.HeaderBar):
 		"go-back": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()),
 		"random-clicked": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()), # in conjunction with random movie button to facilitate a search
 		"revealer-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)),
-		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
-		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
+		"source-change": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()), # in conjunction with change source button to change the database source
+		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()) # in conjunction with edit source button to bring up an edit screen
 	}
 
 	def __init__(self, win):
@@ -101,13 +101,15 @@ class HeaderBar(Gtk.HeaderBar):
 		self.randMovie.get_style_context().add_class("suggested-action")
 
 		data = DataButton(win)
+		data.connect("clicked", self.data_cb)
+		data.connect('source-change', self.sourceChange_cb)
+		data.connect('source-edit', self.sourceEdit_cb)
 
 		searchIcon = Gio.ThemedIcon(name = "edit-find-symbolic")
 		searchImage = Gtk.Image.new_from_gicon(searchIcon, Gtk.IconSize.BUTTON)
 		self.search = Gtk.ToggleButton(image = searchImage)
 
 		self.randMovie.connect("clicked", self.randMovie_cb) # come back to this
-		data.connect("clicked", self.data_cb)
 		self.search.connect("clicked", self.search_cb)
 
 		self.pack_start(back)
@@ -126,3 +128,9 @@ class HeaderBar(Gtk.HeaderBar):
 
 	def search_cb(self, button):
 		self.emit("revealer-change", button.get_active())
+
+	def sourceChange_cb(self, button):
+		self.emit('source-change')
+
+	def sourceEdit_cb(self, button):
+		self.emit('source-edit')
