@@ -12,6 +12,8 @@ class Database:
 	def __init__(self, cred_dict):
 		# self.client = pymongo.MongoClient(DB_INFO['link'])
 		self.client = pymongo.MongoClient('mongodb://test:test@ds133418.mlab.com:33418/flix_with_friends')
+		# UNCOMMENT ME FOR PRES
+		# self.client = pymongo.MongoClient('mongodb://' + cred_dict['username'] + ':' + cred_dict['password'] + '@' + cred_dict['location'])
 		self.db = self.client.flix_with_friends
 		self.movie_collection = self.db.movie_collection
 		self.viewer_collection = self.db.viewer_collection
@@ -25,6 +27,17 @@ class Database:
 		self.get_from_db_movies(self.movie_collection)
 		self.get_images()
 		self.movies.sort(key = lambda x: x.title)
+
+
+		double_val = self.remove_duplicates()
+
+		while(double_val != -1):
+			print(self.movies[double_val].title)
+			id = self.movies[double_val].db_id
+			self.movie_collection.remove({"_id": id})
+
+			self.get_from_db_movies(self.movie_collection)
+			double_val = self.remove_duplicates()
 
 	def get_from_db_movies(self, DB_COLLECTION):
 		# need all movies as movie class
@@ -76,6 +89,15 @@ class Database:
 	def get_images(self):
 		for m in self.movies:
 			m.get_image()
+
+	def remove_duplicates(self):
+		seen = set()
+		i = 0
+		for x in self.movies:
+			if x.title in seen: return i
+			seen.add(x.title)
+			i += 1
+		return -1
 
 	def get_movie_info(self, MOVIE):
 		# Get Movie info as json object

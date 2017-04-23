@@ -7,6 +7,7 @@ import urllib.request
 class Movie:
 
 	def __init__(self, dictionary):
+		self.db_id = dictionary['_id']
 		self.title = dictionary['title']
 		self.ID = dictionary['id']
 		self.viewers = dictionary['viewers'].split(', ')
