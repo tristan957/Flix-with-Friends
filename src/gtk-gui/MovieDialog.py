@@ -51,15 +51,23 @@ class MovieDialog(Gtk.Dialog):
 		if (self.action == 'add') and (self.entry.get_text() != 'Enter the name of a movie to add'):
 			print('Movie to add:', self.entry.get_text())
 
-			try:
+			# try:
 				# self.db.newMovie(self.entry.get_text())
 				# print(self.entry.get_text(), 'added as', self.db.movies[-1].title)
-				search = db.tmdb_search(self.entry.get_text())
-				print('Searh Results:\n')
-				for movie in search:
-					print('Title:', movie.title)
-					print('Overview:', movie.overview)
-					print()
-			except:
-				print('Error adding', self.entry.get_text())
+			search = db.search_movie(self.entry.get_text())
+			print('Searh Results:\n')
+			for movie in search:
+				print('Title:', movie.title)
+				print('Overview:', movie.overview)
+				print()
+				if movie.title not in db.movieTitles:
+					db.add_movie_db(movie.ID)
+			db.movies = []
+			db.movieTitles = []
+			db.get_from_db_movies(db.movie_collection)
+			db.get_images()
+			db.movies.sort(key = lambda x: x.title)
+
+			# except:
+			# 	print('Error adding', self.entry.get_text())
 		self.destroy()

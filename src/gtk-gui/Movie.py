@@ -7,24 +7,25 @@ import urllib.request
 class Movie:
 
 	def __init__(self, dictionary):
-		self.db_id = dictionary['_id']
-		self.title = dictionary['title']
-		self.ID = dictionary['id']
-		self.viewers = dictionary['viewers'].split(', ')
-		self.runtime = dictionary['runtime']
-		self.genres = dictionary['genres']
-		self.release_date = dictionary['release_date']
-		self.vote = str(dictionary['vote_average'])
-		self.overview = dictionary['overview']
-		self.poster_path = dictionary['poster_path']
-		self.actorNames = dictionary['actor_name']
-		self.actorChars = dictionary['actor_char']
-		self.actorImg = dictionary['actor_img']
-		self.directorName = dictionary['director_name']
-		self.directorImg = dictionary['director_img']
-		self.trailer = dictionary['trailer']
-		self.backdrop = dictionary['backdrop_path']
-		self.keywords = dictionary['keywords']
+		if '_id' in dictionary: self.db_id = dictionary['_id']
+
+		if 'title' in dictionary:  self.title = dictionary['title']
+		if 'id' in dictionary:  self.ID = dictionary['id']
+		if 'viewers' in dictionary:  self.viewers = dictionary['viewers'].split(', ')
+		if 'runtime' in dictionary:  self.runtime = dictionary['runtime']
+		if 'genres' in dictionary:  self.genres = dictionary['genres']
+		if 'release_date' in dictionary:  self.release_date = dictionary['release_date']
+		if 'vote_average' in dictionary:  self.vote = str(dictionary['vote_average'])
+		if 'overview' in dictionary:  self.overview = dictionary['overview']
+		if 'poster_path' in dictionary:  self.poster_path = dictionary['poster_path']
+		if 'actor_name' in dictionary:  self.actorNames = dictionary['actor_name']
+		if 'actor_char' in dictionary:  self.actorChars = dictionary['actor_char']
+		if 'actor_img' in dictionary:  self.actorImg = dictionary['actor_img']
+		if 'director_name' in dictionary:  self.directorName = dictionary['director_name']
+		if 'director_img' in dictionary:  self.directorImg = dictionary['director_img']
+		if 'trailer' in dictionary:  self.trailer = dictionary['trailer']
+		if 'backdrop_path' in dictionary:  self.backdrop = dictionary['backdrop_path']
+		if 'keywords' in dictionary:  self.keywords = dictionary['keywords']
 		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
 		self.allActors = []
