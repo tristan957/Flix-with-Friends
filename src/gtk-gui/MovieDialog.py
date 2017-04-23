@@ -11,9 +11,9 @@ class MovieDialog(Gtk.Dialog):
 	Dialog for adding and deleting movies
 	"""
 
-	__gsignals__ {
-		"movie-added": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,),
-		"movie-deleted": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)
+	__gsignals__ = {
+		"movie-added": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)), # in conjunction with change source button to change the database source
+		"movie-deleted": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
 	}
 
 	def __init__(self, parent, action):
@@ -32,7 +32,7 @@ class MovieDialog(Gtk.Dialog):
 		label = Gtk.Label(label = "Enter the name of a friend to " + action.lower())
 		self.area.pack_start(label, True, True, 0)
 
-		self.entry = Gtk.Entry(text = "Enter the name of a movie to " + action.lower())
+		self.entry = Gtk.Entry()
 		self.entry.grab_focus()
 		box.pack_start(self.entry, True, False, 0)
 
