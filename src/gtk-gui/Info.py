@@ -178,7 +178,7 @@ class DetailsGrid(Gtk.Box):
 	"""
 
 	def __init__(self, movie):
-		Gtk.Box.__init__(self, margin = 40, spacing = 50) # halign = Gtk.Align.CENTER
+		Gtk.Box.__init__(self, margin = 40, spacing = 50, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
 
 		self.poster = Gtk.Image(file = movie.get_large_image())
 
