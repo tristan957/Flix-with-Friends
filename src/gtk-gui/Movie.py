@@ -98,7 +98,7 @@ class Movie:
 
 class Person:
 
-	def __init__(self, roleA, name, imgLink='', charName = ""):
+	def __init__(self, roleA, name, imgLink = '', charName = ""):
 		self.role = roleA
 		self.name = name
 		self.imgLink = imgLink
