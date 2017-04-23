@@ -83,13 +83,23 @@ class ActBar(Gtk.ActionBar):
 		viewers = Gtk.MenuButton(label = "Viewers", use_popover = True, popover = self.pop)
 		viewers.connect("toggled", self.viewers_cb)
 
+		self.trailer = Gtk.Button(label = 'Trailer')
+		if movie.trailer == None:
+			self.trailer.set_sensitive(False)
+		self.trailer.connect('clicked', self.trailer_cb)
+
 		# add widgets to the ActionBar
 		self.pack_start(popout)
 		self.pack_end(menu)
+		self.pack_end(self.trailer)
 		self.pack_end(viewers)
 
 	def popout_cb(self, button):
 		popout = InfoWindow(self.movie)
+
+	def trailer_cb(self, button):
+		if self.movie.trailer != None:
+			os.system('google-chrome-stable ' + self.movie.trailer)
 
 	def viewers_cb(self, button):
 
@@ -118,6 +128,9 @@ class ActBar(Gtk.ActionBar):
 		else:
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
 		self.pop.add(self.popBox)
+
+		if self.movie.trailer == None:
+			self.trailer.set_sensitive(False)
 
 class GenreGrid(Gtk.Box):
 
@@ -235,8 +248,6 @@ class DetailsGrid(Gtk.Box):
 		# box.add(grid)
 		# box.add(self.peeps)
 
-		self.peeps.set_size_request(-1, 600)
-
 		self.pack_start(self.poster, True, True, 0)
 		self.pack_start(grid, True, True, 0)
 
@@ -254,81 +265,87 @@ class DetailsGrid(Gtk.Box):
 								" Hours " + str(int(movie.runtime) % 60) + " Minutes</big>")
 		self.genres.update(movie)
 		self.overview.set_label("<big>" + movie.overview + "</big>")
-		self.peeps.set_view(movie)
+		self.peeps.update(movie)
 
-class PeopleView(Gtk.ScrolledWindow):
+class PeopleView(Gtk.Box):
 
 	"""
 	Create a view to show people associated with a movie
 	"""
 
 	def __init__(self, movie):
-		Gtk.ScrolledWindow.__init__(self, shadow_type = Gtk.ShadowType.ETCHED_IN,
-									overlay_scrolling = False, kinetic_scrolling = True)
-		self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-		self.get_style_context().add_class("search-results")
+		Gtk.Box.__init__(self)
 
-		self.tview = Gtk.TreeView(activate_on_single_click = True, enable_grid_lines = False, headers_visible = False)
-		self.tview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
-		self.add(self.tview)
-
-		ren = Gtk.CellRendererPixbuf()
-		# ren.set_property("stock-size", Gtk.IconSize.DIALOG)
-		ren.set_padding(5, 2)
-		column = Gtk.TreeViewColumn("Picture", ren, pixbuf = 2)
-		self.tview.append_column(column)
-
-		ren = Gtk.CellRendererText()
-		ren.set_padding(5, 5)
-		column = Gtk.TreeViewColumn("Person", ren, markup = 0)
-		self.tview.append_column(column)
-		self.tview.set_search_column(1)
-
-		self.set_view(movie)
-
-	def set_view(self, movie):
+		self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10)
 
 		peeps = [movie.director]
-		for p in movie.allActors:
-			peeps.append(p)
+		for peep in movie.allActors:
+			peeps.append(peep)
 
-		model = Gtk.ListStore(str, str, GdkPixbuf.Pixbuf)
-
-		self.reset()
-
+		row = 0
+		column = 0
 		for peep in peeps:
-			desc = movie.overview
-			desc = GLib.markup_escape_text(desc)
+			box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5)
 			if peep.role == 'actor':
-				text = "<b>%s</b>\n%s" % (peep.name.replace('&', '&amp;'), peep.charName)
+				role = peep.charName
 			else:
-				text = "<b>%s</b>\n%s" % (peep.name.replace('&', '&amp;'), peep.role.title())
-
+				role = peep.role.title()
 			if os.path.isfile(peep.img) is True:
-				image = GdkPixbuf.Pixbuf.new_from_file(peep.img)
+				image = Gtk.Image.new_from_file(peep.img)
 			else:
 				image = None
 
-			model.append([text, peep.name, image])
+			if image != None:
+				self.grid.attach(image, column, row, 1, 1)
+			self.grid.attach(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True,
+										wrap = True, max_width_chars = 20,
+										justify = Gtk.Justification.CENTER), column, row + 1, 1, 1)
+			self.grid.attach(Gtk.Label(label = role, wrap = True, max_width_chars = 20,
+								justify = Gtk.Justification.CENTER), column, row + 2, 1, 1)
+			column+=1
+			if column % 4 == 0:
+				row+=3
+				column = 0
 
-			while (Gtk.events_pending()):
-				Gtk.main_iteration()
+		self.add(self.grid)
+		self.show_all()
 
-		# if len(results) is 0:
-		# 	self.stack.set_visible_child_name("not-found")
-		# else:
-		# 	self.stack.set_visible_child_name("available")
+	def update(self, movie):
 
-		self.tview.set_model(model)
+		self.grid.destroy()
 
-	def reset(self):
-		self.tview.set_model(None)
-		self.queue_draw()
+		self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10)
 
-	# def clear_view(self):
-	# 	self.tview.set_model(None)
-	# 	self.stack.set_visible_child_name("empty")
-	# 	self.queue_draw()
+		peeps = [movie.director]
+		for peep in movie.allActors:
+			peeps.append(peep)
+
+		row = 0
+		column = 0
+		for peep in peeps:
+			if peep.role == 'actor':
+				role = peep.charName
+			else:
+				role = peep.role.title()
+			if os.path.isfile(peep.img) is True:
+				image = Gtk.Image.new_from_file(peep.img)
+			else:
+				image = None
+
+			if image != None:
+				self.grid.attach(image, column, row, 1, 1)
+			self.grid.attach(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True,
+										wrap = True, max_width_chars = 20,
+										justify = Gtk.Justification.CENTER), column, row + 1, 1, 1)
+			self.grid.attach(Gtk.Label(label = role, wrap = True, max_width_chars = 20,
+								justify = Gtk.Justification.CENTER), column, row + 2, 1, 1)
+			column+=1
+			if column % 4 == 0:
+				row+=3
+				column = 0
+
+		self.add(self.grid)
+		self.show_all()
 
 class InfoPage(Gtk.Box):
 
