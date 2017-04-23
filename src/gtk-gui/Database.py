@@ -24,6 +24,7 @@ class Database:
 
 		self.get_from_db_movies(self.movie_collection)
 		self.get_images()
+		self.movies.sort(key = lambda x: x.title)
 
 	def get_from_db_movies(self, DB_COLLECTION):
 		# need all movies as movie class
