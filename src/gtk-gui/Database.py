@@ -26,6 +26,17 @@ class Database:
 		self.get_images()
 		self.movies.sort(key = lambda x: x.title)
 
+
+		double_val = self.remove_duplicates()
+
+		while(double_val != -1):
+			print(self.movies[double_val].title)
+			id = self.movies[double_val].db_id
+			self.movie_collection.remove({"_id": id})
+
+			self.get_from_db_movies(self.movie_collection)
+			double_val = self.remove_duplicates()
+
 	def get_from_db_movies(self, DB_COLLECTION):
 		# need all movies as movie class
 		# list of movie titles
@@ -76,6 +87,15 @@ class Database:
 	def get_images(self):
 		for m in self.movies:
 			m.get_image()
+
+	def remove_duplicates(self):
+		seen = set()
+		i = 0
+		for x in self.movies:
+			if x.title in seen: return i
+			seen.add(x.title)
+			i += 1
+		return -1
 
 	def get_movie_info(self, MOVIE):
 		# Get Movie info as json object
