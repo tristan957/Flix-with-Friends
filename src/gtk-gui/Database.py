@@ -12,6 +12,8 @@ class Database:
 	def __init__(self, cred_dict):
 		# self.client = pymongo.MongoClient(DB_INFO['link'])
 		self.client = pymongo.MongoClient('mongodb://test:test@ds133418.mlab.com:33418/flix_with_friends')
+		# UNCOMMENT ME FOR PRES
+		# self.client = pymongo.MongoClient('mongodb://' + cred_dict['username'] + ':' + cred_dict['password'] + '@' + cred_dict['location'])
 		self.db = self.client.flix_with_friends
 		self.movie_collection = self.db.movie_collection
 		self.viewer_collection = self.db.viewer_collection
