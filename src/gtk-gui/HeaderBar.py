@@ -26,9 +26,6 @@ class DataButton(Gtk.MenuButton):
 		self.win = win
 		self.pop = None
 
-		icon = Gio.ThemedIcon(name = "open-menu-symbolic")
-		image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
-
 		change = Gtk.ModelButton(text = "Change Source")
 		edit = Gtk.ModelButton(text = "Edit Source")
 		addMovie = Gtk.ModelButton(text = "Add a Movie")
@@ -55,6 +52,9 @@ class DataButton(Gtk.MenuButton):
 
 		self.pop = Gtk.PopoverMenu(position = Gtk.PositionType.BOTTOM)
 		self.pop.add(box)
+
+		icon = Gio.ThemedIcon(name = "open-menu-symbolic")
+		image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
 
 		self.set_image(image)
 		self.set_use_popover(True)
