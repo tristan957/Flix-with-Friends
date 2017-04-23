@@ -51,9 +51,11 @@ class ActBar(Gtk.ActionBar):
 	def __init__(self, movie):
 		Gtk.ActionBar.__init__(self)
 
+		self.movie = movie
+
 		self.get_style_context().add_class("inline-toolbar")
 
-		self.title = Gtk.Label(label = movie.get_markup_title(), justify = Gtk.Justification.CENTER,
+		self.title = Gtk.Label(label = "<big><b>" + self.movie.title.replace('&', '&amp;') + "</b></big>", justify = Gtk.Justification.CENTER,
 								use_markup = True)
 		self.set_center_widget(self.title)
 
@@ -61,7 +63,7 @@ class ActBar(Gtk.ActionBar):
 		pageIcon = Gio.ThemedIcon(name = "view-paged-symbolic")
 		popImage = Gtk.Image.new_from_gicon(pageIcon, Gtk.IconSize.BUTTON)
 		popout = Gtk.Button(image = popImage)
-		popout.connect("clicked", self.popout_cb, movie)
+		popout.connect("clicked", self.popout_cb)
 
 		# add a button that has actions for the movie, like view trailer, view tmdb url for movie, and maybe an edit button??
 		menuIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
@@ -71,8 +73,8 @@ class ActBar(Gtk.ActionBar):
 		# add a button to show a popover for who has seen the movie
 		self.pop = Gtk.Popover(position = Gtk.PositionType.BOTTOM)
 		self.popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
-		if len(movie.viewers) > 0:
-			for friend in movie.viewers:
+		if len(self.movie.viewers) > 0:
+			for friend in self.movie.viewers:
 				self.popBox.add(Gtk.Label(label = friend))
 		else:
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
@@ -85,8 +87,8 @@ class ActBar(Gtk.ActionBar):
 		self.pack_end(menu)
 		self.pack_end(viewers)
 
-	def popout_cb(self, button, movie):
-		dialog = InfoWindow(movie)
+	def popout_cb(self, button):
+		popout = InfoWindow(self.movie)
 
 	def viewers_cb(self, button):
 
@@ -102,19 +104,26 @@ class ActBar(Gtk.ActionBar):
 		Updates the data in the action bar
 		"""
 
-		self.title.set_label(movie.get_markup_title())
+		self.movie = movie
+
+		self.title.set_label(self.movie.get_markup_title())
 
 		# remake the popover box with new labels
 		self.popBox.destroy()
 		self.popBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, margin = 5, spacing = 10)
-		if len(movie.viewers) > 0: # movies with no viewers for some reason have 1 viewer like "Aloha"
-			for friend in movie.viewers:
+		if len(self.movie.viewers) > 0: # movies with no viewers for some reason have 1 viewer like "Aloha"
+			for friend in self.movie.viewers:
 				self.popBox.add(Gtk.Label(label = friend))
 		else:
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
 		self.pop.add(self.popBox)
 
 class GenreGrid(Gtk.Box):
+
+	"""
+	Container to display genres in an awesome layout_style
+	"""
+
 	def __init__(self, movie):
 		Gtk.Box.__init__(self)
 
@@ -202,8 +211,8 @@ class DetailsGrid(Gtk.Box):
 									halign = Gtk.Align.START)
 		self.overview = Gtk.Label(label = "<big>" + movie.overview + "</big>", use_markup = True,
 									halign = Gtk.Align.START, wrap = True, margin = 10)
-		overviewScroll = Gtk.ScrolledWindow(shadow_type = Gtk.ShadowType.ETCHED_OUT, min_content_height = 200,
-											min_content_width = 300, window_placement = Gtk.CornerType.TOP_LEFT)
+		overviewScroll = Gtk.ScrolledWindow(shadow_type = Gtk.ShadowType.ETCHED_OUT, min_content_height = 250,
+											window_placement = Gtk.CornerType.TOP_LEFT)
 		overviewScroll.add(self.overview)
 
 		grid.attach(self.ratingLabel, 0, 0, 1, 1)
@@ -221,7 +230,10 @@ class DetailsGrid(Gtk.Box):
 		self.add(grid)
 
 	def update(self, movie):
-		"""Update the information within the grid"""
+
+		"""
+		Update the information within the grid
+		"""
 
 		self.poster.set_from_file(movie.get_large_image())
 		self.ratingLabel.set_label("<big>" + str(float(movie.vote) * 10) + "%</big>")
@@ -268,8 +280,14 @@ class InfoPage(Gtk.Box):
 		self.pack_end(right, True, True, 0)
 
 	def update(self, movieName):
+
+		"""
+		Update info within the InfoPage
+		"""
+
 		self.movie = self.db.find_movie(movieName)
 
 		self.action.update(self.movie)
-		# self.poster.set_from_file(self.movie.get_large_image())
 		self.grid.update(self.movie)
+
+		self.queue_draw()
