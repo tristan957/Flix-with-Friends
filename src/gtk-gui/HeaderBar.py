@@ -17,13 +17,14 @@ class DataButton(Gtk.MenuButton):
 	}
 
 	def __init__(self, win):
+
+		ADD = "Add"
+		DELETE = "Delete"
+
 		Gtk.Button.__init__(self)
 
 		self.win = win
 		self.pop = None
-
-		ADD = "Add"
-		DELETE = "Delete"
 
 		icon = Gio.ThemedIcon(name = "open-menu-symbolic")
 		image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
