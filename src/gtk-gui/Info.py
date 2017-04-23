@@ -278,7 +278,10 @@ class PeopleView(Gtk.Box):
 
 		self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10)
 
-		peeps = [movie.director]
+		peeps = []
+
+		if movie.director != None:
+			peeps = peeps.append(movie.director)
 		for peep in movie.allActors:
 			peeps.append(peep)
 
