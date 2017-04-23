@@ -9,8 +9,10 @@ from Window import InitWindow, MainWindow
 FLIX_APP_ID = "com.return0software.Flix-with-Friends"
 
 class FlixApplication(Gtk.Application):
-	"""Acts a program manager"""
-	
+	"""
+	Acts a program manager
+	"""
+
 	def __init__(self):
 		Gtk.Application.__init__(self, application_id = FLIX_APP_ID)
 
@@ -22,7 +24,9 @@ class FlixApplication(Gtk.Application):
 		self.connect("shutdown", self.shutdown_cb)
 
 	def windowCheck(self):
-		"""Checks if a window is already in use"""
+		"""
+		Checks if a window is already in use
+		"""
 
 		if self.initWindow == None and self.mainWindow == None:
 			self.initWindow = InitWindow() # create the initial window to get a location
@@ -31,13 +35,17 @@ class FlixApplication(Gtk.Application):
 			# self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
 
 	def activate_cb(self, app):
-		"""Starts the program"""
+		"""
+		Starts the program
+		"""
 
 		self.windowCheck()
 		self.initWindow.show_all() # display the window and all widgets
 
 	def createMainWin(self, win, location):
-		"""Creates the main window"""
+		"""
+		Creates the main window
+		"""
 
 		Database.location = location
 		self.db = Database(Database.location) # create the database of the given location
