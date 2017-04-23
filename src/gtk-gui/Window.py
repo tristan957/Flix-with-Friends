@@ -185,6 +185,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.header.connect('go-back', self.goBack_cb)
 		self.header.connect("random-clicked", self.random_cb)
 		self.header.connect("revealer-change", self.reveal_cb)
+		self.header.connect('source-change', self.sourceChange_cb)
 		self.set_titlebar(self.header)
 
 		self.searchBar = SearchBar(db)
@@ -204,9 +205,9 @@ class MainWindow(Gtk.ApplicationWindow):
 		# stackBox.pack_end(self.imdbBox, True, True, 0)
 		self.windowStack.add_named(self.imdbBox, "movie-info")
 
-		locationChooser = LocationChooser(self)
+		credentials = LogIn()
 		# locationChooser.connect("location-chosen", self.updateWin)
-		self.windowStack.add_named(locationChooser, "location-chooser")
+		self.windowStack.add_named(credentials, "credentials")
 
 		box.add(self.searchBar)
 		box.add(self.windowStack)
@@ -249,6 +250,9 @@ class MainWindow(Gtk.ApplicationWindow):
 	def searchRan_cb(self, searchBar, results):
 		self.searchResults.set_search_view(results)
 		self.windowStack.set_visible_child_name("search-results")
+
+	def sourceChange_cb(self, header):
+		self.windowStack.set_visible_child_name('credentials')
 
 	def updateIMDB_cb(self, searchResults, movieName):
 		self.imdbBox.update(movieName)
