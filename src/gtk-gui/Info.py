@@ -1,7 +1,8 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, GLib
+from gi.repository import Gtk, Gio, GLib, GdkPixbuf
 
+import os
 from Database import Database
 
 
@@ -181,6 +182,7 @@ class DetailsGrid(Gtk.Box):
 		Gtk.Box.__init__(self, margin = 40, spacing = 50, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
 
 		self.poster = Gtk.Image(file = movie.get_large_image())
+		self.poster.set_valign(Gtk.Align.START)
 
 		grid = Gtk.Grid(column_spacing = 20, row_spacing = 10)
 
@@ -215,6 +217,8 @@ class DetailsGrid(Gtk.Box):
 											window_placement = Gtk.CornerType.TOP_LEFT)
 		overviewScroll.add(self.overview)
 
+		self.peeps = PeopleView(movie)
+
 		grid.attach(self.ratingLabel, 0, 0, 1, 1)
 		grid.attach(self.ratingBar, 0, 1, 1, 3)
 		grid.attach(dateTitle, 1, 0, 1, 1)
@@ -225,9 +229,16 @@ class DetailsGrid(Gtk.Box):
 		grid.attach(self.genres, 2, 2, 1, 1)
 		grid.attach(overviewTitle, 1, 3, 1, 1)
 		grid.attach(overviewScroll, 2, 3, 1, 1)
+		grid.attach(self.peeps, 0, 4, 3, 3)
 
-		self.add(self.poster)
-		self.add(grid)
+		# box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
+		# box.add(grid)
+		# box.add(self.peeps)
+
+		self.peeps.set_size_request(-1, 600)
+
+		self.pack_start(self.poster, True, True, 0)
+		self.pack_start(grid, True, True, 0)
 
 	def update(self, movie):
 
@@ -243,7 +254,81 @@ class DetailsGrid(Gtk.Box):
 								" Hours " + str(int(movie.runtime) % 60) + " Minutes</big>")
 		self.genres.update(movie)
 		self.overview.set_label("<big>" + movie.overview + "</big>")
+		self.peeps.set_view(movie)
 
+class PeopleView(Gtk.ScrolledWindow):
+
+	"""
+	Create a view to show people associated with a movie
+	"""
+
+	def __init__(self, movie):
+		Gtk.ScrolledWindow.__init__(self, shadow_type = Gtk.ShadowType.ETCHED_IN,
+									overlay_scrolling = False, kinetic_scrolling = True)
+		self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+		self.get_style_context().add_class("search-results")
+
+		self.tview = Gtk.TreeView(activate_on_single_click = True, enable_grid_lines = False, headers_visible = False)
+		self.tview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
+		self.add(self.tview)
+
+		ren = Gtk.CellRendererPixbuf()
+		# ren.set_property("stock-size", Gtk.IconSize.DIALOG)
+		ren.set_padding(5, 2)
+		column = Gtk.TreeViewColumn("Picture", ren, pixbuf = 2)
+		self.tview.append_column(column)
+
+		ren = Gtk.CellRendererText()
+		ren.set_padding(5, 5)
+		column = Gtk.TreeViewColumn("Person", ren, markup = 0)
+		self.tview.append_column(column)
+		self.tview.set_search_column(1)
+
+		self.set_view(movie)
+
+	def set_view(self, movie):
+
+		peeps = [movie.director]
+		for p in movie.allActors:
+			peeps.append(p)
+
+		model = Gtk.ListStore(str, str, GdkPixbuf.Pixbuf)
+
+		self.reset()
+
+		for peep in peeps:
+			desc = movie.overview
+			desc = GLib.markup_escape_text(desc)
+			if peep.role == 'actor':
+				text = "<b>%s</b>\n%s" % (peep.name.replace('&', '&amp;'), peep.charName)
+			else:
+				text = "<b>%s</b>\n%s" % (peep.name.replace('&', '&amp;'), peep.role.title())
+
+			if os.path.isfile(peep.img) is True:
+				image = GdkPixbuf.Pixbuf.new_from_file(peep.img)
+			else:
+				image = None
+
+			model.append([text, peep.name, image])
+
+			while (Gtk.events_pending()):
+				Gtk.main_iteration()
+
+		# if len(results) is 0:
+		# 	self.stack.set_visible_child_name("not-found")
+		# else:
+		# 	self.stack.set_visible_child_name("available")
+
+		self.tview.set_model(model)
+
+	def reset(self):
+		self.tview.set_model(None)
+		self.queue_draw()
+
+	# def clear_view(self):
+	# 	self.tview.set_model(None)
+	# 	self.stack.set_visible_child_name("empty")
+	# 	self.queue_draw()
 
 class InfoPage(Gtk.Box):
 
