@@ -121,7 +121,7 @@ class DetailsGrid(Gtk.Box):
 	"""
 
 	def __init__(self, movie):
-		Gtk.Box.__init__(self, margin = 40, spacing = 50)
+		Gtk.Box.__init__(self, margin = 40, spacing = 50) # halign = Gtk.Align.CENTER
 
 		self.poster = Gtk.Image(file = movie.get_large_image())
 
@@ -194,7 +194,8 @@ class InfoPage(Gtk.Box):
 	"""
 
 	def __init__(self, db, movieName):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, vexpand = True)
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, vexpand = True,
+							halign = Gtk.Align.CENTER)
 
 		self.db = db
 
