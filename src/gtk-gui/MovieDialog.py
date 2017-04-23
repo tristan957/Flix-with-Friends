@@ -22,7 +22,7 @@ class MovieDialog(Gtk.Dialog):
 		"""
 		Gtk.Dialog.__init__(self, action + " a Movie", parent, Gtk.DialogFlags.MODAL, use_header_bar = True)
 
-		self.db = Database(Database.location)
+		self.db = Database()
 		self.action = action.lower()
 
 		self.area = self.get_content_area()	 # area is a Gtk.Box
