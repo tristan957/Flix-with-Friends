@@ -61,7 +61,7 @@ class ActBar(Gtk.ActionBar):
 		pageIcon = Gio.ThemedIcon(name = "view-paged-symbolic")
 		popImage = Gtk.Image.new_from_gicon(pageIcon, Gtk.IconSize.BUTTON)
 		popout = Gtk.Button(image = popImage)
-		popout.connect("clicked", self.popout_cb, parent, movie)
+		popout.connect("clicked", self.popout_cb, movie)
 
 		# add a button that has actions for the movie, like view trailer, view tmdb url for movie, and maybe an edit button??
 		menuIcon = Gio.ThemedIcon(name = "open-menu-symbolic")
@@ -85,7 +85,7 @@ class ActBar(Gtk.ActionBar):
 		self.pack_end(menu)
 		self.pack_end(viewers)
 
-	def popout_cb(self, button, parent, movie):
+	def popout_cb(self, button, movie):
 		dialog = InfoWindow(movie)
 
 	def viewers_cb(self, button):
