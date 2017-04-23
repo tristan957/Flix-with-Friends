@@ -28,7 +28,7 @@ class MovieDialog(Gtk.Dialog):
 		box = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
 		box.get_style_context().add_class("linked")
 
-		label = Gtk.Label(label = "Enter the name of a friend to " + action.lower())
+		label = Gtk.Label(label = "Enter the name of a movie to " + action.lower())
 		self.area.pack_start(label, True, True, 0)
 
 		self.entry = Gtk.Entry()
