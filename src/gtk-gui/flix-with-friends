@@ -7,7 +7,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-from ./src/gtk-gui/Application import FlixApplication
+# sys.path.insert(0, '/src/gtk-gui/Application')
+
+from Application import FlixApplication
 
 if __name__ == "__main__":
 	app = FlixApplication()	 # create the GUI
