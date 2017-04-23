@@ -10,98 +10,118 @@ from SearchBar import SearchBar
 from Info import InfoPage
 from search_results import SearchResults
 
-class LocationChooser(Gtk.Box):
+class LogIn(Gtk.Box):
 
 	"""
-	Box to choose the location of information for the database
+	Widget to grab initial log in information for the database
 	"""
 
 	__gsignals__ = {
-		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+		'credentials-set': (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
 	}
 
-	def __init__(self, win):
-		Gtk.Box.__init__(self, margin = 100,
-						orientation = Gtk.Orientation.VERTICAL, spacing = 100)
+	def __init__(self):
+		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, margin = 40,
+							spacing = 30, halign = Gtk.Align.CENTER, valign = Gtk.Align.CENTER)
 
-		self.win = win
-		self.google = None
-		self.spreadsheet = None
-		self.server = None
-		self.local = None
+		self.cred_dict = {}
 
-		label = Gtk.Label("<big>Choose the location of your data</big>", use_markup = True)
-		self.pack_start(label, True, True, 0)
+		header = Gtk.Label(label = '<big><b>Enter the following information to begin</b></big>',
+							use_markup = True)
+		self.check = Gtk.CheckButton(label = 'Click to enter a username and password if needed')
+		self.check.connect('toggled', self.check_cb)
 
-		buttons = Gtk.ButtonBox(layout_style = Gtk.ButtonBoxStyle.EXPAND)
-		buttons.set_size_request(500, 100)
+		locBox = Gtk.Box()
+		locBox.get_style_context().add_class('linked')
+		self.locBut = Gtk.Button(label = 'Enter')
+		self.locBut.connect('clicked', self.grabLoc_cb)
+		self.location = Gtk.Entry()
+		self.location.connect('activate', self.grabLoc_cb)
+		locBox.pack_start(self.location, True, True, 0)
+		locBox.pack_end(self.locBut, False, True, 0)
 
-		# button to set up the database from a Google Sheet
-		googleIcon = Gio.ThemedIcon(name = "google")
-		googleImage = Gtk.Image.new_from_gicon(googleIcon, Gtk.IconSize.BUTTON)
-		self.google = Gtk.Button(label = "Google Sheet", image = googleImage,
-								image_position = Gtk.PositionType.TOP, always_show_image = True)
-		self.google.connect("clicked", self.google_cb)
+		self.rev = Gtk.Revealer(transition_duration = 300, transition_type = Gtk.RevealerTransitionType.CROSSFADE)
+		revBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 30)
 
-		# button to set up the database from a local folder
-		localIcon = Gio.ThemedIcon(name = "folder-symbolic")
-		localImage = Gtk.Image.new_from_gicon(localIcon, Gtk.IconSize.BUTTON)
-		self.local = Gtk.Button(label = "Local Folder", image = localImage,
-								image_position = Gtk.PositionType.TOP, always_show_image = True)
-		self.local.connect("clicked", self.local_cb)
+		userBox = Gtk.Box()
+		userBox.get_style_context().add_class('linked')
+		self.userBut = Gtk.Button(label = 'Enter')
+		self.userBut.connect('clicked', self.grabUser_cb)
+		self.userName = Gtk.Entry()
+		self.userName.connect('activate', self.grabUser_cb)
+		userBox.pack_start(self.userName, True, True, 0)
+		userBox.pack_end(self.userBut, False, True, 0)
 
-		# button to set up the database from a server
-		serverIcon = Gio.ThemedIcon(name = "network-server-symbolic")
-		serverImage = Gtk.Image.new_from_gicon(serverIcon, Gtk.IconSize.BUTTON)
-		self.server = Gtk.Button(label = "Server", image = serverImage,
-								image_position = Gtk.PositionType.TOP, always_show_image = True)
-		self.server.connect("clicked", self.server_cb)
+		passBox = Gtk.Box()
+		passBox.get_style_context().add_class('linked')
+		self.passBut = Gtk.Button(label = 'Enter')
+		self.passBut.connect('clicked', self.grabPass_cb)
+		self.password = Gtk.Entry(invisible_char_set = True)
+		self.password.connect('activate', self.grabPass_cb)
+		passBox.pack_start(self.password, True, True, 0)
+		passBox.pack_end(self.passBut, False, True, 0)
 
-		# button to set up the database from a local spreadsheet
-		spreadsheetIcon = Gio.ThemedIcon(name = "x-office-spreadsheet")
-		spreadsheetImage = Gtk.Image.new_from_gicon(spreadsheetIcon, Gtk.IconSize.BUTTON)
-		self.spreadsheet = Gtk.Button(label = "Spreadsheet", image = spreadsheetImage,
-									image_position = Gtk.PositionType.TOP, always_show_image = True)
-		self.spreadsheet.connect("clicked", self.spreadsheet_cb)
+		revBox.add(Gtk.Label(label = 'Enter a username', halign = Gtk.Align.START))
+		revBox.add(userBox)
+		revBox.add(Gtk.Label(label = 'Enter a password', halign = Gtk.Align.START))
+		revBox.add(passBox)
 
-		buttons.pack_start(self.google, True, True, 0)
-		buttons.pack_start(self.local, True, True, 0)
-		buttons.pack_start(self.server, True, True, 0)
-		buttons.pack_end(self.spreadsheet, True, True, 0)
+		self.rev.add(revBox)
 
-		self.pack_end(buttons, True, False, 0)
+		self.pack_start(header, False, True, 0)
+		self.pack_start(self.check, False, True, 0)
+		self.pack_start(Gtk.Label(label = 'Enter a location for the database',
+							halign = Gtk.Align.START), False, True, 0)
+		self.pack_start(locBox, False, True, 0)
+		self.pack_start(self.rev, False, True, 0)
 
-	def google_cb(self, button):
-		print("This is a dummy google_cb")
+	def check_cb(self, button):
+		self.rev.set_reveal_child(button.get_active())
 
-	def local_cb(self, button):
-		print("This is a dummy local_cb")
+	def checkLength(self):
 
-	def server_cb(self, button):
-		print("This is a dummy server_cb")
+		"""
+		Check if all the credentials have been set
+		"""
 
-	def spreadsheet_cb(self, button):
-		"""ask the user for a spreadsheet file, more specifically a .xls/.xlsx file"""
-		fileChooser = Gtk.FileChooserDialog(self.win, title = "Choose a spreadsheet")
-		fileFilter = Gtk.FileFilter() # filters the file chooser
-		fileFilter.add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") # .xlsx
-		fileFilter.add_mime_type("application/vnd.ms-excel") # .xls
-		fileChooser.add_filter(fileFilter)
-		fileChooser.add_button("Open", Gtk.FileChooserAction.OPEN)
-		fileChooser.add_button("Cancel", Gtk.ResponseType.CANCEL)
-		fileChooser.set_transient_for(self.win)
-		fileChooser.connect("file_activated", self.doubleClickEnter_cb)
+		if len(self.cred_dict) == 3 or (self.check.get_active() == False and len(self.cred_dict) == 1):
+			self.emit('credentials-set', self.cred_dict)
 
-		if fileChooser.run() == 0: # 0 stands for file being chosen
-			location = fileChooser.get_filename()
-			self.emit("location-chosen", location)
-		fileChooser.destroy()
+	def grabLoc_cb(self, widget):
 
-	def doubleClickEnter_cb(self, fileChooser):
-		"""runs if the user hits enter or double clicks an item"""
-		location = fileChooser.get_filename()
-		self.emit("location-chosen", location)
-		fileChooser.destroy()
+		"""
+		Grab the location of the server
+		"""
+
+		self.locBut.set_sensitive(False)
+		self.location.set_sensitive(False)
+
+		self.cred_dict['location'] = self.location.get_text()
+		self.checkLength()
+
+	def grabUser_cb(self, widget):
+
+		"""
+		Grab the location of the server
+		"""
+
+		self.userBut.set_sensitive(False)
+		self.userName.set_sensitive(False)
+
+		self.cred_dict['username'] = self.userName.get_text()
+		self.checkLength()
+
+	def grabPass_cb(self, widget):
+
+		"""
+		Grab the location of the server
+		"""
+
+		self.passBut.set_sensitive(False)
+		self.password.set_sensitive(False)
+
+		self.cred_dict['password'] = self.password.get_text()
+		self.checkLength()
 
 
 class InitWindow(Gtk.ApplicationWindow):
@@ -111,7 +131,7 @@ class InitWindow(Gtk.ApplicationWindow):
 	"""
 
 	__gsignals__ = {
-		"location-chosen": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
+		"credentials-set": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,))
 	}
 
 	def __init__(self):
@@ -120,13 +140,13 @@ class InitWindow(Gtk.ApplicationWindow):
 		header = Gtk.HeaderBar(title = "Flix with Friends", show_close_button = True)
 		self.set_titlebar(header)
 
-		locationChooser = LocationChooser(self)
-		locationChooser.connect("location-chosen", self.locationChosen_cb)
+		cred = LogIn()
+		cred.connect("credentials-set", self.cred_cb)
 
-		self.add(locationChooser)
+		self.add(cred)
 
-	def locationChosen_cb(self, box, location):
-		self.emit("location-chosen", location)
+	def cred_cb(self, stack, cred_dict):
+		self.emit("credentials-set", cred_dict)
 
 
 class MainWindow(Gtk.ApplicationWindow):

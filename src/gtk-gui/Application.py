@@ -32,7 +32,7 @@ class FlixApplication(Gtk.Application):
 
 		if self.initWindow == None and self.mainWindow == None:
 			self.initWindow = InitWindow() # create the initial window to get a location
-			self.initWindow.connect("location-chosen", self.createMainWin)
+			self.initWindow.connect("credentials-set", self.createMainWin)
 			self.add_window(self.initWindow)
 			# self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
 
@@ -45,14 +45,14 @@ class FlixApplication(Gtk.Application):
 		self.windowCheck()
 		self.initWindow.show_all() # display the window and all widgets
 
-	def createMainWin(self, win, location):
-		
+	def createMainWin(self, win, cred_dict):
+
 		"""
 		Creates the main window
 		"""
 
 		# Database.location = location
-		self.db = Database() # create the database of the given location
+		self.db = Database(cred_dict) # create the database of the given location
 		self.mainWindow = MainWindow(self.db) # create the main window now that we have an initial location
 		self.remove_window(self.initWindow)
 		self.initWindow.destroy()
