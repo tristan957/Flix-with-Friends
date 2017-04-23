@@ -119,7 +119,7 @@ class HeaderBar(Gtk.HeaderBar):
 		self.emit('go-back')
 
 	def data_cb(self, data):
-		data.get_pop().show_all()
+		data.pop.show_all()
 
 	def randMovie_cb(self, button):
 		self.emit("random-clicked")

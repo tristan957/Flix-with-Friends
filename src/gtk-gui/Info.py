@@ -114,6 +114,53 @@ class ActBar(Gtk.ActionBar):
 			self.popBox.add(Gtk.Label(label = "No one has seen this movie."))
 		self.pop.add(self.popBox)
 
+class GenreGrid(Gtk.Box):
+	def __init__(self, movie):
+		Gtk.Box.__init__(self)
+
+		self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10)
+
+		row = 0
+		column = 0
+		for g in movie.genres:
+			box = Gtk.Box()
+			box.add(Gtk.Label(label = "<big>" + g + "</big>",
+								use_markup = True, halign = Gtk.Align.CENTER))
+			box.get_style_context().add_class('inline-toolbar')
+			self.grid.attach(box, column, row, 1, 1)
+
+			column+=1
+			if column % 3 == 0:
+				column = 0
+				row+=1
+
+		self.add(self.grid)
+		self.show_all()
+
+	def update(self, movie):
+		self.grid.destroy()
+
+		self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10)
+
+		row = 0
+		column = 0
+		for g in movie.genres:
+			box = Gtk.Box()
+			box.pack_start(Gtk.Label(label = "<big>" + g + "</big>",
+								use_markup = True, halign = Gtk.Align.CENTER),
+								True, True, 0)
+			box.get_style_context().add_class('inline-toolbar')
+			self.grid.attach(box, column, row, 1, 1)
+
+			column+=1
+			if column % 3 == 0:
+				column = 0
+				row+=1
+
+		self.add(self.grid)
+		self.show_all()
+
+
 class DetailsGrid(Gtk.Box):
 
 	"""
@@ -148,9 +195,7 @@ class DetailsGrid(Gtk.Box):
 
 		genreTitle = Gtk.Label(label = "<big><b>Genres</b></big>", use_markup = True,
 								halign = Gtk.Align.START)
-		self.genres = Gtk.Label(label = "<big>" + movie.get_genres_string() + "</big>",
-								use_markup = True, halign = Gtk.Align.START, wrap = True,
-								max_width_chars = 55) # add a wrap
+		self.genres = GenreGrid(movie)
 
 		overviewTitle = Gtk.Label(label = "<big><b>Overview</b></big>", use_markup = True,
 									halign = Gtk.Align.START)
@@ -183,7 +228,7 @@ class DetailsGrid(Gtk.Box):
 		self.date.set_label("<big>" + movie.release_date + "</big>")
 		self.runtime.set_label("<big>" +  str(int(movie.runtime) // 60) +
 								" Hours " + str(int(movie.runtime) % 60) + " Minutes</big>")
-		self.genres.set_label("<big>" + movie.get_genres_string() + "</big>")
+		self.genres.update(movie)
 		self.overview.set_label("<big>" + movie.overview + "</big>")
 
 
@@ -194,12 +239,16 @@ class InfoPage(Gtk.Box):
 	"""
 
 	def __init__(self, db, movieName):
-		Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, vexpand = True,
-							halign = Gtk.Align.CENTER)
+		Gtk.Box.__init__(self)
 
 		self.db = db
 
-		# top = Gtk.Box(margin = 40, spacing = 50)
+		left = Gtk.Box()
+		left.get_style_context().add_class('inline-toolbar')
+		center = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, vexpand = True,
+							halign = Gtk.Align.CENTER)
+		right = Gtk.Box()
+		right.get_style_context().add_class('inline-toolbar')
 
 		self.movie = db.find_movie(movieName)
 
@@ -210,8 +259,12 @@ class InfoPage(Gtk.Box):
 		# top.add(self.poster)
 		# top.add(self.grid)
 
-		self.pack_start(self.action, False, False, 0)
-		self.pack_start(self.grid, True, True, 0)
+		center.pack_start(self.action, False, False, 0)
+		center.pack_start(self.grid, True, True, 0)
+
+		self.pack_start(left, True, True, 0)
+		self.pack_start(center, True, True, 0)
+		self.pack_end(right, True, True, 0)
 
 	def update(self, movieName):
 		self.movie = self.db.find_movie(movieName)
