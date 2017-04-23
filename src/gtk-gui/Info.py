@@ -283,7 +283,8 @@ class PeopleView(Gtk.Box):
 		if movie.director != None:
 			peeps = peeps.append(movie.director)
 		for peep in movie.allActors:
-			peeps.append(peep)
+			if peep != None:
+				peeps.append(peep)
 
 		row = 0
 		column = 0
