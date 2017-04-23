@@ -122,7 +122,7 @@ class ViewedByPop(Gtk.Popover):
 		self.friends = []
 
 		box = Gtk.ButtonBox(orientation = Gtk.Orientation.VERTICAL)
-		for genre in db.friends:
+		for genre in db.viewers:
 			button = Gtk.ModelButton(text = genre, role = Gtk.ButtonRole.CHECK,
 									centered = False)
 			box.add(button)

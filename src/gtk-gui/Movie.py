@@ -7,33 +7,30 @@ import urllib.request
 class Movie:
 
 	def __init__(self, dictionary):
-		self.title = dictionary['Title']
-		self.ID = dictionary['ID']
-		self.viewers = dictionary['ViewedBy'].split(', ')
-		self.runtime = dictionary['Runtime']
-		self.genres = dictionary['Genres'].split(', ')
-		self.release_date = dictionary['ReleaseDate']
-		self.vote = str(dictionary['Vote'])
-		self.overview = dictionary['Overview']
-		self.poster_path = dictionary['Poster']
-		self.actorNames = dictionary['ActorsName'].split(', ')
-		self.actorChars = dictionary['ActorsChar'].split(', ')
-		self.actorImg = dictionary['ActorsImg'].split(', ')
-		self.directorName = dictionary['DirectorName']
-		self.directorImg = dictionary['DirectorImg']
-		self.trailer = dictionary['Trailer']
-		self.backdrop = dictionary['Backdrop']
-		self.keywords = dictionary['Keywords'].split(', ')
+		self.title = dictionary['title']
+		self.ID = dictionary['id']
+		self.viewers = dictionary['viewers'].split(', ')
+		self.runtime = dictionary['runtime']
+		self.genres = dictionary['genres']
+		self.release_date = dictionary['release_date']
+		self.vote = str(dictionary['vote_average'])
+		self.overview = dictionary['overview']
+		self.poster_path = dictionary['poster_path']
+		self.actorNames = dictionary['actor_name']
+		self.actorChars = dictionary['actor_char']
+		self.actorImg = dictionary['actor_img']
+		self.directorName = dictionary['director_name']
+		self.directorImg = dictionary['director_img']
+		self.trailer = dictionary['trailer']
+		self.backdrop = dictionary['backdrop_path']
+		self.keywords = dictionary['keywords']
 		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
-		actors = dictionary['ActorsName'].split(', ')
-		charName = actorChars = dictionary['ActorsChar'].split(', ')
-		actorImage = dictionary['ActorsImg'].split(', ')
 		self.allActors = []
-		self.director = Person('director', dictionary['DirectorName'], dictionary['DirectorImg'])
+		self.director = Person('director', dictionary['director_name'], dictionary['director_img'])
 
-		for i, actor in enumerate(actors):
-			self.allActors.append(Person('actor', actor, actorImage[i], charName[i]))
+		for i, actor in enumerate(self.actorNames):
+			self.allActors.append(Person('actor', self.actorNames[i], self.actorImg[i], self.actorChars[i]))
 
 	def get_image(self):
 
@@ -44,7 +41,7 @@ class Movie:
 			# Create imagePosters directory if not present
 			os.makedirs("./images", exist_ok = True)
 			os.makedirs("./images/movies", exist_ok = True)
-			os.makedirs(self.poster, exist_ok = True)
+			os.makedirs('./images/movies/' + self.title.replace(" ", ""), exist_ok = True)
 			# posters = ['w92', 'w154', 'w185', 'w300_and_h450_bestv2', 'w342', 'w500', 'w780'] #'original']
 			posters = ['w92', 'w342', 'w500']
 
@@ -67,17 +64,8 @@ class Movie:
 
 		self.director.get_image()
 
-	def get_markup_title(self):
-		return "<big><b>" + self.title.replace('&', '&amp;') + "</b></big>"
-
 	def get_markup_overview(self):
 		return self.overview.replace('&', '&amp;')
-
-	def get_genres_string(self):
-		return ', '.join(self.genres).rstrip(', ')
-
-	def get_viewers_string(self):
-		return self.stringify(self.viewers)
 
 	def stringify(self, array):
 		string = ''
@@ -135,4 +123,4 @@ class Person:
 		return None
 
 	def need_image(self):
-		return self.imgLink != 'None' and self.imgLink != '' and not(os.path.exists(self.img))
+		return self.imgLink is not None and self.imgLink != 'None' and self.imgLink != '' and not(os.path.exists(self.img))

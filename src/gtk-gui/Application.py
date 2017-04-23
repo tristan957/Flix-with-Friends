@@ -47,8 +47,8 @@ class FlixApplication(Gtk.Application):
 		Creates the main window
 		"""
 
-		Database.location = location
-		self.db = Database(Database.location) # create the database of the given location
+		# Database.location = location
+		self.db = Database() # create the database of the given location
 		self.mainWindow = MainWindow(self.db) # create the main window now that we have an initial location
 		self.remove_window(self.initWindow)
 		self.initWindow.destroy()
