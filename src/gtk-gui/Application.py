@@ -9,6 +9,7 @@ from Window import InitWindow, MainWindow
 FLIX_APP_ID = "com.return0software.Flix-with-Friends"
 
 class FlixApplication(Gtk.Application):
+
 	"""
 	Acts a program manager
 	"""
@@ -24,6 +25,7 @@ class FlixApplication(Gtk.Application):
 		self.connect("shutdown", self.shutdown_cb)
 
 	def windowCheck(self):
+
 		"""
 		Checks if a window is already in use
 		"""
@@ -35,6 +37,7 @@ class FlixApplication(Gtk.Application):
 			# self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
 
 	def activate_cb(self, app):
+
 		"""
 		Starts the program
 		"""
@@ -43,6 +46,7 @@ class FlixApplication(Gtk.Application):
 		self.initWindow.show_all() # display the window and all widgets
 
 	def createMainWin(self, win, location):
+		
 		"""
 		Creates the main window
 		"""
