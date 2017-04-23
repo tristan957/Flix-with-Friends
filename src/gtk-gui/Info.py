@@ -235,8 +235,6 @@ class DetailsGrid(Gtk.Box):
 		# box.add(grid)
 		# box.add(self.peeps)
 
-		self.peeps.set_size_request(-1, 600)
-
 		self.pack_start(self.poster, True, True, 0)
 		self.pack_start(grid, True, True, 0)
 
@@ -254,16 +252,18 @@ class DetailsGrid(Gtk.Box):
 								" Hours " + str(int(movie.runtime) % 60) + " Minutes</big>")
 		self.genres.update(movie)
 		self.overview.set_label("<big>" + movie.overview + "</big>")
-		self.peeps.set_view(movie)
+		self.peeps.update(movie)
 
-class PeopleView(Gtk.Grid):
+class PeopleView(Gtk.Box):
 
 	"""
 	Create a view to show people associated with a movie
 	"""
 
 	def __init__(self, movie):
-		Gtk.Grid.__init__(self, row_spacing = 10, column_spacing = 10)
+		Gtk.Box.__init__(self)
+
+		self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10)
 
 		peeps = [movie.director]
 		for peep in movie.allActors:
@@ -273,12 +273,61 @@ class PeopleView(Gtk.Grid):
 		column = 0
 		for peep in peeps:
 			box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5)
-			role = ''
-			if peep.role = 'actor':
+			if peep.role == 'actor':
 				role = peep.charName
 			else:
 				role = peep.role.title()
-			box.add()
+			if os.path.isfile(peep.img) is True:
+				image = Gtk.Image.new_from_file(peep.img)
+			else:
+				image = None
+			box.add(image)
+			box.add(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True))
+			box.add(Gtk.Label(label = role))
+
+			self.grid.attach(box, column, row, 1, 1)
+			column+=1
+			if column % 4 == 0:
+				row+=1
+				column = 0
+
+		self.add(self.grid)
+		self.show_all()
+
+	def update(self, movie):
+
+		self.grid.destroy()
+
+		self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10)
+
+		peeps = [movie.director]
+		for peep in movie.allActors:
+			peeps.append(peep)
+
+		row = 0
+		column = 0
+		for peep in peeps:
+			box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5)
+			if peep.role == 'actor':
+				role = peep.charName
+			else:
+				role = peep.role.title()
+			if os.path.isfile(peep.img) is True:
+				image = Gtk.Image.new_from_file(peep.img)
+			else:
+				image = None
+			box.add(image)
+			box.add(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True))
+			box.add(Gtk.Label(label = role))
+
+			self.grid.attach(box, column, row, 1, 1)
+			column+=1
+			if column % 4 == 0:
+				row+=1
+				column = 0
+
+		self.add(self.grid)
+		self.show_all()
 
 class InfoPage(Gtk.Box):
 
