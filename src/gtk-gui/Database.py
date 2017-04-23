@@ -151,7 +151,9 @@ class Database:
 		return movie
 
 	def add_movie_db(self, MOVIE_ID):
-		self.movie_collection.insert(self.get_movie_info(tmdb.Movies(MOVIE_ID)))
+		movie = self.get_movie_info(tmdb.Movies(MOVIE_ID))
+		movie['viewers'] =  ''
+		self.movie_collection.insert(movie)
 
 	def find_movie(self, title):
 		for movie in self.movies:
