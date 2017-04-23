@@ -147,12 +147,13 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.connect("key-press-event", self.key_pressed_cb)
 
 		box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-		stackBox = Gtk.Box()
+		# stackBox = Gtk.Box()
 
 		self.windowStack = Gtk.Stack(interpolate_size = True,
-									transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT)
+									transition_type = Gtk.StackTransitionType.CROSSFADE)
 
 		self.header = HeaderBar(self)
+		self.header.connect('go-back', self.goBack_cb)
 		self.header.connect("random-clicked", self.random_cb)
 		self.header.connect("revealer-change", self.reveal_cb)
 		self.set_titlebar(self.header)
@@ -164,14 +165,15 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.searchResults.connect("row-activated", self.updateIMDB_cb)
 		# self.windowStack.add_named(self.searchResults, "search-results")
 
+		# stackBox.pack_start(self.searchResults, False, False, 0)
+		self.windowStack.add_named(self.searchResults, "search-results") # what if I implement the infobox on a stack that also includes a start typing page like the search results has right now and a choose a search result to display detailed info page
+
+		self.windowStack.set_visible_child_name("search-results")
+
 		self.imdbBox = InfoPage(self, db, "Shrek")
 
-		stackBox.pack_end(self.imdbBox, True, True, 0)
-		stackBox.pack_start(self.searchResults, False, False, 0)
-		# self.windowStack.add_named(self.imdbBox, "imdb")
-
-		self.windowStack.add_named(stackBox, "imdb") # what if I implement the infobox on a stack that also includes a start typing page like the search results has right now and a choose a search result to display detailed info page
-		self.windowStack.set_visible_child_name("imdb")
+		# stackBox.pack_end(self.imdbBox, True, True, 0)
+		self.windowStack.add_named(self.imdbBox, "movie-info")
 
 		locationChooser = LocationChooser(self)
 		# locationChooser.connect("location-chosen", self.updateWin)
@@ -181,6 +183,9 @@ class MainWindow(Gtk.ApplicationWindow):
 		box.add(self.windowStack)
 
 		self.add(box)
+
+	def goBack_cb(self, headerBar):
+		self.windowStack.set_visible_child_name('search-results')
 
 	def key_pressed_cb(self, win, event):
 		self.searchBar.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
@@ -195,7 +200,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.show_all()
 
 	def random_cb(self, header):
-		self.windowStack.set_visible_child_name("imdb")
+		self.windowStack.set_visible_child_name("movie-info")
 		movieResults = self.searchBar.run_search(False)
 		movie_position = random.randint(0, len(movieResults) - 1)
 		self.imdbBox.update(movieResults[movie_position].title)
@@ -214,7 +219,8 @@ class MainWindow(Gtk.ApplicationWindow):
 
 	def searchRan_cb(self, searchBar, results):
 		self.searchResults.set_search_view(results)
-		self.windowStack.set_visible_child_name("imdb")
+		self.windowStack.set_visible_child_name("search-results")
 
 	def updateIMDB_cb(self, searchResults, movieName):
 		self.imdbBox.update(movieName)
+		self.windowStack.set_visible_child_name("movie-info")
