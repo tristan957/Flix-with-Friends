@@ -16,7 +16,7 @@ class DataButton(Gtk.MenuButton):
 		"source-edit": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()) # in conjunction with edit source button to bring up an edit screen
 	}
 
-	def __init__(self, win):
+	def __init__(self, win, db):
 
 		ADD = "Add"
 		DELETE = "Delete"
@@ -35,8 +35,8 @@ class DataButton(Gtk.MenuButton):
 
 		change.connect("clicked", self.change_cb)
 		edit.connect("clicked", self.edit_cb)
-		addMovie.connect("clicked", self.manipulateMovies_cb, ADD)
-		deleteMovie.connect("clicked", self.manipulateMovies_cb, DELETE)
+		addMovie.connect("clicked", self.manipulateMovies_cb, db, ADD)
+		deleteMovie.connect("clicked", self.manipulateMovies_cb, db, DELETE)
 		addFriend.connect("clicked", self.manipulateFriends_cb, ADD)
 		deleteFriend.connect("clicked", self.manipulateFriends_cb, DELETE)
 
@@ -69,11 +69,11 @@ class DataButton(Gtk.MenuButton):
 	def edit_cb(self, button):
 		self.emit('source-edit')
 
-	def manipulateMovies_cb(self, movieButton, action):
-		dialog = MovieDialog(self.win, action)
+	def manipulateMovies_cb(self, movieButton, db, action):
+		dialog = MovieDialog(self.win, db, action)
 
-	def manipulateFriends_cb(self, friendButton, action):
-		dialog = FriendDialog(self.win, action)
+	def manipulateFriends_cb(self, friendButton, db, action):
+		dialog = FriendDialog(self.win, db, action)
 
 class HeaderBar(Gtk.HeaderBar):
 	"""

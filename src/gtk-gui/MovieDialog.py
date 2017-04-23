@@ -16,13 +16,12 @@ class MovieDialog(Gtk.Dialog):
 		"movie-deleted": (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, (object,)) # in conjunction with edit source button to bring up an edit screen
 	}
 
-	def __init__(self, parent, action):
+	def __init__(self, parent, db, action):
 		"""
 		Create a dialog for adding and deleting movies
 		"""
 		Gtk.Dialog.__init__(self, action + " a Movie", parent, Gtk.DialogFlags.MODAL, use_header_bar = True)
 
-		self.db = Database()
 		self.action = action.lower()
 
 		self.area = self.get_content_area()	 # area is a Gtk.Box
@@ -37,7 +36,7 @@ class MovieDialog(Gtk.Dialog):
 		box.pack_start(self.entry, True, False, 0)
 
 		self.enterButton = Gtk.Button(label = "Enter")
-		self.enterButton.connect("clicked", self.enterButton_cb)
+		self.enterButton.connect("clicked", self.enterButton_cb, db)
 		box.pack_end(self.enterButton, True, False, 0)
 
 		self.area.pack_start(box, True, False, 0)
@@ -55,7 +54,7 @@ class MovieDialog(Gtk.Dialog):
 			try:
 				# self.db.newMovie(self.entry.get_text())
 				# print(self.entry.get_text(), 'added as', self.db.movies[-1].title)
-				search = self.db.tmdb_search(self.entry.get_text())
+				search = db.tmdb_search(self.entry.get_text())
 				print('Searh Results:\n')
 				for movie in search:
 					print('Title:', movie.title)
