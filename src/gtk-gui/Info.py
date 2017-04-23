@@ -256,79 +256,29 @@ class DetailsGrid(Gtk.Box):
 		self.overview.set_label("<big>" + movie.overview + "</big>")
 		self.peeps.set_view(movie)
 
-class PeopleView(Gtk.ScrolledWindow):
+class PeopleView(Gtk.Grid):
 
 	"""
 	Create a view to show people associated with a movie
 	"""
 
 	def __init__(self, movie):
-		Gtk.ScrolledWindow.__init__(self, shadow_type = Gtk.ShadowType.ETCHED_IN,
-									overlay_scrolling = False, kinetic_scrolling = True)
-		self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-		self.get_style_context().add_class("search-results")
-
-		self.tview = Gtk.TreeView(activate_on_single_click = True, enable_grid_lines = False, headers_visible = False)
-		self.tview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
-		self.add(self.tview)
-
-		ren = Gtk.CellRendererPixbuf()
-		# ren.set_property("stock-size", Gtk.IconSize.DIALOG)
-		ren.set_padding(5, 2)
-		column = Gtk.TreeViewColumn("Picture", ren, pixbuf = 2)
-		self.tview.append_column(column)
-
-		ren = Gtk.CellRendererText()
-		ren.set_padding(5, 5)
-		column = Gtk.TreeViewColumn("Person", ren, markup = 0)
-		self.tview.append_column(column)
-		self.tview.set_search_column(1)
-
-		self.set_view(movie)
-
-	def set_view(self, movie):
+		Gtk.Grid.__init__(self, row_spacing = 10, column_spacing = 10)
 
 		peeps = [movie.director]
-		for p in movie.allActors:
-			peeps.append(p)
+		for peep in movie.allActors:
+			peeps.append(peep)
 
-		model = Gtk.ListStore(str, str, GdkPixbuf.Pixbuf)
-
-		self.reset()
-
+		row = 0
+		column = 0
 		for peep in peeps:
-			desc = movie.overview
-			desc = GLib.markup_escape_text(desc)
-			if peep.role == 'actor':
-				text = "<b>%s</b>\n%s" % (peep.name.replace('&', '&amp;'), peep.charName)
+			box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5)
+			role = ''
+			if peep.role = 'actor':
+				role = peep.charName
 			else:
-				text = "<b>%s</b>\n%s" % (peep.name.replace('&', '&amp;'), peep.role.title())
-
-			if os.path.isfile(peep.img) is True:
-				image = GdkPixbuf.Pixbuf.new_from_file(peep.img)
-			else:
-				image = None
-
-			model.append([text, peep.name, image])
-
-			while (Gtk.events_pending()):
-				Gtk.main_iteration()
-
-		# if len(results) is 0:
-		# 	self.stack.set_visible_child_name("not-found")
-		# else:
-		# 	self.stack.set_visible_child_name("available")
-
-		self.tview.set_model(model)
-
-	def reset(self):
-		self.tview.set_model(None)
-		self.queue_draw()
-
-	# def clear_view(self):
-	# 	self.tview.set_model(None)
-	# 	self.stack.set_visible_child_name("empty")
-	# 	self.queue_draw()
+				role = peep.role.title()
+			box.add()
 
 class InfoPage(Gtk.Box):
 
