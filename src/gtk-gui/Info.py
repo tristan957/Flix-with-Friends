@@ -124,8 +124,9 @@ class GenreGrid(Gtk.Box):
 		column = 0
 		for g in movie.genres:
 			box = Gtk.Box()
-			box.add(Gtk.Label(label = "<big>" + g + "</big>",
-								use_markup = True, halign = Gtk.Align.CENTER))
+			box.pack_start(Gtk.Label(label = "<big>" + g + "</big>",
+								use_markup = True, halign = Gtk.Align.CENTER),
+								True, True, 0)
 			box.get_style_context().add_class('inline-toolbar')
 			self.grid.attach(box, column, row, 1, 1)
 
