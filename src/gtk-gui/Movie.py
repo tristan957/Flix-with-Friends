@@ -9,6 +9,24 @@ class Movie:
 	def __init__(self, dictionary):
 		if '_id' in dictionary: self.db_id = dictionary['_id']
 
+		self.title = ''
+		self.ID = ''
+		self.viewers = ''
+		self.runtime = ''
+		self.genres = []
+		self.release_date = ''
+		self.vote = ''
+		self.overview = ''
+		self.poster_path = ''
+		self.actorNames = []
+		self.actorChars = []
+		self.actorImg = []
+		self.directorName = ''
+		self.directorImg = ''
+		self.trailer = ''
+		self.backdrop = ''
+		self.keywords = ''
+
 		if 'title' in dictionary:  self.title = dictionary['title']
 		if 'id' in dictionary:  self.ID = dictionary['id']
 		if 'viewers' in dictionary:  self.viewers = dictionary['viewers'].split(', ')
@@ -29,7 +47,7 @@ class Movie:
 		self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
 		self.allActors = []
-		self.director = Person('Director', dictionary['director_name'], dictionary['director_img'])
+		self.director = Person('Director', self.directorName, self.directorImg)
 
 		for i, actor in enumerate(self.actorNames):
 			self.allActors.append(Person('actor', self.actorNames[i], self.actorImg[i], self.actorChars[i]))

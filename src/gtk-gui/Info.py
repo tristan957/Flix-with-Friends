@@ -282,34 +282,37 @@ class PeopleView(Gtk.Box):
 
 		if movie.director != None:
 			peeps = peeps.append(movie.director)
-		for peep in movie.allActors:
-			if peep != None:
-				peeps.append(peep)
+
+		if peeps is not None:
+			for peep in movie.allActors:
+				if peep != None:
+					peeps.append(peep)
 
 		row = 0
 		column = 0
-		for peep in peeps:
-			box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5)
-			if peep.role == 'actor':
-				role = peep.charName
-			else:
-				role = peep.role.title()
-			if os.path.isfile(peep.img) is True:
-				image = Gtk.Image.new_from_file(peep.img)
-			else:
-				image = None
+		if peeps is not None:
+			for peep in peeps:
+				box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 5)
+				if peep.role == 'actor':
+					role = peep.charName
+				else:
+					role = peep.role.title()
+				if os.path.isfile(peep.img) is True:
+					image = Gtk.Image.new_from_file(peep.img)
+				else:
+					image = None
 
-			if image != None:
-				self.grid.attach(image, column, row, 1, 1)
-			self.grid.attach(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True,
-										wrap = True, max_width_chars = 20,
-										justify = Gtk.Justification.CENTER), column, row + 1, 1, 1)
-			self.grid.attach(Gtk.Label(label = role, wrap = True, max_width_chars = 20,
-								justify = Gtk.Justification.CENTER), column, row + 2, 1, 1)
-			column+=1
-			if column % 4 == 0:
-				row+=3
-				column = 0
+				if image != None:
+					self.grid.attach(image, column, row, 1, 1)
+				self.grid.attach(Gtk.Label(label = '<b>' + peep.name + '</b>', use_markup = True,
+											wrap = True, max_width_chars = 20,
+											justify = Gtk.Justification.CENTER), column, row + 1, 1, 1)
+				self.grid.attach(Gtk.Label(label = role, wrap = True, max_width_chars = 20,
+									justify = Gtk.Justification.CENTER), column, row + 2, 1, 1)
+				column+=1
+				if column % 4 == 0:
+					row+=3
+					column = 0
 
 		self.add(self.grid)
 		self.show_all()
