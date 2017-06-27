@@ -1,5 +1,5 @@
 import pymongo
-import pprint
+# import pprint
 import tmdbsimple as tmdb
 
 from Movie import Movie
