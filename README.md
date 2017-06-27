@@ -1,7 +1,12 @@
 [![Head to Waffle.io](https://img.shields.io/badge/Waffle.io--blue.svg?label=Waffle.io&title=Waffle.io&style=social)](https://waffle.io/JosephMart/Flix-with-Friends) [![Head to Slack](https://img.shields.io/badge/Slack--lightgrey.svg?label=Slack&title=Slack&style=social)](https://return0software.slack.com/messages/general/) [![Python Documentation](https://img.shields.io/badge/python-3.5.2-orange.svg?title=3.5.2&style=flat-square)](https://docs.python.org/release/3.5.2/) [![GTK+ Documentation](https://img.shields.io/badge/GTK%2B-3.22-brightgreen.svg?style=flat-square)](https://developer.gnome.org/gtk3/stable/)
+
+<p align="center">
+<a href="https://github.com/Return0Software/Flix-with-Friends"><img src="https://raw.githubusercontent.com/Return0Software/Flix-with-Friends/master/images/FLIX_W_FRIENDS_1.jpg" align="center" height="256" width="256" ></a></p>
+
+
 # Flix with Friends
 
-Developed by [Joseph Martinsen](https://github.com/JosephMart) and [Tristan Partin](https://github.com/tristan957).
+Developed by [Joseph Martinsen](https://github.com/JosephMart), [Tristan Partin](https://github.com/tristan957), and [Hudson Birdsong](https://github.com/Hudson35).
 Developed on [Solus](https://solus-project.com/) using [Atom](https://atom.io/) and [Visual Studio Code](https://code.visualstudio.com/).
 
 Flix with Friends is a program that helps users decide what movie they should watch. It reads
