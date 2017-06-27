@@ -1,7 +1,4 @@
 __pycache__/
 *.pyc
 .vscode/
-<<<<<<< HEAD
-=======
-old_code (Location Chooser).py
->>>>>>> 1d9da8e3ed55ed93aab5a7832766ae8bee43a20b
+.vagrant/

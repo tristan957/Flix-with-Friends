@@ -30,5 +30,30 @@ In no particular order:
 - [ ] Fully Implement the Google Doc
 - [ ] Create Logo
 
+## Contribution Guide
+Steps are the same on any OS. Detailed commands are for developers using Solus.
+
+Install Python3 requirements `pip3 install -r requirements.txt`
+
+Download the latest [VirtualBox Installer](https://www.virtualbox.org/wiki/Linux_Downloads). If in browser, [direct link (5.1.22)](http://download.virtualbox.org/virtualbox/5.1.22/VirtualBox-5.1.22-115126-Linux_amd64.run) right click link and Save As. Now install the dependencies and VirtualBox like so:
+```bash
+sudo eopkg it -c system.devel
+sudo eopkg it linux-lts-headers
+sudo sh ~/Downloads/VirtualBox-5.1.22-115126-Linux_amd64.run
+```
+Replace the version number of the file with the one you downloaded
+
+Install Vagrant
+```bash
+sudo eopkg install vagrant
+```
+
+Navigate to the root of the repo.
+```bash
+vagrant up # will take time for the first time
+vagrant ssh
+# TODO database setup and migrations
+```
+
 ## License
 [GPL 2.0](https://github.com/JosephMart/Flix-with-Friends/blob/master/LICENSE)
