@@ -3,7 +3,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from Database import Database
-from Window import InitWindow, MainWindow
+from Windows import InitWindow, MainWindow
 
 
 FLIX_APP_ID = "com.return0software.Flix-with-Friends"
