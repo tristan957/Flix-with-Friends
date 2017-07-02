@@ -3,7 +3,8 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from Database import Database
-from Windows import InitWindow, MainWindow
+from InitWindow import InitWindow2
+from MainWindow import MainWindow
 
 
 FLIX_APP_ID = "com.return0software.Flix-with-Friends"
@@ -26,7 +27,7 @@ class FlixApplication(Gtk.Application):
         """Checks if a window is already in use"""
 
         if self.initWindow is None and self.mainWindow is None:
-            self.initWindow = InitWindow() # create the initial window to get a location
+            self.initWindow = InitWindow2() # create the initial window to get a location
             self.initWindow.connect("credentials-set", self.createMainWin)
             self.add_window(self.initWindow)
             # self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
