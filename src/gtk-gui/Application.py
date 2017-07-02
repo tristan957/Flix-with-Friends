@@ -28,7 +28,7 @@ class FlixApplication(Gtk.Application):
 
         if self.initWindow is None and self.mainWindow is None:
             self.initWindow = InitWindow() # create the initial window to get a location
-            self.initWindow.connect('cancel', self.quit)
+            self.initWindow.connect('cancel', self.app_quit)
             self.initWindow.connect("credentials-set", self.createMainWin)
             self.add_window(self.initWindow)
             # self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
@@ -41,7 +41,6 @@ class FlixApplication(Gtk.Application):
 
     def createMainWin(self, win, cred_dict):
         """Creates the main window"""
-        print('Hello')
 
         # Database.location = location
         self.db = Database(cred_dict) # create the database of the given location
@@ -53,3 +52,6 @@ class FlixApplication(Gtk.Application):
 
     def shutdown_cb(self, app):
         app.quit() # analogous to self.quit
+
+    def app_quit(self, win):
+        self.quit()
