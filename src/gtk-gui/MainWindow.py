@@ -67,9 +67,9 @@ class MainWindow(Gtk.ApplicationWindow):
         # stackBox.pack_end(self.imdbBox, True, True, 0)
         self.windowStack.add_named(self.imdbBox, "movie-info")
 
-        credentials = LogIn()
+        # credentials = LogIn()
         # locationChooser.connect("location-chosen", self.updateWin)
-        self.windowStack.add_named(credentials, "credentials")
+        # self.windowStack.add_named(credentials, "credentials")
 
         box.add(self.searchBar)
         box.add(self.windowStack)
