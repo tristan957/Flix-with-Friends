@@ -45,7 +45,7 @@ class InitWindow(Gtk.ApplicationWindow):
         enter.get_style_context().add_class('suggested-action')
 
         cancel = Gtk.Button(label='Cancel')
-        cancel.connect('clicked', self.cancel_cb)
+        cancel.connect('clicked', lambda button: self.emit('cancel'))
         cancel.get_style_context().add_class('destructive-action')
 
         button_box.pack_end(cancel, False, False, 0)
@@ -56,6 +56,3 @@ class InitWindow(Gtk.ApplicationWindow):
         self.cred_dict['username'] = self.user_entry.get_text()
         self.cred_dict['password'] = self.pass_entry.get_text()
         self.emit('credentials-set', self.cred_dict)
-
-    def cancel_cb(self, button):
-        self.emit('cancel')
