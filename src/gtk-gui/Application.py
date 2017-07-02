@@ -27,7 +27,7 @@ class FlixApplication(Gtk.Application):
         """Checks if a window is already in use"""
 
         if self.initWindow is None and self.mainWindow is None:
-            self.initWindow = InitWindow2() # create the initial window to get a location
+            self.initWindow = InitWindow() # create the initial window to get a location
             self.initWindow.connect('cancel', self.quit)
             self.initWindow.connect("credentials-set", self.createMainWin)
             self.add_window(self.initWindow)
