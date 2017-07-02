@@ -3,7 +3,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from Database import Database
-from InitWindow import InitWindow2
+from InitWindow import InitWindow
 from MainWindow import MainWindow
 
 
