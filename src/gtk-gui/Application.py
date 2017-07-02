@@ -21,14 +21,14 @@ class FlixApplication(Gtk.Application):
         Gtk.Application.__init__(self, application_id=FLIX_APP_ID)
 
         self.connect("activate", self.activate_cb)
-        self.connect("shutdown", self.shutdown_cb)
+        self.connect("shutdown", lambda app: app.quit())
 
     def windowCheck(self):
         """Checks if a window is already in use"""
 
         if self.initWindow is None and self.mainWindow is None:
             self.initWindow = InitWindow() # create the initial window to get a location
-            self.initWindow.connect('cancel', self.app_quit)
+            self.initWindow.connect('cancel', lambda win: self.quit())
             self.initWindow.connect("credentials-set", self.createMainWin)
             self.add_window(self.initWindow)
             # self.appWindow.connect("delete-event", Gtk.main_quit) # when delete-event signal is received, calls Gtk.main_quit
@@ -49,9 +49,3 @@ class FlixApplication(Gtk.Application):
         self.initWindow.destroy()
         self.add_window(self.mainWindow)
         self.mainWindow.show_all()
-
-    def shutdown_cb(self, app):
-        app.quit() # analogous to self.quit
-
-    def app_quit(self, win):
-        self.quit()
