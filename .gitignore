@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 .vscode/
 .vagrant/
+bin/
+include/
+lib/
+lib64/
+pyvenv.cfg
+pip-selfcheck.json
+setup.cfg
