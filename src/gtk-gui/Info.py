@@ -134,7 +134,7 @@ class GenreGrid(Gtk.Box):
             box.pack_start(Gtk.Label(label="<big>" + g + "</big>",
                                      use_markup=True, halign=Gtk.Align.CENTER),
                            True, True, 0)
-            box.get_style_context().add_class('sidebar')
+            box.get_style_context().add_class('inline-toolbar')
             self.grid.attach(box, column, row, 1, 1)
 
             column += 1
