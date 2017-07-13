@@ -7,7 +7,7 @@ import random
 from Database import Database
 from HeaderBar import HeaderBar
 from SearchBar import SearchBar
-from Info import InfoPage
+from Info2 import InfoPage
 from search_results import SearchResults
 
 
@@ -62,7 +62,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.windowStack.set_visible_child_name("search-results")
 
-        self.imdbBox = InfoPage(db, "Shrek")
+        self.imdbBox = InfoPage(db.find_movie("Shrek"))
 
         # stackBox.pack_end(self.imdbBox, True, True, 0)
         self.windowStack.add_named(self.imdbBox, "movie-info")
@@ -94,8 +94,8 @@ class MainWindow(Gtk.ApplicationWindow):
     def random_cb(self, header):
         self.windowStack.set_visible_child_name("movie-info")
         movieResults = self.searchBar.run_search(False)
-        movie_position = random.randint(0, len(movieResults) - 1)
-        self.imdbBox.update(movieResults[movie_position].title)
+        movie_position = random.randint(0, len(movieResults) - 1) # make this a db_function to return a random movie
+        self.imdbBox.update(self.db.find_movie(movieResults[movie_position].title))
         # self.searchBar.run_search()
 
     def reveal_cb(self, header, toggled):
@@ -117,5 +117,5 @@ class MainWindow(Gtk.ApplicationWindow):
         self.windowStack.set_visible_child_name('credentials')
 
     def updateIMDB_cb(self, searchResults, movieName):
-        self.imdbBox.update(movieName)
+        self.imdbBox.update(self.db.find_movie(movieName))
         self.windowStack.set_visible_child_name("movie-info")

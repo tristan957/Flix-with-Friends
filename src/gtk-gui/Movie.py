@@ -64,11 +64,12 @@ class Movie:
             self.keywords = dictionary['keywords']
         self.poster = "./images/movies/" + self.title.replace(" ", "") + '/' + self.title.replace(" ", "") + "_"
 
-        self.allActors = []
+        self.cast = []
         self.director = Person('Director', self.directorName, self.directorImg)
+        self.cast.append(self.director)
 
         for i, actor in enumerate(self.actorNames):
-            self.allActors.append(Person('actor', self.actorNames[i], self.actorImg[i], self.actorChars[i]))
+            self.cast.append(Person('actor', self.actorNames[i], self.actorImg[i], self.actorChars[i]))
 
     def get_image(self):
 
@@ -97,7 +98,7 @@ class Movie:
                     print(p, 'poster image:', imagePage)
 
         # Actors images
-        for p in self.allActors:
+        for p in self.cast:
             p.get_image()
 
         self.director.get_image()
