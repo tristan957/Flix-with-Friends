@@ -93,9 +93,9 @@ class InfoPage(Gtk.Box):
         self.action = ActionBar(movie)
         self.images = ImageBox(movie)
 
-        # self.pack_start(self.action, False, True, 0)
-        # self.pack_start(self.images, True, True, 0)
-        self.add(Gtk.Image.new_from_file(movie.get_large_image()))
+        self.pack_start(self.action, False, True, 0)
+        self.pack_start(self.images, True, True, 0)
+        # self.add(Gtk.Image.new_from_file(movie.get_large_image()))
 
     def update(self, movie):
         """Update all UI components"""

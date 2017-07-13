@@ -72,8 +72,8 @@ class MainWindow(Gtk.ApplicationWindow):
         # locationChooser.connect("location-chosen", self.updateWin)
         # self.windowStack.add_named(credentials, "credentials")
 
-        box.add(self.searchBar)
-        box.add(self.windowStack)
+        box.pack_start(self.searchBar, False, True, 0)
+        box.pack_end(self.windowStack, True, True, 0)
 
         self.add(box)
 
