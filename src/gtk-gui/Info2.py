@@ -51,10 +51,9 @@ class ImageBox(Gtk.Grid):
     """Box for displaying the poster and the cast"""
 
     def __init__(self, movie):
-        Gtk.Grid.__init__(self, column_spacing=25, row_spacing=25)
+        Gtk.Grid.__init__(self, column_spacing=25, row_spacing=25, halign=Gtk.Align.CENTER)
 
         self.poster = Gtk.Image.new_from_file(movie.get_large_image())
-        print(movie.get_large_image())
 
         self.peep_imgs = [Gtk.Image.new_from_file(peep.img) for peep in movie.cast]
 
@@ -89,14 +88,14 @@ class InfoPage(Gtk.Box):
 
     def __init__(self, movie):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL,
-                         spacing=40, halign=Gtk.Align.CENTER)
+                         spacing=40)
 
         self.action = ActionBar(movie)
         self.images = ImageBox(movie)
 
-        self.pack_start(self.action, True, True, 0)
-        self.pack_start(self.images, True, True, 0)
-   
+        # self.pack_start(self.action, False, True, 0)
+        # self.pack_start(self.images, True, True, 0)
+        self.add(Gtk.Image.new_from_file(movie.get_large_image()))
 
     def update(self, movie):
         """Update all UI components"""

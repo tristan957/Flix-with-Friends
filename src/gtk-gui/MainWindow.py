@@ -63,6 +63,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.windowStack.set_visible_child_name("search-results")
 
         self.imdbBox = InfoPage(db.find_movie("Shrek"))
+        self.imdbBox.set_size_request(700, 700)
 
         # stackBox.pack_end(self.imdbBox, True, True, 0)
         self.windowStack.add_named(self.imdbBox, "movie-info")
