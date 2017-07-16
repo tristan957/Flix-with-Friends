@@ -53,18 +53,8 @@ class ImageBox(Gtk.Grid):
     def __init__(self, movie):
         Gtk.Grid.__init__(self, column_spacing=25, row_spacing=25, halign=Gtk.Align.CENTER)
 
-        self.poster = Gtk.Image.new_from_file(movie.get_large_image())
-
+        self.poster = Gtk.Image.new_from_pixbuf(GdkPixbuf.Pixbuf.new_from_file(movie.get_large_image()))
         self.peep_imgs = [Gtk.Image.new_from_file(peep.img) for peep in movie.cast]
-
-        # left_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        # right_box = left_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-
-        # left_box.add(self.peeps[3])
-        # left_box.add(self.peeps[0])
-
-        # right_box.add(self.peeps[1])
-        # right_box.add(self.peeps[2])
 
         self.attach(self.peep_imgs[0], 0, 0, 1, 1)
         self.attach(self.peep_imgs[1], 0, 1, 1, 1)
@@ -76,7 +66,7 @@ class ImageBox(Gtk.Grid):
 
     def update(self, movie):
         """Update all the images"""
-        self.poster.set_from_file(movie.poster)
+        self.poster.set_from_pixbuf(GdkPixbuf.Pixbuf.new_from_file(movie.get_large_image()))
         for index, img in enumerate(self.peep_imgs):
             img.set_from_file(movie.cast[index].img)
 
