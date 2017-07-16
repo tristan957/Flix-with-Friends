@@ -53,6 +53,7 @@ class ImageBox(Gtk.Grid):
     def __init__(self, movie):
         Gtk.Grid.__init__(self, column_spacing=25, row_spacing=25, halign=Gtk.Align.CENTER)
 
+        # don't do this at home folks
         self.poster = Gtk.Image.new_from_pixbuf(GdkPixbuf.Pixbuf.new_from_file(movie.get_large_image()))
         self.peep_imgs = [Gtk.Image.new_from_file(peep.img) for peep in movie.cast]
 
